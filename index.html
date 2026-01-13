@@ -1,3 +1,4 @@
+<!-- FILE: index_en.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,87 +9,216 @@
   <meta name="description" content="Curriculum Vitae of Gustavo Pinho Maia — chemist and PhD student in astrobiology.">
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <a class="brand" href="index_en.html">
-        <div class="logo">GM</div>
-        <div>
-          <div style="font-weight:700;font-size:18px">Gustavo P. Maia</div>
-          <div style="color:var(--muted);font-size:13px">PhD student — Astrobiology | CQE • MNHN • NASA collaborator</div>
-        </div>
-      </a>
-      <nav class="nav" aria-label="Main">
-        <a href="index_en.html" class="active">Home</a>
-        <a href="about_en.html">About</a>
-        <a href="education_en.html">Education</a>
-        <a href="research_en.html">Research</a>
-        <a href="publications_en.html">Publications</a>
-        <a href="contact_en.html">Contact</a>
-        <a href="index_pt.html" title="Portuguese version">PT</a>
-        <a href="#" onclick="openTutoring();return false" title="Tutoring (PT)">Tutoring (PT)</a>
+  <div class="site">
+    <header class="site-header">
+      <div class="brand">
+        <a class="brand-link" href="index_en.html">
+          <div class="logo">GM</div>
+          <div class="brand-text">
+            <div class="name">Gustavo P. Maia</div>
+            <div class="position">PhD student — Astrobiology | CQE • MNHN • NASA collaborator</div>
+          </div>
+        </a>
+      </div>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index_en.html" class="nav-item active">Home</a>
+        <a href="about_en.html" class="nav-item">About</a>
+        <a href="education_en.html" class="nav-item">Education</a>
+        <a href="research_en.html" class="nav-item">Research</a>
+        <a href="publications_en.html" class="nav-item">Publications</a>
+        <a href="contact_en.html" class="nav-item">Contact</a>
       </nav>
     </header>
 
     <main>
       <section class="hero">
-        <div class="card">
-          <div class="profile">
-            <div class="avatar" aria-hidden="true">GM</div>
-            <div>
-              <h1 style="margin:0">Gustavo Pinho Maia</h1>
-              <p class="meta" style="margin-top:6px">
-                I am a PhD student and researcher at Centro de Química Estrutural (CQE), collaborating with the Muséum National d’Histoire Naturelle (MNHN) and NASA Goddard. My research sits at the interface of prebiotic chemistry, mechanochemistry and meteoritics, exploring how mechanical energy influences the synthesis and fate of organic molecules relevant to origins of life. :contentReference[oaicite:1]{index=1}
-              </p>
-              <div style="margin-top:12px" class="kv">
-                <span class="tag">Astrobiology</span>
-                <span class="tag">Mechanochemistry</span>
-                <span class="tag">Meteoritics</span>
+        <!-- Replace the hero background with the provided image. Save the image as "images/hero-banner.jpg" or update the --hero-image variable in style.css -->
+        <div class="hero-overlay">
+          <div class="hero-card">
+            <div class="profile">
+              <div class="avatar" aria-hidden="true">GM</div>
+              <div class="profile-body">
+                <h1 class="profile-name">Gustavo Pinho Maia</h1>
+                <p class="profile-title">PhD student in Chemistry (Astrobiology) — Centro de Química Estrutural, Universidade de Lisboa</p>
+                <p class="intro">My research explores how mechanical energy influences the synthesis and fate of organic molecules relevant to the origins of life, combining mechanochemistry, meteoritics and prebiotic chemistry in collaborations with MNHN and NASA Goddard.</p>
+                <div class="kv">
+                  <span class="tag">Astrobiology</span>
+                  <span class="tag">Mechanochemistry</span>
+                  <span class="tag">Meteoritics</span>
+                  <span class="tag">Prebiotic Chemistry</span>
+                </div>
+
+                <div class="hero-ctas">
+                  <a class="btn" href="about_en.html">Read full CV</a>
+                  <a class="btn ghost" href="publications_en.html">Publications</a>
+                  <a class="btn" href="contact_en.html">Contact</a>
+                </div>
               </div>
-              <p style="margin-top:12px;color:var(--muted);font-size:14px">
-                ORCID: 0000-0001-5314-8816 • Email: gustavopinho.maia@mnhn.fr. :contentReference[oaicite:2]{index=2}
-              </p>
+            </div>
+
+            <div class="hero-meta">
+              <div class="meta-block">
+                <h4>Selected highlights</h4>
+                <p class="muted">Mechanochemical reactivity of ribonucleosides, shock-induced degradation of nucleosides, and a PhD funded project by FCT on mechanochemical prebiotic synthesis.</p>
+              </div>
+
+              <div class="meta-block">
+                <h4>Quick links</h4>
+                <ul class="links">
+                  <li><a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener">ORCID profile</a></li>
+                  <li><a href="https://cienciavitae.pt/portal/en/8212-CEE3-E928" target="_blank" rel="noopener">CiênciaVitae source</a></li>
+                </ul>
+              </div>
             </div>
           </div>
-
-          <div style="margin-top:14px">
-            <a class="btn" href="about_en.html">Read full CV</a>
-            <a class="btn" href="publications_en.html" style="margin-left:8px;background:#2f855a">Publications</a>
-          </div>
         </div>
-
-        <aside class="card">
-          <h3 style="margin-top:0">Quick facts</h3>
-          <p style="margin:0;color:var(--muted)">
-            Current: PhD in Chemistry (Astrobiology) at Universidade de Lisboa, Instituto Superior Técnico. Visiting scientist engagements at MNHN and NASA Goddard are listed in the CV. :contentReference[oaicite:3]{index=3}
-          </p>
-        </aside>
       </section>
 
-      <section class="sections">
+      <section class="sections grid">
         <article class="card">
-          <h3>Recent highlights</h3>
-          <p style="color:var(--muted)">
-            Published research on mechanochemical reactivity of ribonucleosides and shock-induced degradation of nucleosides. Recent and ongoing projects include a PhD project funded by FCT on mechanochemical energy and prebiotic synthesis. :contentReference[oaicite:4]{index=4}
-          </p>
+          <h3>Recent publications</h3>
+          <p class="muted">A concise list of peer-reviewed outputs, preprints and selected conference contributions. Visit the Publications page for a complete and citable list.</p>
         </article>
 
         <article class="card">
-          <h3>Get in touch</h3>
-          <table class="table" aria-hidden="false">
-            <tr><th style="width:120px">Email</th><td>gustavopinho.maia@mnhn.fr</td></tr>
-            <tr><th>ORCID</th><td><a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener">0000-0001-5314-8816</a></td></tr>
-            <tr><th>Profile</th><td><a href="https://cienciavitae.pt/portal/en/8212-CEE3-E928" target="_blank" rel="noopener">CiênciaVitae source</a>. :contentReference[oaicite:5]{index=5}</td></tr>
-          </table>
+          <h3>Research summary</h3>
+          <p class="muted">Work at the interface of experimental mechanochemistry and meteoritic organic analysis, aiming to understand energy-driven pathways for molecular complexity under astrophysical conditions.</p>
+        </article>
+
+        <article class="card">
+          <h3>News & updates</h3>
+          <p class="muted">Announcements about talks, new papers, visiting positions and collaboration opportunities.</p>
         </article>
       </section>
     </main>
 
-    <footer class="footer card">
-      This English CV site is a faithful, readable rendition of the public CiênciaVitae profile. For the original structured CV and complete details, see CiênciaVitae. :contentReference[oaicite:6]{index=6}
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>© Gustavo P. Maia — English CV site. For the original structured CV and complete details, see CiênciaVitae.</div>
+        <nav class="footer-nav">
+          <a href="index_en.html">Home</a>
+          <a href="contact_en.html">Contact</a>
+          <a href="publications_en.html">Publications</a>
+        </nav>
+      </div>
     </footer>
   </div>
 
   <script src="script.js"></script>
-  <script>function openTutoring(){ window.open('tutoring_pt.html','_blank','noopener'); }</script>
 </body>
 </html>
+
+
+<!-- FILE: contact_en.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — Gustavo P. Maia</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container contact-page">
+    <header class="site-header small">
+      <div class="brand">
+        <a class="brand-link" href="index_en.html">
+          <div class="logo">GM</div>
+          <div class="brand-text">
+            <div class="name">Gustavo P. Maia</div>
+            <div class="position">PhD student — Astrobiology</div>
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <main class="card contact-card">
+      <h2>Contact</h2>
+      <p class="muted">For professional enquiries, collaboration, or speaking invitations please use the contact details below or the contact form (if you prefer private messages, include a short subject line and your affiliation).</p>
+
+      <table class="table">
+        <tr><th>Email</th><td><a href="mailto:gustavopinho.maia@mnhn.fr">gustavopinho.maia@mnhn.fr</a></td></tr>
+        <tr><th>ORCID</th><td><a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener">0000-0001-5314-8816</a></td></tr>
+        <tr><th>Profile</th><td><a href="https://cienciavitae.pt/portal/en/8212-CEE3-E928" target="_blank" rel="noopener">CiênciaVitae source</a></td></tr>
+      </table>
+
+      <p>If you would like a contact form added here instead of raw email visibility, I can add a simple serverless form or a static form that sends to your inbox via a service of your choice.</p>
+
+      <p style="margin-top:18px"><a class="btn" href="index_en.html">Back to home</a></p>
+    </main>
+
+    <footer class="site-footer small">© Gustavo P. Maia</footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+<!-- FILE: style.css -->
+:root{
+  --bg: #f6f7f8;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2b3a67; /* deep blue */
+  --accent-2: #2f855a; /* green for publications */
+  --text:#111827;
+  --radius:12px;
+  --hero-image: url('images/hero-banner.jpg'); /* Replace with provided image */
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:var(--text);background:var(--bg)}
+
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:transparent}
+.brand-link{display:flex;align-items:center;text-decoration:none;color:inherit}
+.logo{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),#44527a);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-right:12px}
+.brand-text .name{font-weight:700;font-size:16px}
+.brand-text .position{color:var(--muted);font-size:13px}
+.main-nav{display:flex;gap:14px}
+.nav-item{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px}
+.nav-item.active{background:rgba(43,58,103,0.08);color:var(--accent)}
+
+.hero{background-image:var(--hero-image);background-size:cover;background-position:center;min-height:420px;display:flex;align-items:center}
+.hero-overlay{width:100%;background:linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92));display:flex;justify-content:center;padding:48px 20px}
+.hero-card{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 320px;gap:24px;background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(12,15,30,0.08);padding:24px}
+.profile{display:flex;gap:18px}
+.avatar{width:96px;height:96px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#6b7db3);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px}
+.profile-body{flex:1}
+.profile-name{margin:0 0 6px 0}
+.profile-title{color:var(--muted);margin:0 0 12px 0}
+.intro{margin:0 0 12px 0}
+.kv{display:flex;gap:8px;flex-wrap:wrap}
+.tag{background:rgba(43,58,103,0.06);padding:6px 10px;border-radius:8px;font-size:13px;color:var(--accent)}
+.hero-ctas{margin-top:14px;display:flex;gap:10px}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;text-decoration:none;background:var(--accent);color:#fff;font-weight:600}
+.btn.ghost{background:transparent;border:1px solid rgba(43,58,103,0.08);color:var(--accent)}
+
+.hero-meta{padding:6px 10px}
+.meta-block h4{margin:0 0 6px 0}
+.muted{color:var(--muted)}
+
+.sections{padding:28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(12,15,30,0.04)}
+.table{width:100%;border-collapse:collapse}
+.table th{vertical-align:top;padding:8px 12px;color:var(--muted);text-align:left}
+.table td{padding:8px 12px}
+
+.site-footer{padding:18px 28px;background:transparent}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
+.footer-nav a{margin-left:12px;color:var(--muted);text-decoration:none}
+
+/* Responsive */
+@media (max-width:900px){
+  .hero-card{grid-template-columns:1fr;}
+  .hero{min-height:520px;padding-top:28px;padding-bottom:28px}
+  .main-nav{display:none}
+}
+
+/* Small header variant for contact page */
+.site-header.small{padding:12px 20px}
+.contact-page .contact-card{max-width:760px;margin:32px auto}
+
+/* End of style.css */
