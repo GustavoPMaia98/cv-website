@@ -1,25 +1,209 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Contact — Gustavo P. Maia</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Contact Gustavo P. Maia — email, professional profiles, and a quick contact form.">
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7dd3fc; --glass: rgba(255,255,255,0.03);
+      --radius:12px; --maxw:980px; --gap:18px; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#071025 0%, #07162b 60%);color:#e6eef8;-webkit-font-smoothing:antialiased}
+    .container{max-width:var(--maxw);margin:36px auto;padding:20px}
+    header.header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:grid;place-items:center;font-weight:800;color:#04203a}
+    .brand h1{margin:0;font-size:18px}
+    nav.nav a{color:var(--muted);text-decoration:none;margin-left:14px;padding:8px;border-radius:8px}
+    nav.nav a.active{color:var(--accent);background:var(--glass)}
+    main{display:grid;grid-template-columns:1fr 380px;gap:var(--gap)}
+    @media (max-width:880px){main{grid-template-columns:1fr} .aside{order:2}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:20px;border-radius:var(--radius);box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    h2{margin:0 0 8px 0;font-size:20px}
+    p.lead{color:var(--muted);margin-top:0}
+
+    .contact-list{display:grid;gap:12px;margin-top:10px}
+    .contact-item{display:flex;gap:12px;align-items:center}
+    .meta{font-size:13px;color:var(--muted)}
+    .value{font-weight:600}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#60a5fa);color:#04203a;border:none;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--accent)}
+    .socials{display:flex;gap:10px;margin-top:10px}
+    .socials a{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;text-decoration:none;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:600}
+
+    form .row{display:flex;gap:10px;margin-bottom:10px}
+    form input, form textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px}
+    form textarea{min-height:120px;resize:vertical}
+    .hint{font-size:13px;color:var(--muted);margin-top:8px}
+    footer.footer{margin-top:20px;color:var(--muted);font-size:13px}
+
+    /* small helpers */
+    .icon{width:18px;height:18px;display:inline-block}
+    .flexcol{display:flex;flex-direction:column}
+    .muted{color:var(--muted)}
+  </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
-      <a class="brand" href="index_en.html"><div class="logo">GM</div><div><div style="font-weight:700">Gustavo P. Maia</div></div></a>
-      <nav class="nav"><a href="index_en.html">Home</a><a href="contact_en.html" class="active">Contact</a><a href="index_pt.html">PT</a></nav>
+      <a class="brand" href="index_en.html" aria-label="Gustavo P. Maia homepage">
+        <div class="logo">GM</div>
+        <div class="flexcol"><h1>Gustavo P. Maia</h1><div class="meta">Researcher — organic geochemistry & meteoritics</div></div>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="index_en.html">Home</a>
+        <a href="contact_en.html" class="active">Contact</a>
+        <a href="index_pt.html">PT</a>
+      </nav>
     </header>
 
     <main>
-      <div class="card">
-        <h2>Contact</h2>
-        <p style="color:var(--muted)">
-          Professional email: gustavopinho.maia@mnhn.fr. Postal addresses and phone numbers are listed on the CiênciaVitae profile. ORCID: 0000-0001-5314-8816. :contentReference[oaicite:31]{index=31}
-        </p>
-      </div>
+      <section class="card" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Get in touch</h2>
+        <p class="lead">Use the quick form below for short messages or collaboration requests. For formal letters, postal addresses and phone numbers are listed on the CiênciaVitae profile. You can also download a vCard or copy the email address with one click.</p>
+
+        <div class="contact-list" role="list">
+          <div class="contact-item" role="listitem">
+            <div style="width:44px;height:44px;border-radius:8px;background:rgba(125,211,252,0.07);display:grid;place-items:center"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8.5L12 13L21 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div class="meta">Professional email</div>
+              <div class="value" id="emailValue">gustavopinho.maia@mnhn.fr</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;margin-left:54px">
+            <button class="btn" id="copyEmailBtn" type="button" aria-live="polite">Copy email</button>
+            <a class="btn ghost" id="downloadVcard" href="#" download="gustavo_maia.vcf">Download vCard</a>
+            <a class="btn ghost" href="mailto:gustavopinho.maia@mnhn.fr">Open mail client</a>
+          </div>
+
+          <div class="contact-item" role="listitem">
+            <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.02);display:grid;place-items:center"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 22h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div class="meta">ORCID</div>
+              <div class="value"><a href="https://orcid.org/0000-0001-5314-8816" style="color:var(--accent);text-decoration:none" target="_blank" rel="noopener">0000-0001-5314-8816</a></div>
+            </div>
+          </div>
+
+          <div class="contact-item" role="listitem">
+            <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.02);display:grid;place-items:center"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div class="meta">CiênciaVitae</div>
+              <div class="value"><a href="https://www.cienciavitae.pt" style="color:var(--accent);text-decoration:none" target="_blank" rel="noopener">View profile (search by name)</a></div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+        <form id="contactForm" class="card" onsubmit="return handleContact(event)">
+          <label for="name">Your name</label>
+          <input id="name" name="name" placeholder="e.g. Dr. Ana Silva" required>
+
+          <label for="affil" class="hint">Affiliation (optional)</label>
+          <input id="affil" name="affiliation" placeholder="e.g. University of Lisbon">
+
+          <div class="row">
+            <div style="flex:1">
+              <label for="email">Your email</label>
+              <input id="email" name="email" type="email" placeholder="you@institution.edu" required>
+            </div>
+            <div style="width:140px">
+              <label for="subject">Subject</label>
+              <input id="subject" name="subject" placeholder="Short subject" required>
+            </div>
+          </div>
+
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Brief message describing collaboration, question, or request" required></textarea>
+
+          <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+            <button class="btn" type="submit">Send (opens email client)</button>
+            <button class="btn ghost" type="button" onclick="clearForm()">Clear</button>
+            <div class="hint">This form constructs an email in your default client. For attachments or long proposals, please use the professional email address.</div>
+          </div>
+        </form>
+      </section>
+
+      <aside class="aside">
+        <div class="card">
+          <h3>Connect on</h3>
+          <div class="socials" role="list">
+            <a role="listitem" href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener" aria-label="Gustavo's LinkedIn profile">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7a2 2 0 110-4 2 2 0 010 4zM4 8v12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12v8M12 8v.01M20 12v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              LinkedIn
+            </a>
+
+            <a role="listitem" href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank" rel="noopener" aria-label="Gustavo's ResearchGate profile">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4"/><path d="M7 15s2-3 5-3 5 3 5 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              ResearchGate
+            </a>
+          </div>
+
+          <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+          <div class="muted">Privacy: by using the contact form you consent to your name, email and message being included in an email generated locally on your device and stored per your email client's policies. This site does not store form submissions.</div>
+        </div>
+      </aside>
     </main>
-    <footer class="footer card">Source: CiênciaVitae. :contentReference[oaicite:32]{index=32}</footer>
+
+    <footer class="footer">Source: CiênciaVitae. Content references and full postal addresses available on the CiênciaVitae profile.</footer>
   </div>
+
+  <script>
+    // vCard generation (data URI) — minimal fields
+    (function(){
+      const vcard = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        'FN:Gustavo P. Maia',
+        'EMAIL;TYPE=INTERNET:gustavopinho.maia@mnhn.fr',
+        'URL:https://orcid.org/0000-0001-5314-8816',
+        'NOTE:Researcher — organic geochemistry & meteoritics',
+        'END:VCARD'
+      ].join('\r\n');
+      const href = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vcard);
+      document.getElementById('downloadVcard').setAttribute('href', href);
+    })();
+
+    // Copy email
+    document.getElementById('copyEmailBtn').addEventListener('click', async function(){
+      const email = document.getElementById('emailValue').textContent.trim();
+      try{
+        await navigator.clipboard.writeText(email);
+        this.textContent = 'Copied!';
+        setTimeout(()=> this.textContent = 'Copy email', 2000);
+      }catch(e){
+        alert('Copy failed. Please select and copy manually.');
+      }
+    });
+
+    // Contact form: construct mailto link and open default client
+    function handleContact(ev){
+      ev.preventDefault();
+      const name = encodeURIComponent(document.getElementById('name').value.trim());
+      const aff = encodeURIComponent(document.getElementById('affil').value.trim());
+      const from = encodeURIComponent(document.getElementById('email').value.trim());
+      const subject = encodeURIComponent(document.getElementById('subject').value.trim());
+      const message = encodeURIComponent(document.getElementById('message').value.trim());
+
+      let body = 'From: ' + decodeURIComponent(from) + '%0D%0A';
+      if(aff) body += 'Affiliation: ' + decodeURIComponent(aff) + '%0D%0A';
+      body += '%0D%0A' + decodeURIComponent(message) + '%0D%0A%0D%0A' + 'Sender name: ' + decodeURIComponent(name);
+
+      const mailto = `mailto:gustavopinho.maia@mnhn.fr?subject=${subject}&body=${body}`;
+      window.location.href = mailto;
+      return false;
+    }
+
+    function clearForm(){
+      document.getElementById('contactForm').reset();
+    }
+  </script>
 </body>
 </html>
