@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gustavo P. Maia — CV</title>
-<meta name="description" content="Curriculum Vitae of Gustavo Pinho Maia — PhD student in Astrobiology.">
 
 <style>
 :root{
@@ -30,156 +29,138 @@ body{
   margin:0;
   background:linear-gradient(180deg,#070c1d,#0b1020 70%);
   color:var(--text);
-  line-height:1.55;
 }
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-
 .site{
   max-width:var(--max-width);
   margin:32px auto;
   padding:20px;
 }
-
-/* ================= HEADER ================= */
-.site-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:24px;
-  margin-bottom:32px;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-.logo{
-  width:56px;height:56px;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-strong));
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;color:#03131e;
-}
-.brand-text .name{font-weight:700}
-.brand-text .position{font-size:13px;color:var(--muted)}
-
-.nav{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.nav a{
-  padding:8px 12px;
-  font-size:14px;
-  color:var(--muted);
-  border-radius:8px;
-}
-.nav a:hover{background:var(--card);color:var(--text)}
-.nav a[aria-current]{background:var(--card);color:var(--accent)}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
 
 /* ================= HERO ================= */
 .hero{
   background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
   padding:24px;
   border-radius:var(--radius-lg);
+  margin-bottom:48px;
 }
-.hero-grid{
-  display:grid;
-  grid-template-columns:1fr 320px;
+.hero-card{
+  display:flex;
   gap:24px;
-}
-
-.profile{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius-lg);
   padding:22px;
-  display:flex;
-  gap:22px;
 }
-.avatar{
-  width:120px;height:120px;
-  border-radius:14px;
+.avatar-img{
+  width:130px;height:130px;
+  border-radius:16px;
+  object-fit:cover;
+  box-shadow:var(--shadow);
+}
+.avatar-fallback{
+  width:130px;height:130px;
+  border-radius:16px;
   background:linear-gradient(135deg,#0ea5a5,#60a5fa);
   display:flex;align-items:center;justify-content:center;
   font-weight:800;font-size:32px;color:#03131e;
 }
-.profile h1{margin:0 0 6px;font-size:26px}
-.profile-role{color:var(--muted);margin-bottom:12px}
+.role{color:var(--muted);margin-bottom:12px}
 
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
-.tag{
-  padding:6px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  font-size:13px;color:var(--muted);
+/* ================= TIMELINE ================= */
+.section{margin-bottom:56px}
+.section h2{margin-bottom:20px}
+
+.timeline{
+  position:relative;
+  padding-left:36px;
 }
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:12px;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:rgba(255,255,255,.15);
+}
+.timeline-item{
+  position:relative;
+  margin-bottom:32px;
 
-/* ===== ICON LINKS ===== */
-.icon-links{
+  /* Animation initial state */
+  opacity:0;
+  transform:translateY(24px);
+  transition:
+    opacity .6s ease,
+    transform .6s ease;
+}
+.timeline-item.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+.timeline-item::before{
+  content:"";
+  position:absolute;
+  left:-26px;
+  top:8px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--accent);
+}
+.timeline-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px;
+}
+.timeline-header{
   display:flex;
-  gap:12px;
-  margin-top:14px;
+  align-items:center;
+  gap:14px;
 }
-.icon-links a{
-  width:36px;height:36px;
-  border-radius:10px;
-  background:var(--card);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-}
-.icon-links svg{width:18px;height:18px;fill:var(--accent)}
-
-/* ================= SIDEBAR ================= */
-.sidebar{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
-  padding:18px;
-}
-.sidebar h4{margin-top:0}
-
-/* ================= SECTIONS ================= */
-.section{
-  margin-top:36px;
-}
-.section h2{
-  margin-bottom:18px;
-  font-size:22px;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
-  padding:18px;
-  margin-bottom:16px;
-}
-
-.entry{
-  display:grid;
-  grid-template-columns:120px 1fr;
-  gap:16px;
-}
-.logo-box img{
-  width:100%;
-  max-height:60px;
+.timeline-header img{
+  width:48px;
+  height:48px;
   object-fit:contain;
-  filter:grayscale(1) brightness(1.1);
+  opacity:.95;
+  transition:transform .2s ease;
 }
-.entry h3{margin:0 0 4px}
-.entry .meta{font-size:13px;color:var(--muted)}
-.entry p{margin:6px 0 0}
+.timeline-card:hover img{
+  transform:scale(1.05);
+}
+.meta{font-size:13px;color:var(--muted)}
+.timeline-card p{margin:8px 0 0}
 
-/* ================= RESPONSIVE ================= */
-@media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr}
+/* ================= PUBLICATIONS ================= */
+.pub{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;
+  margin-bottom:14px;
 }
-@media(max-width:520px){
-  .profile{flex-direction:column;text-align:center}
-  .entry{grid-template-columns:1fr}
+.pub-title{font-weight:600}
+.pub-meta{font-size:13px;color:var(--muted)}
+.pub a{font-size:13px}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce){
+  .timeline-item{
+    opacity:1;
+    transform:none;
+    transition:none;
+  }
+}
+
+@media(max-width:700px){
+  .hero-card{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
 }
 </style>
 </head>
@@ -187,137 +168,114 @@ a:hover{text-decoration:underline}
 <body>
 <div class="site">
 
-<!-- HEADER -->
-<header class="site-header">
-  <div class="brand">
-    <div class="logo">GM</div>
-    <div class="brand-text">
-      <div class="name">Gustavo P. Maia</div>
-      <div class="position">PhD Student — Astrobiology</div>
-    </div>
-  </div>
-
-  <nav class="nav">
-    <a aria-current="page">Home</a>
-    <a href="education_en.html">Education</a>
-    <a href="research_en.html">Research</a>
-    <a href="publications_en.html">Publications</a>
-    <a href="contact_en.html">Contact</a>
-  </nav>
-</header>
-
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-grid">
+  <div class="hero-card">
+    <img src="images/avatar.jpg" alt="Gustavo Maia"
+      class="avatar-img"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback" style="display:none">GM</div>
 
-    <article class="profile">
-      <div class="avatar">GM</div>
-      <div>
-        <h1>Gustavo Pinho Maia</h1>
-        <div class="profile-role">
-          PhD student in Chemistry (Astrobiology) — University of Lisbon
-        </div>
-
-        <p>
-          Research on mechanochemical and shock-driven synthesis of
-          organic molecules relevant to the origin of life, combining
-          meteoritics, prebiotic chemistry and experimental astrobiology.
-        </p>
-
-        <div class="tags">
-          <span class="tag">Astrobiology</span>
-          <span class="tag">Mechanochemistry</span>
-          <span class="tag">Meteoritics</span>
-          <span class="tag">Prebiotic Chemistry</span>
-        </div>
-
-        <!-- ICON LINKS -->
-        <div class="icon-links">
-          <!-- ORCID -->
-          <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" aria-label="ORCID">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-          </a>
-          <!-- LinkedIn -->
-          <a href="https://www.linkedin.com/" target="_blank" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20"/></svg>
-          </a>
-          <!-- ResearchGate -->
-          <a href="https://www.researchgate.net/" target="_blank" aria-label="ResearchGate">
-            <svg viewBox="0 0 24 24"><path d="M12 2L22 22H2z"/></svg>
-          </a>
-          <!-- Email -->
-          <a href="mailto:your.email@domain.com" aria-label="Email">
-            <svg viewBox="0 0 24 24"><path d="M2 4h20v16H2z"/></svg>
-          </a>
-        </div>
+    <div>
+      <h1>Gustavo Pinho Maia</h1>
+      <div class="role">
+        PhD student in Chemistry (Astrobiology) — University of Lisbon
       </div>
-    </article>
-
-    <aside class="sidebar">
-      <h4>Affiliations</h4>
-      <p class="meta">University of Lisbon — IST</p>
-      <p class="meta">MNHN (France)</p>
-      <p class="meta">NASA Goddard (USA)</p>
-    </aside>
-
+      <p>
+        Research on mechanochemical and shock-driven synthesis of organic
+        molecules relevant to the origin of life.
+      </p>
+    </div>
   </div>
 </section>
 
 <!-- EDUCATION -->
 <section class="section">
 <h2>Education</h2>
+<div class="timeline">
 
-<div class="card entry">
-  <div class="logo-box"><img src="images/logos/ist.png" alt="IST"></div>
-  <div>
-    <h3>PhD in Chemistry — Astrobiology</h3>
-    <div class="meta">2023/12/01 – 2027/12/01 · Ongoing</div>
-    <p>Universidade de Lisboa — Instituto Superior Técnico<br>
-    <em>Mechanochemical energy and prebiotic synthesis</em></p>
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>PhD in Chemistry — Astrobiology</strong>
+        <div class="meta">2023–2027 · Ongoing · Universidade de Lisboa</div>
+      </div>
+    </div>
+    <p><em>Mechanochemical energy and prebiotic synthesis</em></p>
   </div>
 </div>
 
-<div class="card entry">
-  <div class="logo-box"><img src="images/logos/ist.png" alt="IST"></div>
-  <div>
-    <h3>MSc in Chemistry</h3>
-    <div class="meta">2020/09 – 2022/12 · Concluded</div>
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>MSc in Chemistry</strong>
+        <div class="meta">2020–2022 · Concluded</div>
+      </div>
+    </div>
     <p><em>Ribonucleoside stability and prebiotic synthesis</em></p>
   </div>
 </div>
 
-<div class="card entry">
-  <div class="logo-box"><img src="images/logos/ubi.png" alt="UBI"></div>
-  <div>
-    <h3>BSc in Industrial Chemistry</h3>
-    <div class="meta">2017/09 – 2020/09</div>
-  </div>
 </div>
-
 </section>
 
-<!-- EXPERIENCE -->
+<!-- PUBLICATIONS -->
 <section class="section">
-<h2>Affiliations & Experience</h2>
-
-<div class="card entry">
-  <div class="logo-box"><img src="images/logos/nasa.png" alt="NASA"></div>
-  <div>
-    <h3>Visiting Scientist</h3>
-    <div class="meta">NASA Goddard Space Flight Center · 2024</div>
-  </div>
-</div>
-
-<div class="card entry">
-  <div class="logo-box"><img src="images/logos/mnhn.png" alt="MNHN"></div>
-  <div>
-    <h3>Visiting Scientist</h3>
-    <div class="meta">Muséum National d’Histoire Naturelle · 2025–Current</div>
-  </div>
-</div>
-
+<h2>Publications</h2>
+<div id="pub-list"></div>
 </section>
 
 </div>
+
+<!-- ================= TIMELINE ANIMATION ================= -->
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.2});
+
+document.querySelectorAll(".timeline-item").forEach(item=>{
+  observer.observe(item);
+});
+</script>
+
+<!-- ================= BIBTEX + DOI PARSER ================= -->
+<script>
+fetch("publications.bib")
+  .then(r=>r.text())
+  .then(text=>{
+    const entries=text.split("@").slice(1);
+    const container=document.getElementById("pub-list");
+
+    entries.forEach(e=>{
+      const title=(e.match(/title\s*=\s*[{"]([^}"]+)/i)||[])[1];
+      const author=(e.match(/author\s*=\s*[{"]([^}"]+)/i)||[])[1];
+      const year=(e.match(/year\s*=\s*[{"]([^}"]+)/i)||[])[1];
+      const doi=(e.match(/doi\s*=\s*[{"]([^}"]+)/i)||[])[1];
+
+      if(!title) return;
+
+      const div=document.createElement("div");
+      div.className="pub";
+      div.innerHTML=`
+        <div class="pub-title">${title}</div>
+        <div class="pub-meta">
+          ${author || ""}${year ? " · "+year : ""}
+        </div>
+        ${doi ? `<a href="https://doi.org/${doi}" target="_blank">DOI: ${doi}</a>` : ""}
+      `;
+      container.appendChild(div);
+    });
+  });
+</script>
+
 </body>
 </html>
