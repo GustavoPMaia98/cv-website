@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gustavo P. Maia — CV</title>
+
+<style>
+:root{
+  --bg:#0b1020;
+  --card:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.08);
+  --text:#e7edf6;
+  --muted:#9aa4b2;
+  --accent:#7dd3fc;
+  --accent-strong:#60a5fa;
+
+  --radius-lg:18px;
+  --radius-md:12px;
+  --shadow:0 10px 30px rgba(0,0,0,.6);
+  --max-width:1120px;
+
+  color-scheme:dark;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#070c1d,#0b1020 70%);
+  color:var(--text);
+}
+.site{
+  max-width:var(--max-width);
+  margin:32px auto;
+  padding:20px;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ================= HERO ================= */
+.hero{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  padding:24px;
+  border-radius:var(--radius-lg);
+  margin-bottom:48px;
+}
+.hero-card{
+  display:flex;
+  gap:24px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px;
+}
+.avatar-img{
+  width:130px;height:130px;
+  border-radius:16px;
+  object-fit:cover;
+  box-shadow:var(--shadow);
+}
+.avatar-fallback{
+  width:130px;height:130px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#0ea5a5,#60a5fa);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:32px;color:#03131e;
+}
+.role{color:var(--muted);margin-bottom:12px}
+
+/* ================= TIMELINE ================= */
+.section{margin-bottom:56px}
+.section h2{margin-bottom:20px}
+
+.timeline{
+  position:relative;
+  padding-left:36px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:12px;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:rgba(255,255,255,.15);
+}
+.timeline-item{
+  position:relative;
+  margin-bottom:32px;
+
+  /* Animation initial state */
+  opacity:0;
+  transform:translateY(24px);
+  transition:
+    opacity .6s ease,
+    transform .6s ease;
+}
+.timeline-item.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+.timeline-item::before{
+  content:"";
+  position:absolute;
+  left:-26px;
+  top:8px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--accent);
+}
+.timeline-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px;
+}
+.timeline-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.timeline-header img{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+  opacity:.95;
+  transition:transform .2s ease;
+}
+.timeline-card:hover img{
+  transform:scale(1.05);
+}
+.meta{font-size:13px;color:var(--muted)}
+.timeline-card p{margin:8px 0 0}
+
+/* ================= PUBLICATIONS ================= */
+.pub{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;
+  margin-bottom:14px;
+}
+.pub-title{font-weight:600}
+.pub-meta{font-size:13px;color:var(--muted)}
+.pub a{font-size:13px}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce){
+  .timeline-item{
+    opacity:1;
+    transform:none;
+    transition:none;
+  }
+}
+
+@media(max-width:700px){
+  .hero-card{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="site">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-card">
+    <img src="images/avatar.jpg" alt="Gustavo Maia"
+      class="avatar-img"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback" style="display:none">GM</div>
+
+    <div>
+      <h1>Gustavo Pinho Maia</h1>
+      <div class="role">
+        PhD student in Chemistry (Astrobiology) — University of Lisbon
+      </div>
+      <p>
+        Research on mechanochemical and shock-driven synthesis of organic
+        molecules relevant to the origin of life.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="section">
+<h2>Education</h2>
+<div class="timeline">
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>PhD in Chemistry — Astrobiology</strong>
+        <div class="meta">2023–2027 · Ongoing · Universidade de Lisboa</div>
+      </div>
+    </div>
+    <p><em>Mechanochemical energy and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>MSc in Chemistry</strong>
+        <div class="meta">2020–2022 · Concluded</div>
+      </div>
+    </div>
+    <p><em>Ribonucleoside stability and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+</div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section class="section">
+<h2>Publications</h2>
+<div id="pub-list"></div>
+</section>
+
+</div>
+
+<!-- ================= TIMELINE ANIMATION ================= -->
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.2});
+
+document.querySelectorAll(".timeline-item").forEach(item=>{
+  observer.observe(item);
+});
+</script>
+
+<!-- ================= BIBTEX + DOI PARSER ================= -->
+<script>
+fetch("publications.bib")
+  .then(r=>r.text())
+  .then(text=>{
+    const entries=text.split("@").slice(1);
+    const container=document.getElementById("pub-list");
+
+    entries.forEach(e=>{
+      const title=(e.match(/title\s*=\s*[{"]([^}"]+)/i)||[])[1];
+      const author=(e.match(/author\s*=\s*[{"]([^}"]+)/i)||[])[1];
+      const year=(e.match(/year\s*=\s*[{"]([^}"]+)/i)||[])[1];
+      const doi=(e.match(/doi\s*=\s*[{"]([^}"]+)/i)||[])[1];
+
+      if(!title) return;
+
+      const div=document.createElement("div");
+      div.className="pub";
+      div.innerHTML=`
+        <div class="pub-title">${title}</div>
+        <div class="pub-meta">
+          ${author || ""}${year ? " · "+year : ""}
+        </div>
+        ${doi ? `<a href="https://doi.org/${doi}" target="_blank">DOI: ${doi}</a>` : ""}
+      `;
+      container.appendChild(div);
+    });
+  });
+</script>
+
+</body>
+</html>
