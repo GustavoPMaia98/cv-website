@@ -1,109 +1,198 @@
-<!-- FILE: index_en.html -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gustavo P. Maia — CV (EN)</title>
-<meta name="description" content="Curriculum Vitae of Gustavo Pinho Maia — chemist and PhD student in astrobiology.">
-<!-- Use the updated stylesheet below (style.css) -->
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gustavo P. Maia — CV (EN)</title>
+  <meta name="description" content="Curriculum Vitae of Gustavo Pinho Maia — chemist and PhD student in astrobiology.">
+  <!-- Improved styling included inline for convenience. You can extract the <style> block into style.css if you prefer. -->
+  <style>
+    :root{
+      --bg:#0f1724; /* deep navy */
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#7dd3fc;
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      --fw-regular: 400;
+      --fw-medium: 600;
+      --max-width:1100px;
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#071026 0%, #081226 60%);color:#e6eef6;-webkit-font-smoothing:antialiased}
+    .site{max-width:var(--max-width);margin:28px auto;padding:20px}
+
+    .site-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+    .brand-link{display:flex;align-items:center;text-decoration:none;color:inherit}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#022;box-shadow:0 6px 18px rgba(7,12,22,0.6);font-size:20px}
+    .brand-text{margin-left:12px}
+    .name{font-weight:700;font-size:18px}
+    .position{font-size:13px;color:var(--muted);margin-top:3px}
+
+    .main-nav{display:flex;gap:12px}
+    .nav-item{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px}
+    .nav-item[aria-current="page"]{background:var(--glass);color:var(--accent)}
+
+    .hero{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:22px;border-radius:18px}
+    .hero-inner{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+
+    .profile-card{display:flex;gap:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:var(--radius);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    .media{min-width:120px;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .avatar-img{width:120px;height:120px;border-radius:14px;object-fit:cover;display:block;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    .avatar-fallback{width:120px;height:120px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0ea5a5,#60a5fa);font-weight:700;color:#022;font-size:30px}
+
+    .profile-body{flex:1}
+    .profile-name{margin:0 0 6px 0;font-size:24px}
+    .profile-role{margin:0 0 12px 0;color:var(--muted)}
+    .intro{margin:0 0 12px 0;color:#dbe9f7;line-height:1.5}
+    .kv{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .tag{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted)}
+
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#042;box-shadow:0 8px 24px rgba(96,165,250,0.12)}
+    .btn.outline{border:1px solid rgba(255,255,255,0.06);color:var(--accent);background:transparent}
+    .btn.ghost{color:var(--muted);background:transparent}
+
+    .profile-meta{padding:12px;background:rgba(255,255,255,0.02);border-radius:12px;min-width:260px}
+    .meta-block h4{margin:0 0 8px 0}
+    .meta-block p{margin:0;color:var(--muted);line-height:1.4}
+    .links{padding-left:18px;margin:6px 0}
+    .links a{color:var(--accent);text-decoration:none}
+
+    /* CV thumbnail */
+    .cv-preview{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .cv-thumb{display:block;width:116px;height:160px;border-radius:10px;overflow:hidden;flex-shrink:0;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 20px rgba(2,6,23,0.6)}
+    .cv-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .cv-meta{color:var(--muted);font-size:13px}
+
+    /* Sections grid */
+    .sections.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+    .card{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px}
+    .muted{color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .hero-inner{grid-template-columns:1fr}
+      .hero-inner .profile-card{flex-direction:row;align-items:flex-start}
+      .profile-card{padding:16px}
+      .profile-meta{min-width:unset}
+    }
+    @media (max-width:520px){
+      .site{padding:12px;margin:12px}
+      .media{min-width:88px}
+      .avatar-img,.avatar-fallback{width:88px;height:88px}
+      .cv-thumb{width:92px;height:128px}
+      .profile-name{font-size:20px}
+    }
+
+    /* Print friendly tweaks */
+    @media print{
+      body{background:white;color:black}
+      .site-header,.main-nav,.hero-actions{display:none}
+      .cv-thumb img{display:none}
+    }
+  </style>
 </head>
 <body class="page-cv">
-<div class="site">
-<header class="site-header" role="banner">
-<div class="brand">
-<a class="brand-link" href="index_en.html" aria-label="Gustavo P. Maia homepage">
-<div class="logo" aria-hidden="true">GM</div>
-<div class="brand-text">
-<div class="name">Gustavo P. Maia</div>
-<div class="position">PhD student in Chemistry — Astrobiology</div>
-</div>
-</a>
-</div>
+  <div class="site">
+    <header class="site-header" role="banner">
+      <div class="brand">
+        <a class="brand-link" href="index_en.html" aria-label="Gustavo P. Maia homepage">
+          <div class="logo" aria-hidden="true">GM</div>
+          <div class="brand-text">
+            <div class="name">Gustavo P. Maia</div>
+            <div class="position">PhD student in Chemistry — Astrobiology</div>
+          </div>
+        </a>
+      </div>
 
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index_en.html" class="nav-item" aria-current="page">Home</a>
+        <a href="about_en.html" class="nav-item">About</a>
+        <a href="education_en.html" class="nav-item">Education</a>
+        <a href="research_en.html" class="nav-item">Research</a>
+        <a href="publications_en.html" class="nav-item">Publications</a>
+        <a href="contact_en.html" class="nav-item">Contact</a>
+      </nav>
+    </header>
 
-<nav class="main-nav" aria-label="Main navigation">
-<a href="index_en.html" class="nav-item" aria-current="page">Home</a>
-<a href="about_en.html" class="nav-item">About</a>
-<a href="education_en.html" class="nav-item">Education</a>
-<a href="research_en.html" class="nav-item">Research</a>
-<a href="publications_en.html" class="nav-item">Publications</a>
-<a href="contact_en.html" class="nav-item">Contact</a>
-</nav>
-</header>
+    <main>
+      <section class="hero" aria-label="Hero — Gustavo P. Maia">
+        <div class="hero-inner">
+          <article class="profile-card">
+            <div class="media">
+              <!-- Avatar: put your image at images/avatar.jpg. Fallback shows initials automatically if image fails. -->
+              <img src="images/avatar.jpg" alt="Gustavo P. Maia" class="avatar-img" loading="lazy" onerror="this.style.display='none';document.querySelector('.avatar-fallback').style.display='flex'">
+              <div class="avatar-fallback" style="display:none" aria-hidden="true">GM</div>
 
+              <!-- CV preview thumbnail: create images/cv-thumb.jpg as a small visual preview of the CV PDF -->
+              <a class="cv-thumb" href="assets/Gustavo_Maia_CV_EN.pdf" target="_blank" rel="noopener" aria-label="Open CV PDF preview">
+                <img src="images/cv-thumb.jpg" alt="CV preview — Gustavo P. Maia" loading="lazy" onerror="this.style.display='none'">
+              </a>
 
-<main>
-<section class="hero" aria-label="Hero — Gustavo P. Maia">
-<div class="hero-bg" role="img" aria-hidden="true"></div>
+            </div>
 
+            <div class="profile-body">
+              <h1 class="profile-name">Gustavo Pinho Maia</h1>
+              <p class="profile-role">PhD student in Chemistry (Astrobiology) — Centro de Química Estrutural, University of Lisbon</p>
 
-<div class="hero-inner">
-<article class="profile-card">
-<div class="media">
-<!-- Replace with real avatar at images/avatar.jpg (optional). Keeps initials as fallback. -->
-<img src="images/avatar.jpg" alt="Gustavo P. Maia" class="avatar-img" onerror="this.style.display='none'">
-<div class="avatar-fallback" aria-hidden="true">GM</div>
-</div>
+              <p class="intro">I study how mechanical and shock energies drive the synthesis and transformation of organic molecules relevant to the origins of life. My work combines mechanochemistry, meteoritics and prebiotic chemistry in collaborations with MNHN and NASA Goddard.</p>
 
+              <div class="kv">
+                <span class="tag">Astrobiology</span>
+                <span class="tag">Mechanochemistry</span>
+                <span class="tag">Meteoritics</span>
+                <span class="tag">Prebiotic Chemistry</span>
+              </div>
 
-<div class="profile-body">
-<h1 class="profile-name">Gustavo Pinho Maia</h1>
-<p class="profile-role">PhD student in Chemistry (Astrobiology) — Centro de Química Estrutural, University of Lisbon</p>
+              <div class="hero-actions">
+                <a class="btn primary" href="assets/Gustavo_Maia_CV_EN.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
+                <a class="btn outline" href="publications_en.html">Publications</a>
+                <a class="btn ghost" href="contact_en.html">Contact</a>
+              </div>
 
+            </div>
 
-<p class="intro">I study how mechanical and shock energies drive the synthesis and transformation of organic molecules relevant to the origins of life. My work combines mechanochemistry, meteoritics and prebiotic chemistry in collaborations with MNHN and NASA Goddard.</p>
+            <aside class="profile-meta" aria-label="Selected highlights and links">
+              <div class="meta-block">
+                <h4>Selected highlights</h4>
+                <p class="muted">Mechanochemical reactivity of ribonucleosides; shock-induced degradation of nucleosides; FCT-funded PhD project on mechanochemical prebiotic synthesis.</p>
+              </div>
 
+              <div class="meta-block">
+                <h4>Quick links</h4>
+                <ul class="links">
+                  <li><a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener">ORCID</a></li>
+                  <li><a href="https://cienciavitae.pt/portal/en/8212-CEE3-E928" target="_blank" rel="noopener">CiênciaVitae</a></li>
+                </ul>
+              </div>
+            </aside>
 
-<div class="kv">
-<span class="tag">Astrobiology</span>
-<span class="tag">Mechanochemistry</span>
-<span class="tag">Meteoritics</span>
-<span class="tag">Prebiotic Chemistry</span>
-</div>
+          </article>
+        </div>
+      </section>
 
+      <section class="sections grid" aria-label="Overview sections">
+        <article class="card">
+          <h3>Recent publications</h3>
+          <p class="muted">Concise list of peer-reviewed outputs, preprints and selected conference contributions. See the Publications page for a complete and citable list.</p>
+        </article>
 
-<div class="hero-actions">
-<a class="btn primary" href="assets/Gustavo_Maia_CV_EN.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
-<a class="btn outline" href="publications_en.html">Publications</a>
-<a class="btn ghost" href="contact_en.html">Contact</a>
-</div>
-</div>
+        <article class="card">
+          <h3>Research summary</h3>
+          <p class="muted">I work at the interface of experimental mechanochemistry and meteoritic organic analysis to explore energy-driven pathways for molecular complexity under astrophysical conditions.</p>
+        </article>
 
-
-<aside class="profile-meta" aria-label="Selected highlights and links">
-<div class="meta-block">
-<h4>Selected highlights</h4>
-<p class="muted">Mechanochemical reactivity of ribonucleosides; shock-induced degradation of nucleosides; FCT-funded PhD project on mechanochemical prebiotic synthesis.</p>
-</div>
-
-
-<div class="meta-block">
-<h4>Quick links</h4>
-<ul class="links">
-<li><a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener">ORCID</a></li>
-<li><a href="https://cienciavitae.pt/portal/en/8212-CEE3-E928" target="_blank" rel="noopener">CiênciaVitae</a></li>
-</ul>
-</div>
-</aside>
-</article>
-</div>
-</section>
-
-
-<section class="sections grid" aria-label="Overview sections">
-<article class="card">
-<h3>Recent publications</h3>
-<p class="muted">Concise list of peer-reviewed outputs, preprints and selected conference contributions. See the Publications page for a complete and citable list.</p>
-</article>
-
-
-<article class="card">
-<h3>Research summary</h3>
-<p class="muted">I work at the interface of experimental mechanochemistry and meteoritic organic analysis to explore energy-driven pathways for molecular complexity under astrophysical conditions.</p>
-</article>
-
-
-<article class="card">
+        <article class="card">
+          <h3>Conferences & talks</h3>
+          <p class="muted">Selected invited talks and poster presentations.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
 </html>
