@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -109,6 +109,7 @@ h2{margin:0 0 20px 0}
   opacity:0;
   transform:translateY(24px);
   transition:opacity .6s ease, transform .6s ease;
+  cursor:pointer;
 }
 .timeline-item.visible{
   opacity:1;
@@ -143,6 +144,44 @@ h2{margin:0 0 20px 0}
 .meta{font-size:13px;color:var(--muted)}
 .timeline-card p{margin:8px 0 0}
 
+/* ================= TIMELINE EXPANDABLE ================= */
+.timeline-expand {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+  padding: 0 0;
+  margin-top: 8px;
+}
+.timeline-expand.open {
+  padding: 12px 16px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  max-height: 2000px;
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+}
+
+.expand-body p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.expand-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px,1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.expand-gallery img {
+  width: 100%;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
 /* ================= PUBLICATIONS ================= */
 .pub{
   background:var(--card);
@@ -153,6 +192,8 @@ h2{margin:0 0 20px 0}
 }
 .pub-title{font-weight:600}
 .pub-meta{font-size:13px;color:var(--muted)}
+
+
 
 /* ================= CONTACT ================= */
 .contact-grid{
@@ -213,90 +254,6 @@ form textarea{min-height:120px}
 @media(max-width:700px){
   .hero-card{flex-direction:column;align-items:center;text-align:center}
 }
-
-/* ================= EXPERIENCE MODAL ================= */
-.modal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease;
-}
-.modal.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-.modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(2,6,12,0.6);
-  backdrop-filter: blur(4px);
-  transition: opacity .25s ease;
-}
-.modal-content {
-  position: relative;
-  z-index: 2;
-  width: min(920px, calc(100% - 48px));
-  max-height: calc(100vh - 80px);
-  overflow: auto;
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 60px rgba(0,0,0,.6);
-  transform: translateY(18px) scale(.995);
-  transition: transform .28s cubic-bezier(.2,.9,.2,1), opacity .2s ease;
-  color: var(--text);
-}
-.modal.open .modal-content {
-  transform: translateY(0) scale(1);
-}
-.modal-header {
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  margin-bottom:8px;
-}
-.modal-header h3{margin:0;font-size:18px}
-.modal-meta{font-size:13px;color:var(--muted);margin-top:4px}
-.modal-body{margin-top:12px;font-size:15px;line-height:1.45;color:var(--text)}
-.modal-gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:10px;
-  margin-top:12px;
-}
-.modal-gallery img{
-  width:100%;
-  height:100px;
-  object-fit:cover;
-  border-radius:10px;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-}
-.close-btn{
-  position:absolute;
-  top:12px;
-  right:12px;
-  background:transparent;
-  border:none;
-  color:var(--muted);
-  font-size:20px;
-  cursor:pointer;
-  padding:6px;
-  border-radius:8px;
-}
-.close-btn:hover{color:var(--accent)}
-@media(max-width:700px){
-  .modal-content{padding:16px;border-radius:12px}
-  .modal-gallery img{height:90px}
-}
-
-
 </style>
 </head>
 
@@ -306,11 +263,9 @@ form textarea{min-height:120px}
 <!-- HERO -->
 <section class="hero">
   <div class="hero-card">
-    <img src="images/avatar.jpg" alt="Gustavo Maia"
-      class="avatar-img"
+    <img src="images/avatar.jpg" alt="Gustavo Maia" class="avatar-img"
       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
     <div class="avatar-fallback" style="display:none">GM</div>
-
     <div>
       <h1>Gustavo Pinho Maia</h1>
       <div class="role">PhD student in Chemistry (Astrobiology)</div>
@@ -318,45 +273,17 @@ form textarea{min-height:120px}
         Research on mechanochemical and shock-driven synthesis of organic molecules
         relevant to prebiotic chemistry and the origin of life.
       </p>
-
-      
-	<div class="social-links">
-	  <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener noreferrer">
-		<img
-		  src="images/logos/orcid.png"
-		  alt=""
-		  width="20" height="20"
-		  class="icon"
-		  loading="lazy"
-		  referrerpolicy="no-referrer"
-		/>
-		<span class="label">ORCID</span>
-	  </a>
-
-	  <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener noreferrer">
-		<img
-		  src="images/logos/linkedin.png"
-		  alt=""
-		  width="20" height="20"
-		  class="icon"
-		  loading="lazy"
-		  referrerpolicy="no-referrer"
-		/>
-		<span class="label">LinkedIn</span>
-	  </a>
-
-	  <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank" rel="noopener noreferrer">
-		<img
-		  src="images/logos/researchgate.png"
-		  alt=""
-		  width="20" height="20"
-		  class="icon"
-		  loading="lazy"
-		  referrerpolicy="no-referrer"
-		/>
-		<span class="label">ResearchGate</span>
-	  </a>
-	</div>
+      <div class="social-links">
+        <a href="https://orcid.org/0000-0001-5314-8816" target="_blank">
+          <img src="images/logos/orcid.png" width="20" height="20"> ORCID
+        </a>
+        <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank">
+          <img src="images/logos/linkedin.png" width="20" height="20"> LinkedIn
+        </a>
+        <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank">
+          <img src="images/logos/researchgate.png" width="20" height="20"> ResearchGate
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -378,6 +305,7 @@ form textarea{min-height:120px}
 <h2>Education</h2>
 <div class="timeline">
 
+<!-- PhD -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -391,6 +319,7 @@ form textarea{min-height:120px}
   </div>
 </div>
 
+<!-- MSc -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -404,6 +333,7 @@ form textarea{min-height:120px}
   </div>
 </div>
 
+<!-- BSc -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -425,6 +355,7 @@ form textarea{min-height:120px}
 <h2>Experience</h2>
 <div class="timeline">
 
+<!-- 1 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -435,8 +366,18 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Collaborative research at MNHN focusing on mechanochemical synthesis, sample analysis, and astrobiology methods.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/mnhn1.jpg">
+        <img src="images/experiences/mnhn2.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 2 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -447,8 +388,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Short-term visit to NASA Goddard collaborating on organic analysis workflows.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/nasa1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 3 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -459,8 +409,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Assisted in teaching undergraduate chemistry courses and supervised lab experiments.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ist1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 4 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -471,8 +430,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Oversaw fiscal compliance, audited financial statements, and coordinated council meetings.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/aneq1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 5 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -483,8 +451,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Assisted the president and managed organizational activities for student chemistry association.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/aneq2.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 6 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -495,8 +472,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Managed student projects, coordinated events, and facilitated communication between members.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubiquimica1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 7 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -507,8 +493,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Conducted laboratory research on chemical synthesis under supervision of faculty researchers.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubi1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 8 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -519,8 +514,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Represented the student body, conveyed concerns, and organized class activities and discussions.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubi2.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 9 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -531,8 +535,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Performed operational tasks in the production line, quality control, and packaging processes.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/nestle1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 10 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -543,8 +556,17 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Reviewed student projects and contributed to planning of academic events and workshops.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubiquimica2.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 11 -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -555,16 +577,90 @@ form textarea{min-height:120px}
       </div>
     </div>
   </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Gained practical experience in industrial processes, safety procedures, and workflow optimization.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ramada1.jpg">
+      </div>
+    </div>
+  </div>
 </div>
 
 </div>
 </section>
+
 
 <!-- PUBLICATIONS -->
 <section class="section">
-<h2>Publications</h2>
-<div id="pub-list"></div>
+  <h2>Publications</h2>
+  <div class="timeline">
+
+    <!-- Example Publication 1 -->
+    <div class="timeline-item">
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <img src="images/logos/applied_sciences.png" alt="Applied Sciences">
+          <div>
+            <strong>Mechanochemical Reactivity of Ribonucleosides Mediated by Inorganic Species</strong>
+            <div class="meta">2025 · Applied Sciences</div>
+          </div>
+        </div>
+        <p><em>Study on mechanochemical reactivity of ribonucleosides, relevant to prebiotic chemistry and astrobiology.</em></p>
+        <p><a href="https://doi.org/10.3390/app12345678" target="_blank">DOI link</a></p>
+      </div>
+    </div>
+
+    <!-- Example Publication 2 -->
+    <div class="timeline-item">
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <img src="images/logos/molecules.png" alt="Molecules">
+          <div>
+            <strong>Shock-Induced Degradation of Guanosine and Uridine Promoted by Nickel and Carbonate</strong>
+            <div class="meta">2023 · Molecules</div>
+          </div>
+        </div>
+        <p><em>Investigation of shock-driven degradation of nucleosides with implications for meteoritic organic matter transformations.</em></p>
+        <p><a href="https://doi.org/10.3390/molecules12345678" target="_blank">DOI link</a></p>
+      </div>
+    </div>
+
+    <!-- Add more publications as needed -->
+    <div class="timeline-item">
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <img src="images/logos/cv.png" alt="CiênciaVitae">
+          <div>
+            <strong>Full bibliographic record</strong>
+            <div class="meta">See full CV on CiênciaVitae</div>
+          </div>
+        </div>
+        <p><em>Includes conference posters, thesis references, and all other publications.</em></p>
+        <p><a href="https://www.cienciavitae.pt" target="_blank">CiênciaVitae profile</a></p>
+      </div>
+    </div>
+
+  </div>
 </section>
+
+  <h2>Publications</h2>
+  
+  <!-- Static selected publications -->
+  <div class="card">
+    <h3>Selected publications & outputs</h3>
+    <p style="color:var(--muted)">
+      Examples include: "Mechanochemical Reactivity of Ribonucleosides Mediated by Inorganic Species" (Applied Sciences, 2025) and "Shock-Induced Degradation of Guanosine and Uridine Promoted by Nickel and Carbonate" (Molecules, 2023). Conference posters and thesis references are available in the full CV.
+    </p>
+    <p style="margin-top:10px">
+      For full bibliographic details, see the original CiênciaVitae page or linked DOIs in the CV.
+    </p>
+  </div>
+
+  <!-- Dynamically loaded BibTeX publications -->
+  <div id="pub-list"></div>
+</section>
+
 
 <!-- CONTACT -->
 <section class="section">
@@ -598,9 +694,8 @@ form textarea{min-height:120px}
 
 </div>
 
-<!-- ================= SCRIPTS ================= -->
 <script>
-// Timeline animation
+// Timeline fade-in animation
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
@@ -611,7 +706,8 @@ const observer = new IntersectionObserver(entries=>{
 },{threshold:0.2});
 document.querySelectorAll(".timeline-item").forEach(i=>observer.observe(i));
 
-// BibTeX + DOI
+
+// BibTeX + DOI placeholder (optional)
 fetch("publications.bib")
 .then(r=>r.text())
 .then(text=>{
@@ -627,8 +723,7 @@ fetch("publications.bib")
       <div class="pub">
         <div class="pub-title">${t}</div>
         <div class="pub-meta">${a||""}${y?" · "+y:""}</div>
-        ${d?`<a href="https://doi.org/${d}" target="_blank">DOI: ${d}</a>`:""}
-      </div>`;
+        ${d?`<a href="https://doi.org/${d}" target="_blank">DOI: ${d}</a>`:""}</div>`;
   });
 });
 
@@ -660,6 +755,20 @@ function handleContact(e){
   location.href=`mailto:gustavopinho.maia@mnhn.fr?subject=${s}&body=${b}`;
   return false;
 }
+
+// Accordion expand for experiences
+document.querySelectorAll('.timeline-item').forEach(item=>{
+  item.addEventListener('click', e=>{
+    const expand = item.querySelector('.timeline-expand');
+    if(!expand) return;
+    const isOpen = expand.classList.contains('open');
+    // Close all others
+    document.querySelectorAll('.timeline-expand.open').forEach(el=>{
+      if(el!==expand) el.classList.remove('open');
+    });
+    if(!isOpen) expand.classList.add('open');
+  });
+});
 </script>
 
 </body>
