@@ -15,8 +15,6 @@
   --text:#e7edf6;
   --muted:#9aa4b2;
   --accent:#7dd3fc;
-  --accent-strong:#60a5fa;
-  --radius-lg:18px;
   --radius-md:12px;
   --shadow:0 10px 30px rgba(0,0,0,.6);
   --max-width:1120px;
@@ -36,7 +34,7 @@ body{
   padding:20px;
 }
 .section{margin-bottom:64px}
-h2{margin:0 0 20px}
+h2{margin:0 0 24px}
 
 /* ===== TIMELINE ===== */
 .timeline{position:relative}
@@ -73,7 +71,13 @@ h2{margin:0 0 20px}
   border-radius:var(--radius-md);
   padding:16px;
   width:100%;
+  transition:.3s ease;
 }
+.timeline-item:hover .timeline-card{
+  border-color:rgba(125,211,252,.4);
+}
+
+/* ===== HEADER ===== */
 .timeline-header{
   display:flex;
   align-items:center;
@@ -86,21 +90,22 @@ h2{margin:0 0 20px}
 }
 .meta{font-size:13px;color:var(--muted)}
 
-/* ===== EXPERIENCE DETAILS ===== */
+/* ===== DETAILS ===== */
 .experience-details{
   margin-top:14px;
   background:rgba(255,255,255,.03);
   border:1px solid var(--border);
-  border-radius:var(--radius-md);
+  border-radius:12px;
   padding:16px;
   display:grid;
   grid-template-columns:160px 1fr;
   gap:16px;
+
   opacity:0;
   max-height:0;
   overflow:hidden;
   transform:translateY(-10px);
-  transition:.4s ease;
+  transition:opacity .35s ease, max-height .45s ease, transform .35s ease;
 }
 .experience-details.open{
   opacity:1;
@@ -112,13 +117,15 @@ h2{margin:0 0 20px}
   height:120px;
   object-fit:cover;
   border-radius:10px;
+  background:#111;
 }
 .experience-details p{
   margin:0;
-  color:var(--muted);
   font-size:14px;
+  color:var(--muted);
 }
-@media(max-width:700px){
+
+@media(max-width:720px){
   .experience-details{grid-template-columns:1fr}
 }
 </style>
@@ -127,13 +134,13 @@ h2{margin:0 0 20px}
 <body>
 <div class="site">
 
-<!-- ================= EXPERIENCE ================= -->
 <section class="section">
 <h2>Experience</h2>
 
 <div class="timeline">
 
-<!-- MNHN -->
+<!-- ===== MOST RECENT ===== -->
+
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -144,17 +151,12 @@ h2{margin:0 0 20px}
       </div>
     </div>
     <div class="experience-details">
-      <img src="images/experience/mnhn.jpg" alt="">
-      <p>
-        Research collaboration at IMPMC focusing on mechanochemical and
-        shock-driven synthesis of prebiotic organic molecules under
-        planetary and extraterrestrial conditions.
-      </p>
+      <img src="images/experience/mnhn.jpg">
+      <p>Research collaboration on mechanochemical and shock-driven synthesis of prebiotic organic molecules under planetary and extraterrestrial conditions.</p>
     </div>
   </div>
 </div>
 
-<!-- NASA -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -165,17 +167,12 @@ h2{margin:0 0 20px}
       </div>
     </div>
     <div class="experience-details">
-      <img src="images/experience/nasa.jpg" alt="">
-      <p>
-        Experimental research in astrobiology and prebiotic chemistry,
-        collaborating with NASA teams on impact-driven synthesis and
-        molecular characterization.
-      </p>
+      <img src="images/experience/nasa.jpg">
+      <p>Experimental astrobiology research focused on impact-driven chemistry, molecular characterization, and prebiotic synthesis.</p>
     </div>
   </div>
 </div>
 
-<!-- IST -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -186,16 +183,12 @@ h2{margin:0 0 20px}
       </div>
     </div>
     <div class="experience-details">
-      <img src="images/experience/ist.jpg" alt="">
-      <p>
-        Teaching assistance in chemistry courses, supporting laboratory
-        classes, mentoring students, and contributing to academic assessment.
-      </p>
+      <img src="images/experience/ist.jpg">
+      <p>Teaching assistance in chemistry courses, laboratory supervision, mentoring students, and academic evaluation.</p>
     </div>
   </div>
 </div>
 
-<!-- ANEQ -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -206,16 +199,44 @@ h2{margin:0 0 20px}
       </div>
     </div>
     <div class="experience-details">
-      <img src="images/experience/aneq.jpg" alt="">
-      <p>
-        Responsible for financial oversight, governance compliance,
-        and strategic supervision at the national level.
-      </p>
+      <img src="images/experience/aneq.jpg">
+      <p>Financial supervision, governance oversight, and strategic advisory responsibilities at national level.</p>
     </div>
   </div>
 </div>
 
-<!-- UBI -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/aneq.png" alt="ANEQ">
+      <div>
+        <strong>Vice President</strong>
+        <div class="meta">Jun 2020 – Jun 2021 · ANEQ, Portugal</div>
+      </div>
+    </div>
+    <div class="experience-details">
+      <img src="images/experience/aneq2.jpg">
+      <p>Leadership in national student representation, event organization, and institutional coordination.</p>
+    </div>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI">
+      <div>
+        <strong>Research Intern</strong>
+        <div class="meta">Jul 2020 – Sep 2020 · Universidade da Beira Interior</div>
+      </div>
+    </div>
+    <div class="experience-details">
+      <img src="images/experience/research.jpg">
+      <p>Laboratory research experience involving analytical chemistry techniques and experimental data analysis.</p>
+    </div>
+  </div>
+</div>
+
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
@@ -226,31 +247,72 @@ h2{margin:0 0 20px}
       </div>
     </div>
     <div class="experience-details">
-      <img src="images/experience/ubi.jpg" alt="">
-      <p>
-        Organization of academic events, student representation,
-        and coordination of scientific activities within the department.
-      </p>
+      <img src="images/experience/ubi.jpg">
+      <p>Scientific event organization, student advocacy, and departmental coordination.</p>
     </div>
   </div>
 </div>
 
-<!-- OLDER -->
 <div class="timeline-item">
   <div class="timeline-card">
     <div class="timeline-header">
-      <img src="images/logos/ramada.png" alt="Ramada Aços">
+      <img src="images/logos/ubi.png" alt="UBI">
       <div>
-        <strong>Professional Internship</strong>
-        <div class="meta">Jun 2014 – Jul 2014 · Ramada Aços, S.A., Portugal</div>
+        <strong>Delegate of Industrial Chemistry Students</strong>
+        <div class="meta">Oct 2019 – Sep 2020 · University of Beira Interior</div>
       </div>
     </div>
     <div class="experience-details">
-      <img src="images/experience/ramada.jpg" alt="">
-      <p>
-        Early industrial experience in metallurgical processes,
-        quality control, and industrial safety.
-      </p>
+      <img src="images/experience/delegate.jpg">
+      <p>Representation of students in academic councils and curriculum discussions.</p>
+    </div>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/nestle.png" alt="Nestlé">
+      <div>
+        <strong>Factory Worker</strong>
+        <div class="meta">Aug 2019 – Sep 2019 · Nestlé Portugal</div>
+      </div>
+    </div>
+    <div class="experience-details">
+      <img src="images/experience/nestle.jpg">
+      <p>Industrial production support, quality assurance procedures, and operational workflow experience.</p>
+    </div>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI">
+      <div>
+        <strong>Scientific Committee Member — UBIQUÍMICA</strong>
+        <div class="meta">Aug 2018 – Aug 2019 · University of Beira Interior</div>
+      </div>
+    </div>
+    <div class="experience-details">
+      <img src="images/experience/scientific.jpg">
+      <p>Planning of scientific programs, speaker invitations, and academic outreach initiatives.</p>
+    </div>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ramada.png" alt="Ramada">
+      <div>
+        <strong>Professional Internship</strong>
+        <div class="meta">Jun 2014 – Jul 2014 · Ramada Aços, S.A.</div>
+      </div>
+    </div>
+    <div class="experience-details">
+      <img src="images/experience/ramada.jpg">
+      <p>Industrial exposure to metallurgical processes, quality control, and safety standards.</p>
     </div>
   </div>
 </div>
@@ -261,7 +323,6 @@ h2{margin:0 0 20px}
 </div>
 
 <script>
-/* Toggle experience details */
 document.querySelectorAll(".timeline-item").forEach(item=>{
   item.addEventListener("click",()=>{
     const box=item.querySelector(".experience-details");
