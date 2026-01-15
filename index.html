@@ -24,15 +24,6 @@
   color-scheme:dark;
 }
 
-.keywords{display:flex;flex-wrap:wrap;gap:10px}
-.keyword{
-  background:#7dd3fc;
-  color:#04203a;
-  padding:6px 12px;
-  border-radius:10px;
-  font-weight:600;
-}
-
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -46,9 +37,9 @@ body{
 }
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-h2{margin:0 0 20px}
+h2{margin:0 0 20px 0}
 
-/* HERO */
+/* ================= HERO ================= */
 .hero{
   background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
   padding:24px;
@@ -64,25 +55,21 @@ h2{margin:0 0 20px}
   padding:22px;
 }
 .avatar-img{
-  width:200px;height:200px;
+  width:130px;height:130px;
   border-radius:16px;
   object-fit:cover;
   box-shadow:var(--shadow);
 }
 .avatar-fallback{
-  width:200px;height:200px;
+  width:130px;height:130px;
   border-radius:16px;
   background:linear-gradient(135deg,#0ea5a5,#60a5fa);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  font-size:32px;
-  color:#03131e;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:32px;color:#03131e;
 }
 .role{color:var(--muted);margin-bottom:10px}
 
-/* SOCIAL */
+/* ================= SOCIAL LINKS ================= */
 .social-links{
   display:flex;
   gap:12px;
@@ -99,15 +86,18 @@ h2{margin:0 0 20px}
   font-weight:600;
 }
 
-/* SECTIONS */
+/* ================= SECTIONS ================= */
 .section{margin-bottom:64px}
 
-/* TIMELINE */
-.timeline{position:relative}
+/* ================= TIMELINE ================= */
+.timeline{
+  position:relative;
+  padding-left:36px;
+}
 .timeline::before{
   content:"";
   position:absolute;
-  left:32px;
+  left:12px;
   top:0;
   bottom:0;
   width:2px;
@@ -115,25 +105,31 @@ h2{margin:0 0 20px}
 }
 .timeline-item{
   position:relative;
-  display:flex;
-  align-items:center;
-  margin-bottom:40px;
+  margin-bottom:32px;
   opacity:0;
   transform:translateY(24px);
-  transition:opacity .6s ease,transform .6s ease;
+  transition:opacity .6s ease, transform .6s ease;
 }
-.timeline-item.visible{opacity:1;transform:none}
+.timeline-item.visible{
+  opacity:1;
+  transform:none;
+}
 .timeline-item::before{
   content:"";
   position:absolute;
-  left:32px;
+  left:-26px;
+  top:10px;
   width:14px;
   height:14px;
   border-radius:50%;
   background:var(--accent);
-  transform:translateX(-50%);
 }
-.timeline-card{margin-left:64px;flex:1}
+.timeline-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px;
+}
 .timeline-header{
   display:flex;
   align-items:center;
@@ -145,8 +141,9 @@ h2{margin:0 0 20px}
   object-fit:contain;
 }
 .meta{font-size:13px;color:var(--muted)}
+.timeline-card p{margin:8px 0 0}
 
-/* PUBLICATIONS */
+/* ================= PUBLICATIONS ================= */
 .pub{
   background:var(--card);
   border:1px solid var(--border);
@@ -157,7 +154,7 @@ h2{margin:0 0 20px}
 .pub-title{font-weight:600}
 .pub-meta{font-size:13px;color:var(--muted)}
 
-/* CONTACT */
+/* ================= CONTACT ================= */
 .contact-grid{
   display:grid;
   grid-template-columns:1fr 380px;
@@ -166,6 +163,7 @@ h2{margin:0 0 20px}
 @media(max-width:900px){
   .contact-grid{grid-template-columns:1fr}
 }
+
 .card{
   background:var(--card);
   border:1px solid var(--border);
@@ -178,6 +176,7 @@ h2{margin:0 0 20px}
   align-items:center;
   margin-bottom:12px;
 }
+.contact-item strong{font-weight:600}
 .btn{
   display:inline-flex;
   align-items:center;
@@ -195,7 +194,8 @@ h2{margin:0 0 20px}
   border:1px solid var(--border);
   color:var(--accent);
 }
-form input,form textarea{
+
+form input, form textarea{
   width:100%;
   padding:10px;
   border-radius:10px;
@@ -205,9 +205,11 @@ form input,form textarea{
 }
 form textarea{min-height:120px}
 
+/* ================= REDUCED MOTION ================= */
 @media (prefers-reduced-motion: reduce){
   .timeline-item{opacity:1;transform:none;transition:none}
 }
+
 @media(max-width:700px){
   .hero-card{flex-direction:column;align-items:center;text-align:center}
 }
@@ -217,8 +219,122 @@ form textarea{min-height:120px}
 <body>
 <div class="site">
 
-<!-- CONTENT UNCHANGED -->
-<!-- (Hero, About, Research, Education, Experience sections remain identical) -->
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-card">
+    <img src="images/avatar.jpg" alt="Gustavo Maia"
+      class="avatar-img"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback" style="display:none">GM</div>
+
+    <div>
+      <h1>Gustavo Pinho Maia</h1>
+      <div class="role">PhD student in Chemistry (Astrobiology)</div>
+      <p>
+        Research on mechanochemical and shock-driven synthesis of organic molecules
+        relevant to prebiotic chemistry and the origin of life.
+      </p>
+
+      
+	<div class="social-links">
+	  <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener noreferrer">
+		<img
+		  src="images/logos/orcid.png"
+		  alt=""
+		  width="20" height="20"
+		  class="icon"
+		  loading="lazy"
+		  referrerpolicy="no-referrer"
+		/>
+		<span class="label">ORCID</span>
+	  </a>
+
+	  <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener noreferrer">
+		<img
+		  src="images/logos/linkedin.png"
+		  alt=""
+		  width="20" height="20"
+		  class="icon"
+		  loading="lazy"
+		  referrerpolicy="no-referrer"
+		/>
+		<span class="label">LinkedIn</span>
+	  </a>
+
+	  <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank" rel="noopener noreferrer">
+		<img
+		  src="images/logos/researchgate.png"
+		  alt=""
+		  width="20" height="20"
+		  class="icon"
+		  loading="lazy"
+		  referrerpolicy="no-referrer"
+		/>
+		<span class="label">ResearchGate</span>
+	  </a>
+	</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="section">
+<h2>Research Interests</h2>
+<div class="card">
+  <p class="meta">
+    Mechanochemical energy and prebiotic synthesis; mechanochemical reactivity of ribonucleosides;
+    shock-induced transformation and degradation of organic molecules in extraterrestrial materials;
+    analytical approaches to organic matter in meteorites.
+  </p>
+</div>
+</section>
+
+<!-- EDUCATION -->
+<section class="section">
+<h2>Education</h2>
+<div class="timeline">
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>PhD in Chemistry (Astrobiology)</strong>
+        <div class="meta">2023–2027 · Ongoing · Universidade de Lisboa — Instituto Superior Técnico</div>
+      </div>
+    </div>
+    <p><em>Mechanochemical energy and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>MSc in Chemistry</strong>
+        <div class="meta">2020–2022 · Concluded · Instituto Superior Técnico</div>
+      </div>
+    </div>
+    <p><em>Ribonucleoside stability and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI">
+      <div>
+        <strong>BSc in Industrial Chemistry</strong>
+        <div class="meta">2017–2020 · Universidade da Beira Interior</div>
+      </div>
+    </div>
+    <p><em>Optimization of quinoline N-oxide synthesis</em></p>
+  </div>
+</div>
+
+</div>
+</section>
 
 <!-- PUBLICATIONS -->
 <section class="section">
@@ -230,10 +346,10 @@ form textarea{min-height:120px}
 <section class="section">
 <h2>Contact</h2>
 <div class="contact-grid">
+
 <div class="card">
   <div class="contact-item">
-    <strong>Email:</strong>
-    <span id="emailValue">gustavopinho.maia(at)mnhn.fr</span>
+    <strong>Email:</strong> <span id="emailValue">gustavopinho.maia(at)mnhn.fr</span>
   </div>
 
   <div style="display:flex;gap:10px;margin-bottom:16px">
@@ -241,103 +357,93 @@ form textarea{min-height:120px}
     <a class="btn ghost" id="downloadVcard" download="gustavo_maia.vcf">Download vCard</a>
   </div>
 
-  <form id="contactForm">
+  <form id="contactForm" onsubmit="return handleContact(event)">
     <input id="name" placeholder="Your name" required>
     <input id="email" type="email" placeholder="Your email" required>
     <input id="subject" placeholder="Subject" required>
     <textarea id="message" placeholder="Message" required></textarea>
     <div style="margin-top:10px;display:flex;gap:10px">
       <button class="btn" type="submit">Send</button>
-      <button class="btn ghost" type="reset">Clear</button>
+      <button class="btn ghost" type="button" onclick="this.form.reset()">Clear</button>
     </div>
   </form>
 </div>
+
+<div class="card">
+  <strong>Profiles</strong>
+  <p class="meta">
+    Full academic record, appointments, and addresses are available via CiênciaVitae and ORCID.
+  </p>
+</div>
+
 </div>
 </section>
 
 </div>
 
+<!-- ================= SCRIPTS ================= -->
 <script>
-/* Timeline animation */
-if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-
-  document.querySelectorAll(".timeline-item")
-    .forEach(item => observer.observe(item));
-}
-
-/* Publications */
-fetch("publications.bib")
-  .then(r => r.text())
-  .then(text => {
-    const container = document.getElementById("pub-list");
-    const fragment = document.createDocumentFragment();
-
-    text.split("@").slice(1).forEach(entry => {
-      const title = entry.match(/title\s*=\s*[{"]([^}"]+)/i)?.[1];
-      if (!title) return;
-
-      const author = entry.match(/author\s*=\s*[{"]([^}"]+)/i)?.[1] || "";
-      const year = entry.match(/year\s*=\s*[{"]([^}"]+)/i)?.[1] || "";
-      const doi = entry.match(/doi\s*=\s*[{"]([^}"]+)/i)?.[1] || "";
-
-      const div = document.createElement("div");
-      div.className = "pub";
-      div.innerHTML = `
-        <div class="pub-title">${title}</div>
-        <div class="pub-meta">${author}${year ? " · " + year : ""}</div>
-        ${doi ? `<a href="https://doi.org/${doi}" target="_blank" rel="noopener">DOI: ${doi}</a>` : ""}
-      `;
-      fragment.appendChild(div);
-    });
-
-    container.appendChild(fragment);
+// Timeline animation
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+      observer.unobserve(e.target);
+    }
   });
+},{threshold:0.2});
+document.querySelectorAll(".timeline-item").forEach(i=>observer.observe(i));
 
-/* vCard */
-(() => {
-  const vcard = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    "FN:Gustavo P. Maia",
-    "EMAIL:gustavopinho.maia@mnhn.fr",
-    "URL:https://orcid.org/0000-0001-5314-8816",
-    "END:VCARD"
-  ].join("\r\n");
+// BibTeX + DOI
+fetch("publications.bib")
+.then(r=>r.text())
+.then(text=>{
+  const entries=text.split("@").slice(1);
+  const c=document.getElementById("pub-list");
+  entries.forEach(e=>{
+    const t=(e.match(/title\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const a=(e.match(/author\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const y=(e.match(/year\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const d=(e.match(/doi\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    if(!t) return;
+    c.innerHTML+=`
+      <div class="pub">
+        <div class="pub-title">${t}</div>
+        <div class="pub-meta">${a||""}${y?" · "+y:""}</div>
+        ${d?`<a href="https://doi.org/${d}" target="_blank">DOI: ${d}</a>`:""}
+      </div>`;
+  });
+});
 
-  document.getElementById("downloadVcard").href =
-    "data:text/vcard;charset=utf-8," + encodeURIComponent(vcard);
+// vCard
+(function(){
+  const vcard=[
+    'BEGIN:VCARD','VERSION:3.0',
+    'FN:Gustavo P. Maia',
+    'EMAIL:gustavopinho.maia(at)mnhn.fr',
+    'URL:https://orcid.org/0000-0001-5314-8816',
+    'END:VCARD'
+  ].join('\r\n');
+  document.getElementById('downloadVcard').href=
+    'data:text/vcard;charset=utf-8,'+encodeURIComponent(vcard);
 })();
 
-/* Copy email */
-document.getElementById("copyEmailBtn")
-  .addEventListener("click", async () => {
-    await navigator.clipboard.writeText(
-      document.getElementById("emailValue").textContent
-    );
-  });
+// Copy email
+document.getElementById('copyEmailBtn').onclick=async()=>{
+  await navigator.clipboard.writeText(
+    document.getElementById('emailValue').textContent
+  );
+};
 
-/* Contact form */
-document.getElementById("contactForm")
-  .addEventListener("submit", e => {
-    e.preventDefault();
-    const subject = encodeURIComponent(
-      document.getElementById("subject").value
-    );
-    const message = encodeURIComponent(
-      document.getElementById("message").value
-    );
-
-    window.location.href =
-      `mailto:gustavopinho.maia@mnhn.fr?subject=${subject}&body=${message}`;
-  });
+// Contact form
+function handleContact(e){
+  e.preventDefault();
+  const s=encodeURIComponent(subject.value);
+  const b=encodeURIComponent(message.value);
+  location.href=`mailto:gustavopinho.maia@mnhn.fr?subject=${s}&body=${b}`;
+  return false;
+}
 </script>
+
 </body>
 </html>
