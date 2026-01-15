@@ -8,7 +8,6 @@
 <meta name="description" content="Gustavo P. Maia — PhD student in Astrobiology. Research, education, publications, and contact.">
 
 <style>
-/* ================= CSS VARIABLES ================= */
 :root{
   --bg:#0b1020;
   --card:rgba(255,255,255,.04);
@@ -21,295 +20,253 @@
   --radius-md:12px;
   --shadow:0 10px 30px rgba(0,0,0,.6);
   --max-width:1120px;
-  color-scheme:dark;
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:dark;
 }
 
 *{box-sizing:border-box}
-
 body{
   margin:0;
   background:linear-gradient(180deg,#070c1d,#0b1020 70%);
   color:var(--text);
 }
-
 .site{
   max-width:var(--max-width);
   margin:32px auto;
   padding:20px;
 }
-
 a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+h2{margin-bottom:20px}
 
-h2{margin:0 0 20px}
-
-/* ================= KEYWORDS ================= */
-.keywords{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-.keyword{
-  background:var(--accent);
-  color:#04203a;
-  padding:6px 12px;
-  border-radius:10px;
-  font-weight:600;
-}
-
-/* ================= HERO ================= */
-.hero{
-  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
-  padding:24px;
-  border-radius:var(--radius-lg);
-  margin-bottom:56px;
-}
-.hero-card{
-  display:flex;
-  gap:24px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:22px;
-}
-.avatar-img{
-  width:200px;
-  height:200px;
-  border-radius:16px;
-  object-fit:cover;
-  box-shadow:var(--shadow);
-}
-.avatar-fallback{
-  width:200px;
-  height:200px;
-  border-radius:16px;
-  background:linear-gradient(135deg,#0ea5a5,#60a5fa);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  font-size:32px;
-  color:#03131e;
-}
-.role{color:var(--muted);margin-bottom:10px}
-
-/* ================= SOCIAL ================= */
-.social-links{
-  display:flex;
-  gap:12px;
-  margin-top:12px;
-  flex-wrap:wrap;
-}
-.social-links a{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:10px;
-  background:rgba(255,255,255,.04);
-  font-weight:600;
-}
-
-/* ================= SECTIONS ================= */
 .section{margin-bottom:64px}
 
-/* ================= TIMELINE ================= */
-.timeline{
-  position:relative;
-}
-.timeline::before{
-  content:"";
-  position:absolute;
-  left:32px;
-  top:0;
-  bottom:0;
-  width:2px;
-  background:rgba(255,255,255,.15);
-}
 .timeline-item{
-  position:relative;
+  margin-bottom:40px;
+  cursor:pointer;
+}
+
+/* ================= EXPERIENCE POPUP ================= */
+.experience-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
   display:flex;
   align-items:center;
-  margin-bottom:40px;
+  justify-content:center;
   opacity:0;
-  transform:translateY(24px);
-  transition:.6s ease;
+  pointer-events:none;
+  transition:.3s ease;
+  z-index:999;
 }
-.timeline-item.visible{
+
+.experience-popup.active{
   opacity:1;
+  pointer-events:auto;
+}
+
+.popup-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  max-width:760px;
+  width:92%;
+  padding:24px;
+  box-shadow:var(--shadow);
+  transform:translateY(20px);
+  transition:.3s ease;
+}
+
+.experience-popup.active .popup-card{
   transform:none;
 }
-.timeline-item::before{
-  content:"";
-  position:absolute;
-  left:32px;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:var(--accent);
-  transform:translateX(-50%);
-}
-.timeline-card{
-  margin-left:64px;
-  flex:1;
-}
-.timeline-header{
+
+.popup-header{
   display:flex;
-  gap:14px;
+  justify-content:space-between;
   align-items:center;
 }
-.timeline-header img{
-  width:48px;
-  height:48px;
-  object-fit:contain;
-}
-.meta{
-  font-size:13px;
-  color:var(--muted);
+
+.popup-header strong{
+  font-size:18px;
 }
 
-/* ================= CARDS ================= */
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
-  padding:18px;
-}
-
-/* ================= PUBLICATIONS ================= */
-.pub{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
-  padding:14px;
-  margin-bottom:14px;
-}
-.pub-title{font-weight:600}
-.pub-meta{font-size:13px;color:var(--muted)}
-
-/* ================= CONTACT ================= */
-.contact-grid{
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:20px;
-}
-@media(max-width:900px){
-  .contact-grid{grid-template-columns:1fr}
-}
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:10px;
-  background:linear-gradient(90deg,var(--accent),var(--accent-strong));
-  color:#04203a;
+.popup-close{
+  background:none;
   border:none;
-  cursor:pointer;
-  font-weight:600;
-}
-.btn.ghost{
-  background:transparent;
-  border:1px solid var(--border);
   color:var(--accent);
+  font-size:22px;
+  cursor:pointer;
 }
 
-input,textarea{
+.popup-images{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:10px;
+  margin-top:16px;
+}
+
+.popup-images img{
   width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:transparent;
-  color:inherit;
-}
-
-/* ================= RESPONSIVE ================= */
-@media(max-width:700px){
-  .hero-card{
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-  }
+  border-radius:12px;
+  object-fit:cover;
 }
 </style>
 </head>
 
 <body>
 <div class="site">
-<!-- CONTENT UNCHANGED -->
+
+<!-- EXPERIENCE -->
+<section class="section">
+<h2>Experience</h2>
+<div class="timeline">
+
+<div class="timeline-item experience-item"
+ data-title="Visiting Scientist — MNHN (IMPMC)"
+ data-summary="Research collaboration focused on mechanochemical and shock-driven synthesis of organic molecules relevant to prebiotic chemistry, including analytical characterization of reaction products."
+ data-images="images/exp/mnhn1.jpg,images/exp/mnhn2.jpg">
+
+<strong>Visiting Scientist</strong><br>
+<span>Jan 2025 – Present · MNHN — IMPMC, France</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Visiting Scientist — NASA GSFC"
+ data-summary="Short-term research stay focused on shock-induced chemical transformations and astrobiology-relevant reaction pathways under extreme conditions."
+ data-images="images/exp/nasa1.jpg,images/exp/nasa2.jpg">
+
+<strong>Visiting Scientist</strong><br>
+<span>Nov 2024 – Dec 2024 · NASA Goddard Space Flight Center, USA</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Invited Assistant — Instituto Superior Técnico"
+ data-summary="University-level teaching in chemistry-related courses, assisting in lectures, laboratory sessions, and student evaluation."
+ data-images="images/exp/ist1.jpg">
+
+<strong>Invited Assistant (University Teacher)</strong><br>
+<span>Sep 2024 – Oct 2024 · Instituto Superior Técnico, Portugal</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="President — Fiscal Council (ANEQ)"
+ data-summary="Oversight of financial governance and institutional compliance within the National Association of Chemistry Students."
+ data-images="images/exp/aneq1.jpg">
+
+<strong>President of the Fiscal Council</strong><br>
+<span>Jun 2021 – May 2022 · ANEQ, Portugal</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Vice President — ANEQ"
+ data-summary="Leadership role coordinating national student initiatives, academic representation, and organizational strategy."
+ data-images="images/exp/aneq2.jpg">
+
+<strong>Vice President</strong><br>
+<span>Jun 2020 – Jun 2021 · ANEQ, Portugal</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Vice-President — UBIQUÍMICA"
+ data-summary="Student association leadership focused on academic events, scientific outreach, and student representation."
+ data-images="images/exp/ubi1.jpg">
+
+<strong>Vice-President — UBIQUÍMICA</strong><br>
+<span>Sep 2019 – Dec 2020 · University of Beira Interior</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Research Intern — UBI"
+ data-summary="Laboratory research internship focused on synthetic chemistry and reaction optimization."
+ data-images="images/exp/research1.jpg">
+
+<strong>Research Intern</strong><br>
+<span>Jul 2020 – Sep 2020 · Universidade da Beira Interior</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Delegate — Pedagogical Council"
+ data-summary="Student representative role in curriculum discussions and academic governance."
+ data-images="images/exp/delegate1.jpg">
+
+<strong>Delegate of Industrial Chemistry Students</strong><br>
+<span>Oct 2019 – Sep 2020 · Universidade da Beira Interior</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Factory Worker — Nestlé"
+ data-summary="Industrial experience in food production environments, quality control, and operational logistics."
+ data-images="images/exp/nestle1.jpg">
+
+<strong>Factory Worker</strong><br>
+<span>Aug 2019 – Sep 2019 · Nestlé Portugal</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Scientific Committee Member — UBIQUÍMICA"
+ data-summary="Organization of academic conferences and scientific events for chemistry students."
+ data-images="images/exp/committee1.jpg">
+
+<strong>Scientific Committee Member — UBIQUÍMICA</strong><br>
+<span>Aug 2018 – Aug 2019 · University of Beira Interior</span>
+</div>
+
+<div class="timeline-item experience-item"
+ data-title="Professional Internship — Ramada Aços"
+ data-summary="Early professional exposure to industrial metallurgy processes and quality assurance systems."
+ data-images="images/exp/ramada1.jpg">
+
+<strong>Professional Internship</strong><br>
+<span>Jun 2014 – Jul 2014 · Ramada Aços, S.A.</span>
+</div>
+
+</div>
+</section>
+
+</div>
+
+<!-- POPUP -->
+<div class="experience-popup" id="experiencePopup">
+  <div class="popup-card">
+    <div class="popup-header">
+      <strong id="popupTitle"></strong>
+      <button class="popup-close" onclick="closePopup()">✕</button>
+    </div>
+    <p id="popupSummary"></p>
+    <div class="popup-images" id="popupImages"></div>
+  </div>
 </div>
 
 <script>
-/* ================= TIMELINE ANIMATION ================= */
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      entry.target.classList.add("visible");
-      observer.unobserve(entry.target);
-    }
-  });
-},{threshold:0.2});
+const popup = document.getElementById("experiencePopup");
+const popupTitle = document.getElementById("popupTitle");
+const popupSummary = document.getElementById("popupSummary");
+const popupImages = document.getElementById("popupImages");
 
-document.querySelectorAll(".timeline-item")
-  .forEach(item=>observer.observe(item));
+document.querySelectorAll(".experience-item").forEach(item=>{
+  item.addEventListener("click",()=>{
+    popupTitle.textContent = item.dataset.title;
+    popupSummary.textContent = item.dataset.summary;
+    popupImages.innerHTML = "";
 
-/* ================= PUBLICATIONS ================= */
-fetch("publications.bib")
-  .then(r=>r.text())
-  .then(text=>{
-    const container=document.getElementById("pub-list");
-    text.split("@").slice(1).forEach(e=>{
-      const title=(e.match(/title\s*=\s*[{"]([^}"]+)/i)||[])[1];
-      if(!title) return;
-
-      const author=(e.match(/author\s*=\s*[{"]([^}"]+)/i)||[])[1] || "";
-      const year=(e.match(/year\s*=\s*[{"]([^}"]+)/i)||[])[1] || "";
-      const doi=(e.match(/doi\s*=\s*[{"]([^}"]+)/i)||[])[1];
-
-      container.insertAdjacentHTML("beforeend",`
-        <div class="pub">
-          <div class="pub-title">${title}</div>
-          <div class="pub-meta">${author}${year?` · ${year}`:""}</div>
-          ${doi?`<a href="https://doi.org/${doi}" target="_blank" rel="noopener">DOI</a>`:""}
-        </div>
-      `);
+    item.dataset.images.split(",").forEach(src=>{
+      const img = document.createElement("img");
+      img.src = src.trim();
+      popupImages.appendChild(img);
     });
+
+    popup.classList.add("active");
   });
-
-/* ================= VCARD ================= */
-(()=>{
-  const vcard=[
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    "FN:Gustavo P. Maia",
-    "EMAIL:gustavopinho.maia(at)mnhn.fr",
-    "URL:https://orcid.org/0000-0001-5314-8816",
-    "END:VCARD"
-  ].join("\r\n");
-
-  document.getElementById("downloadVcard").href =
-    "data:text/vcard;charset=utf-8," + encodeURIComponent(vcard);
-})();
-
-/* ================= CONTACT ================= */
-document.getElementById("copyEmailBtn").addEventListener("click",()=>{
-  navigator.clipboard.writeText(
-    document.getElementById("emailValue").textContent
-  );
 });
 
-function handleContact(e){
-  e.preventDefault();
-  const subject=document.getElementById("subject").value;
-  const message=document.getElementById("message").value;
-  location.href =
-    `mailto:gustavopinho.maia@mnhn.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+function closePopup(){
+  popup.classList.remove("active");
 }
+
+popup.addEventListener("click",e=>{
+  if(e.target === popup) closePopup();
+});
 </script>
 
 </body>
 </html>
-
-
