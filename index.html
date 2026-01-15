@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Gustavo P. Maia — Academic CV</title>
-<meta name="description" content="Gustavo P. Maia — PhD student in Astrobiology">
+<meta name="description" content="Gustavo P. Maia — PhD student in Astrobiology. Research, education, publications, and contact.">
 
-<!-- ================= INDEX / EXPERIENCE STYLES ================= -->
 <style>
 :root{
   --bg:#0b1020;
@@ -16,6 +15,8 @@
   --text:#e7edf6;
   --muted:#9aa4b2;
   --accent:#7dd3fc;
+  --accent-strong:#60a5fa;
+  --radius-lg:18px;
   --radius-md:12px;
   --shadow:0 10px 30px rgba(0,0,0,.6);
   --max-width:1120px;
@@ -34,15 +35,69 @@ body{
   margin:32px auto;
   padding:20px;
 }
-.section{margin-bottom:64px}
-h2{margin:0 0 24px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+h2{margin:0 0 20px 0}
 
-/* ===== TIMELINE ===== */
-.timeline{position:relative}
+/* ================= HERO ================= */
+.hero{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  padding:24px;
+  border-radius:var(--radius-lg);
+  margin-bottom:56px;
+}
+.hero-card{
+  display:flex;
+  gap:24px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px;
+}
+.avatar-img{
+  width:130px;height:130px;
+  border-radius:16px;
+  object-fit:cover;
+  box-shadow:var(--shadow);
+}
+.avatar-fallback{
+  width:130px;height:130px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#0ea5a5,#60a5fa);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:32px;color:#03131e;
+}
+.role{color:var(--muted);margin-bottom:10px}
+
+/* ================= SOCIAL LINKS ================= */
+.social-links{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.social-links a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.04);
+  font-weight:600;
+}
+
+/* ================= SECTIONS ================= */
+.section{margin-bottom:64px}
+
+/* ================= TIMELINE ================= */
+.timeline{
+  position:relative;
+  padding-left:36px;
+}
 .timeline::before{
   content:"";
   position:absolute;
-  left:32px;
+  left:12px;
   top:0;
   bottom:0;
   width:2px;
@@ -50,35 +105,31 @@ h2{margin:0 0 24px}
 }
 .timeline-item{
   position:relative;
-  display:flex;
-  align-items:flex-start;
-  margin-bottom:40px;
-  cursor:pointer;
+  margin-bottom:32px;
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.timeline-item.visible{
+  opacity:1;
+  transform:none;
 }
 .timeline-item::before{
   content:"";
   position:absolute;
-  left:32px;
+  left:-26px;
+  top:10px;
   width:14px;
   height:14px;
   border-radius:50%;
   background:var(--accent);
-  transform:translateX(-50%);
 }
 .timeline-card{
-  margin-left:64px;
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius-md);
   padding:16px;
-  width:100%;
-  transition:.3s ease;
 }
-.timeline-item:hover .timeline-card{
-  border-color:rgba(125,211,252,.4);
-}
-
-/* ===== HEADER ===== */
 .timeline-header{
   display:flex;
   align-items:center;
@@ -90,91 +141,241 @@ h2{margin:0 0 24px}
   object-fit:contain;
 }
 .meta{font-size:13px;color:var(--muted)}
+.timeline-card p{margin:8px 0 0}
 
-/* ===== DETAILS ===== */
-.experience-details{
-  margin-top:14px;
-  background:rgba(255,255,255,.03);
+/* ================= PUBLICATIONS ================= */
+.pub{
+  background:var(--card);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:16px;
+  border-radius:var(--radius-md);
+  padding:14px;
+  margin-bottom:14px;
+}
+.pub-title{font-weight:600}
+.pub-meta{font-size:13px;color:var(--muted)}
+
+/* ================= CONTACT ================= */
+.contact-grid{
   display:grid;
-  grid-template-columns:160px 1fr;
-  gap:16px;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+}
+@media(max-width:900px){
+  .contact-grid{grid-template-columns:1fr}
+}
 
-  opacity:0;
-  max-height:0;
-  overflow:hidden;
-  transform:translateY(-10px);
-  transition:opacity .35s ease, max-height .45s ease, transform .35s ease;
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:18px;
 }
-.experience-details.open{
-  opacity:1;
-  max-height:500px;
-  transform:none;
+.contact-item{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:12px;
 }
-.experience-details img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
+.contact-item strong{font-weight:600}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
   border-radius:10px;
-  background:#111;
+  background:linear-gradient(90deg,var(--accent),var(--accent-strong));
+  color:#04203a;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
 }
-.experience-details p{
-  margin:0;
-  font-size:14px;
-  color:var(--muted);
+.btn.ghost{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--accent);
 }
 
-@media(max-width:720px){
-  .experience-details{grid-template-columns:1fr}
+form input, form textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:inherit;
 }
-</style>
+form textarea{min-height:120px}
 
-<!-- ================= CONTACT PAGE STYLES (UNTOUCHED) ================= -->
-<style>
-:root{
-  --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7dd3fc; --glass: rgba(255,255,255,0.03);
-  --radius:12px; --maxw:980px; --gap:18px; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce){
+  .timeline-item{opacity:1;transform:none;transition:none}
 }
-.container{max-width:var(--maxw);margin:36px auto;padding:20px}
-header.header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:grid;place-items:center;font-weight:800;color:#04203a}
-nav.nav a{color:var(--muted);text-decoration:none;margin-left:14px;padding:8px;border-radius:8px}
-nav.nav a.active{color:var(--accent);background:var(--glass)}
-main{display:grid;grid-template-columns:1fr 380px;gap:var(--gap)}
-@media (max-width:880px){main{grid-template-columns:1fr} .aside{order:2}}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:20px;border-radius:var(--radius);box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+
+@media(max-width:700px){
+  .hero-card{flex-direction:column;align-items:center;text-align:center}
+}
 </style>
 </head>
 
 <body>
-
 <div class="site">
 
-<!-- ================= EXPERIENCE ================= -->
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-card">
+    <img src="images/avatar.jpg" alt="Gustavo Maia"
+      class="avatar-img"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback" style="display:none">GM</div>
+
+    <div>
+      <h1>Gustavo Pinho Maia</h1>
+      <div class="role">PhD student in Chemistry (Astrobiology)</div>
+      <p>
+        Research on mechanochemical and shock-driven synthesis of organic molecules
+        relevant to prebiotic chemistry and the origin of life.
+      </p>
+
+      
+	<div class="social-links">
+	  <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener noreferrer">
+		<img
+		  src="images/logos/orcid.png"
+		  alt=""
+		  width="20" height="20"
+		  class="icon"
+		  loading="lazy"
+		  referrerpolicy="no-referrer"
+		/>
+		<span class="label">ORCID</span>
+	  </a>
+
+	  <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener noreferrer">
+		<img
+		  src="images/logos/linkedin.png"
+		  alt=""
+		  width="20" height="20"
+		  class="icon"
+		  loading="lazy"
+		  referrerpolicy="no-referrer"
+		/>
+		<span class="label">LinkedIn</span>
+	  </a>
+
+	  <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank" rel="noopener noreferrer">
+		<img
+		  src="images/logos/researchgate.png"
+		  alt=""
+		  width="20" height="20"
+		  class="icon"
+		  loading="lazy"
+		  referrerpolicy="no-referrer"
+		/>
+		<span class="label">ResearchGate</span>
+	  </a>
+	</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
 <section class="section">
-<h2>Experience</h2>
-<div class="timeline">
-  <!-- (timeline items exactly as provided, unchanged) -->
-  <!-- … SNIPPED FOR BREVITY — content preserved exactly … -->
+<h2>Research Interests</h2>
+<div class="card">
+  <p class="meta">
+    Mechanochemical energy and prebiotic synthesis; mechanochemical reactivity of ribonucleosides;
+    shock-induced transformation and degradation of organic molecules in extraterrestrial materials;
+    analytical approaches to organic matter in meteorites.
+  </p>
 </div>
 </section>
 
-<!-- ================= RESEARCH ================= -->
+<!-- EDUCATION -->
 <section class="section">
-<h2>Research interests</h2>
-<p style="color:var(--muted)">
-Mechanochemical energy and prebiotic synthesis, mechanochemical reactivity of ribonucleosides, shock-induced transformation and degradation of organic molecules in extraterrestrial materials, and analytical approaches to study organic matter in meteorites.
-</p>
+<h2>Education</h2>
+<div class="timeline">
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>PhD in Chemistry (Astrobiology)</strong>
+        <div class="meta">2023–2027 · Ongoing · Universidade de Lisboa — Instituto Superior Técnico</div>
+      </div>
+    </div>
+    <p><em>Mechanochemical energy and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>MSc in Chemistry</strong>
+        <div class="meta">2020–2022 · Concluded · Instituto Superior Técnico</div>
+      </div>
+    </div>
+    <p><em>Ribonucleoside stability and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI">
+      <div>
+        <strong>BSc in Industrial Chemistry</strong>
+        <div class="meta">2017–2020 · Universidade da Beira Interior</div>
+      </div>
+    </div>
+    <p><em>Optimization of quinoline N-oxide synthesis</em></p>
+  </div>
+</div>
+
+</div>
 </section>
 
-<!-- ================= CONTACT ================= -->
+<!-- PUBLICATIONS -->
+<section class="section">
+<h2>Publications</h2>
+<div id="pub-list"></div>
+</section>
+
+<!-- CONTACT -->
 <section class="section">
 <h2>Contact</h2>
-<div class="container">
-  <!-- Entire contact_en body content inserted unchanged -->
+<div class="contact-grid">
+
+<div class="card">
+  <div class="contact-item">
+    <strong>Email:</strong> <span id="emailValue">gustavopinho.maia(at)mnhn.fr</span>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="btn" id="copyEmailBtn">Copy email</button>
+    <a class="btn ghost" id="downloadVcard" download="gustavo_maia.vcf">Download vCard</a>
+  </div>
+
+  <form id="contactForm" onsubmit="return handleContact(event)">
+    <input id="name" placeholder="Your name" required>
+    <input id="email" type="email" placeholder="Your email" required>
+    <input id="subject" placeholder="Subject" required>
+    <textarea id="message" placeholder="Message" required></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button class="btn" type="submit">Send</button>
+      <button class="btn ghost" type="button" onclick="this.form.reset()">Clear</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <strong>Profiles</strong>
+  <p class="meta">
+    Full academic record, appointments, and addresses are available via CiênciaVitae and ORCID.
+  </p>
+</div>
+
 </div>
 </section>
 
@@ -182,15 +383,66 @@ Mechanochemical energy and prebiotic synthesis, mechanochemical reactivity of ri
 
 <!-- ================= SCRIPTS ================= -->
 <script>
-document.querySelectorAll(".timeline-item").forEach(item=>{
-  item.addEventListener("click",()=>{
-    const box=item.querySelector(".experience-details");
-    if(!box) return;
-    document.querySelectorAll(".experience-details.open")
-      .forEach(b=>b!==box && b.classList.remove("open"));
-    box.classList.toggle("open");
+// Timeline animation
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll(".timeline-item").forEach(i=>observer.observe(i));
+
+// BibTeX + DOI
+fetch("publications.bib")
+.then(r=>r.text())
+.then(text=>{
+  const entries=text.split("@").slice(1);
+  const c=document.getElementById("pub-list");
+  entries.forEach(e=>{
+    const t=(e.match(/title\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const a=(e.match(/author\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const y=(e.match(/year\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const d=(e.match(/doi\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    if(!t) return;
+    c.innerHTML+=`
+      <div class="pub">
+        <div class="pub-title">${t}</div>
+        <div class="pub-meta">${a||""}${y?" · "+y:""}</div>
+        ${d?`<a href="https://doi.org/${d}" target="_blank">DOI: ${d}</a>`:""}
+      </div>`;
   });
 });
+
+// vCard
+(function(){
+  const vcard=[
+    'BEGIN:VCARD','VERSION:3.0',
+    'FN:Gustavo P. Maia',
+    'EMAIL:gustavopinho.maia(at)mnhn.fr',
+    'URL:https://orcid.org/0000-0001-5314-8816',
+    'END:VCARD'
+  ].join('\r\n');
+  document.getElementById('downloadVcard').href=
+    'data:text/vcard;charset=utf-8,'+encodeURIComponent(vcard);
+})();
+
+// Copy email
+document.getElementById('copyEmailBtn').onclick=async()=>{
+  await navigator.clipboard.writeText(
+    document.getElementById('emailValue').textContent
+  );
+};
+
+// Contact form
+function handleContact(e){
+  e.preventDefault();
+  const s=encodeURIComponent(subject.value);
+  const b=encodeURIComponent(message.value);
+  location.href=`mailto:gustavopinho.maia@mnhn.fr?subject=${s}&body=${b}`;
+  return false;
+}
 </script>
 
 </body>
