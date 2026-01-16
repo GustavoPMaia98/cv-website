@@ -55,7 +55,7 @@ h2{margin:0 0 20px 0}
   padding:22px;
 }
 .avatar-img{
-  width:130px;height:130px;
+  width:250px;height:250px;
   border-radius:16px;
   object-fit:cover;
   box-shadow:var(--shadow);
@@ -141,6 +141,15 @@ h2{margin:0 0 20px 0}
   height:48px;
   object-fit:contain;
 }
+
+/* Publications timeline logos */
+.timeline-item.publication .timeline-header img {
+  width:100px;
+  height:100px;
+  object-fit:contain;
+}
+
+
 .meta{font-size:13px;color:var(--muted)}
 .timeline-card p{margin:8px 0 0}
 
@@ -597,7 +606,7 @@ form textarea{min-height:120px}
   <div class="timeline">
 
     <!-- Example Publication 1 -->
-    <div class="timeline-item">
+    <div class="timeline-item publication">
       <div class="timeline-card">
         <div class="timeline-header">
           <img src="images/logos/applied_sciences.png" alt="Applied Sciences">
@@ -607,12 +616,12 @@ form textarea{min-height:120px}
           </div>
         </div>
         <p><em>Study on mechanochemical reactivity of ribonucleosides, relevant to prebiotic chemistry and astrobiology.</em></p>
-        <p><a href="https://doi.org/10.3390/app12345678" target="_blank">DOI link</a></p>
+        <p><a href="https://doi.org/10.3390/app12345678" target="_blank">doi.org/10.3390/app12345678</a></p>
       </div>
     </div>
 
     <!-- Example Publication 2 -->
-    <div class="timeline-item">
+    <div class="timeline-item publication">
       <div class="timeline-card">
         <div class="timeline-header">
           <img src="images/logos/molecules.png" alt="Molecules">
@@ -622,42 +631,14 @@ form textarea{min-height:120px}
           </div>
         </div>
         <p><em>Investigation of shock-driven degradation of nucleosides with implications for meteoritic organic matter transformations.</em></p>
-        <p><a href="https://doi.org/10.3390/molecules12345678" target="_blank">DOI link</a></p>
-      </div>
-    </div>
-
-    <!-- Add more publications as needed -->
-    <div class="timeline-item">
-      <div class="timeline-card">
-        <div class="timeline-header">
-          <img src="images/logos/cv.png" alt="CiênciaVitae">
-          <div>
-            <strong>Full bibliographic record</strong>
-            <div class="meta">See full CV on CiênciaVitae</div>
-          </div>
-        </div>
-        <p><em>Includes conference posters, thesis references, and all other publications.</em></p>
-        <p><a href="https://www.cienciavitae.pt" target="_blank">CiênciaVitae profile</a></p>
+        <p><a href="https://doi.org/10.3390/molecules12345678" target="_blank">doi.org/10.3390/molecules12345678</a></p>
       </div>
     </div>
 
   </div>
 </section>
 
-  <h2>Publications</h2>
-  
-  <!-- Static selected publications -->
-  <div class="card">
-    <h3>Selected publications & outputs</h3>
-    <p style="color:var(--muted)">
-      Examples include: "Mechanochemical Reactivity of Ribonucleosides Mediated by Inorganic Species" (Applied Sciences, 2025) and "Shock-Induced Degradation of Guanosine and Uridine Promoted by Nickel and Carbonate" (Molecules, 2023). Conference posters and thesis references are available in the full CV.
-    </p>
-    <p style="margin-top:10px">
-      For full bibliographic details, see the original CiênciaVitae page or linked DOIs in the CV.
-    </p>
-  </div>
-
-  <!-- Dynamically loaded BibTeX publications -->
+    <!-- Dynamically loaded BibTeX publications -->
   <div id="pub-list"></div>
 </section>
 
