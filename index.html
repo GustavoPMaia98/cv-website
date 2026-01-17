@@ -14,24 +14,25 @@
 </div>
 <script src="script.js"></script>
 <script>
-// Load all sections
 async function loadSections() {
   const sections = ['hero', 'research', 'education', 'experience', 'publications', 'tutoring'];
   const content = document.getElementById('content');
-  
+
   for (const section of sections) {
     try {
       const response = await fetch(`sections/${section}.html`);
+      if (!response.ok) throw new Error('Failed to load');
       const html = await response.text();
-      content.innerHTML += html;
+      content.insertAdjacentHTML('beforeend', html);
     } catch (error) {
       console.error(`Error loading ${section}.html:`, error);
     }
   }
-  
-  // Initialize after all sections are loaded
-  setTimeout(initializeScripts, 100);
+
+  // ✅ Initialize exactly once, after all sections are loaded
+  initializeScripts();
 }
+
 loadSections();
 </script>
 </body>

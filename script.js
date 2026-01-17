@@ -161,6 +161,3 @@ function initializeScripts() {
     contactForm.onsubmit = handleContact;
   }
 }
-
-// after the for loop in loadSections()
-initializeScripts();
