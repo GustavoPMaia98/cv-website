@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Education — Gustavo P. Maia</title>
+<meta name="description" content="Education — Gustavo P. Maia">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="site">
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="education.html" class="active">Education</a>
+      <a href="experience.html">Experience</a>
+    </nav>
+
+    <main>
+      <h1>Education</h1>
+
+      <section class="timeline" aria-labelledby="education-heading">
+        <div class="timeline-card" role="article">
+          <div class="timeline-header">
+            <img src="images/logos/ist.png" alt="Instituto Superior Técnico">
+            <div>
+              <div class="timeline-item-title">PhD in Chemistry (Astrobiology)</div>
+              <div class="timeline-item-sub">2023–2027 · Ongoing · Universidade de Lisboa — Instituto Superior Técnico</div>
+            </div>
+          </div>
+          <div class="timeline-item-desc">
+            <p><em>Mechanochemical energy and prebiotic synthesis.</em></p>
+          </div>
+        </div>
+
+        <div class="timeline-card" role="article">
+          <div class="timeline-header">
+            <img src="images/logos/ist.png" alt="Instituto Superior Técnico">
+            <div>
+              <div class="timeline-item-title">MSc in Chemistry</div>
+              <div class="timeline-item-sub">2020–2022 · Concluded · Instituto Superior Técnico</div>
+            </div>
+          </div>
+          <div class="timeline-item-desc">
+            <p><em>Ribonucleoside stability and prebiotic synthesis.</em></p>
+          </div>
+        </div>
+
+        <div class="timeline-card" role="article">
+          <div class="timeline-header">
+            <img src="images/logos/ubi.png" alt="Universidade da Beira Interior">
+            <div>
+              <div class="timeline-item-title">BSc in Industrial Chemistry</div>
+              <div class="timeline-item-sub">2017–2020 · Universidade da Beira Interior</div>
+            </div>
+          </div>
+          <div class="timeline-item-desc">
+            <p><em>Optimization of quinoline N-oxide synthesis.</em></p>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+
+<script>
+// Simple observer to reveal any cards when scrolled into view
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.timeline-card').forEach(el=>observer.observe(el));
+</script>
+
+</body>
+</html>
