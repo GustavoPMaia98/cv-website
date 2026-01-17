@@ -1,7 +1,7 @@
 // Guard to prevent publications from loading multiple times
 let publicationsLoaded = false;
 
-// Timeline fade-in animation
+// IntersectionObserver for fade-in
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
@@ -19,7 +19,7 @@ function wireUpTimelineItems() {
 
     item.addEventListener('click', e => {
       const t = e.target.tagName.toLowerCase();
-      if (t === 'a' || t === 'button' || t === 'input' || t === 'textarea') return;
+      if (['a', 'button', 'input', 'textarea'].includes(t)) return;
 
       const expand = item.querySelector('.timeline-expand');
       if (!expand) return;
@@ -30,22 +30,19 @@ function wireUpTimelineItems() {
         if (el !== expand) el.classList.remove('open');
       });
 
-      // Toggle this one open
+      // Toggle this one
       if (!isOpen) expand.classList.add('open');
     });
   });
 }
 
-// BibTeX + DOI loader (dynamic publications)
+// Dynamic publications loader
 function loadPublications() {
   if (publicationsLoaded) return;
   publicationsLoaded = true;
 
   fetch("publications.bib")
-    .then(r => {
-      if (!r.ok) throw new Error('no bib');
-      return r.text();
-    })
+    .then(r => r.ok ? r.text() : Promise.reject('no bib'))
     .then(text => {
       const entries = text.split("@").slice(1);
       const container = document.getElementById("pub-list");
@@ -85,12 +82,10 @@ function loadPublications() {
 
       wireUpTimelineItems();
     })
-    .catch(err => {
-      console.warn('publications.bib not loaded', err);
-    });
+    .catch(err => console.warn('publications.bib not loaded', err));
 }
 
-// Utility: basic HTML escape
+// HTML escape utility
 function escapeHtml(str) {
   if (!str) return "";
   return String(str)
@@ -101,7 +96,7 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-// vCard function
+// vCard setup
 function setupVCard() {
   const vcard = [
     'BEGIN:VCARD', 'VERSION:3.0',
@@ -112,9 +107,7 @@ function setupVCard() {
   ].join('\r\n');
 
   const vcardLink = document.getElementById('downloadVcard');
-  if (vcardLink) {
-    vcardLink.href = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vcard);
-  }
+  if (vcardLink) vcardLink.href = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vcard);
 }
 
 // Copy email function
@@ -123,16 +116,13 @@ function setupCopyEmail() {
   if (copyBtn) {
     copyBtn.onclick = async () => {
       const text = document.getElementById('emailValue').textContent.replace('(at)', '@').trim();
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch (e) {
-        console.warn('Clipboard write failed', e);
-      }
+      try { await navigator.clipboard.writeText(text); } 
+      catch (e) { console.warn('Clipboard write failed', e); }
     };
   }
 }
 
-// Contact form handler
+// Contact form
 function handleContact(e) {
   e.preventDefault();
   const s = encodeURIComponent(document.getElementById('subject').value || '');
@@ -143,18 +133,13 @@ function handleContact(e) {
 
 // Experiments section setup
 function setupExperiments() {
-  const experimentItems = document.querySelectorAll('.experiment-item');
-  experimentItems.forEach(item => {
+  document.querySelectorAll('.experiment-item').forEach(item => {
     if (item.__wired) return;
     item.__wired = true;
 
     const button = item.querySelector('.expand-button');
     const details = item.querySelector('.details');
-    if (button && details) {
-      button.addEventListener('click', () => {
-        details.classList.toggle('open');
-      });
-    }
+    if (button && details) button.addEventListener('click', () => details.classList.toggle('open'));
   });
 }
 

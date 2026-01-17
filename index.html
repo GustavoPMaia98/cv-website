@@ -16,7 +16,6 @@
 <script src="script.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-  // Include experiments in the loader
   const sections = ['hero', 'research', 'education', 'experience', 'publications', 'tutoring'];
   const content = document.getElementById('content');
 
@@ -26,15 +25,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!response.ok) throw new Error(`Failed to load ${section}`);
       const html = await response.text();
       content.insertAdjacentHTML('beforeend', html);
+      console.log(`Loaded section: ${section}`);
     } catch (error) {
       console.error(error);
+
+      // Fallback: add empty section to keep page structure
+      const fallback = document.createElement('div');
+      fallback.id = section;
+      fallback.className = 'section';
+      fallback.innerHTML = `<h2>${section.charAt(0).toUpperCase() + section.slice(1)}</h2><p>Content unavailable.</p>`;
+      content.appendChild(fallback);
     }
   }
 
-  // Initialize all scripts after sections are loaded
+  // Initialize scripts after all sections are loaded
   initializeScripts();
 });
 </script>
-
 </body>
 </html>
