@@ -1,3 +1,5 @@
+let publicationsLoaded = false;
+
 // Timeline fade-in animation
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
@@ -37,7 +39,7 @@ function wireUpTimelineItems(){
 // BibTeX + DOI loader (dynamic publications)
 function loadPublications() {
   if (publicationsLoaded) return;
-  publicationsLoaded = false;
+  publicationsLoaded = true;
 
   fetch("publications.bib")
   .then(r => {
@@ -136,6 +138,3 @@ function initializeScripts() {
     contactForm.onsubmit = handleContact;
   }
 }
-
-// after the for loop in loadSections()
-initializeScripts();
