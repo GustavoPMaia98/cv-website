@@ -173,3 +173,7 @@ function initializeScripts() {
   const contactForm = document.getElementById('contactForm');
   if (contactForm) contactForm.onsubmit = handleContact;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializeScripts();
+});
