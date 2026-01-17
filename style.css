@@ -14,15 +14,7 @@
   color-scheme:dark;
 }
 
-/* Basic reset */
 *{box-sizing:border-box}
-html,body{height:100%}
-
-/* ========= Deep-space background (CSS-only) =========
-   - body background is a dark gradient fallback
-   - body::before = large blurred nebula layers (colored radial gradients)
-   - body::after  = starfield using multiple radial gradients positioned to look random
-*/
 body {
   margin: 0;
   min-height: 100vh;
@@ -32,7 +24,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Nebula / interstellar medium: large blurred color blobs */
 body::before{
   content: "";
   position: fixed;
@@ -40,38 +31,29 @@ body::before{
   z-index: -3;
   pointer-events: none;
   background-image:
-    radial-gradient(40vw 30vw at 10% 20%, rgba(124,58,237,0.14) 0%, rgba(124,58,237,0.06) 20%, transparent 40%),
-    radial-gradient(50vw 36vw at 75% 10%, rgba(34,211,238,0.12) 0%, rgba(34,211,238,0.05) 22%, transparent 45%),
-    radial-gradient(36vw 26vw at 40% 80%, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.04) 24%, transparent 48%),
-    radial-gradient(28vw 18vw at 85% 70%, rgba(236,72,153,0.06) 0%, rgba(236,72,153,0.03) 30%, transparent 60%);
+    radial-gradient(40vw 30vw at 10% 20%, rgba(124,58,237,0.14), transparent 40%),
+    radial-gradient(50vw 36vw at 75% 10%, rgba(34,211,238,0.12), transparent 45%),
+    radial-gradient(36vw 26vw at 40% 80%, rgba(59,130,246,0.10), transparent 48%),
+    radial-gradient(28vw 18vw at 85% 70%, rgba(236,72,153,0.06), transparent 60%);
   filter: blur(60px) saturate(110%);
-  transform: translate3d(0,0,0);
   mix-blend-mode: screen;
   opacity: 0.95;
-  will-change: transform;
-  animation: nebulaShift 70s linear infinite alternate;
 }
 
-/* Starfield (multiple layers, visually random) */
 body::after{
   content: "";
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-
   background-image:
-    /* a few individually-positioned stars as 'anchors' */
-    radial-gradient(circle at 12% 23%, rgba(255,255,255,0.95) 1px, transparent 1.4px),
-    radial-gradient(circle at 77% 64%, rgba(255,255,255,0.85) 1.1px, transparent 1.6px),
-    radial-gradient(circle at 33% 81%, rgba(255,255,255,0.7) 0.9px, transparent 1.4px),
-    radial-gradient(circle at 58% 14%, rgba(255,255,255,0.8) 1px, transparent 1.5px),
-
-    /* repeated layers of small stars at different scales */
-    radial-gradient(circle, rgba(255,255,255,0.92) 1px, transparent 1.6px),
-    radial-gradient(circle, rgba(255,255,255,0.72) 0.9px, transparent 1.4px),
-    radial-gradient(circle, rgba(255,255,255,0.55) 0.7px, transparent 1.2px);
-
+    radial-gradient(circle at 12% 23%, rgba(255,255,255,0.9) 1px, transparent 1.5px),
+    radial-gradient(circle at 77% 64%, rgba(255,255,255,0.8) 1px, transparent 1.6px),
+    radial-gradient(circle at 33% 81%, rgba(255,255,255,0.6) 0.8px, transparent 1.4px),
+    radial-gradient(circle at 58% 14%, rgba(255,255,255,0.7) 0.9px, transparent 1.5px),
+    radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(255,255,255,0.7) 0.9px, transparent 1.4px),
+    radial-gradient(circle, rgba(255,255,255,0.5) 0.7px, transparent 1.2px);
   background-size:
     300px 300px,
     420px 420px,
@@ -80,7 +62,6 @@ body::after{
     140px 140px,
     220px 220px,
     90px 90px;
-
   background-position:
     13px 29px,
     211px 97px,
@@ -89,30 +70,31 @@ body::after{
     0 0,
     120px 200px,
     45px 78px;
-
   opacity: 0.95;
   filter: brightness(105%) contrast(110%);
   mix-blend-mode: screen;
-  animation: starsTwinkle 9s ease-in-out infinite;
 }
 
-@keyframes nebulaShift {
-  0%   { transform: translate3d(-18px, -12px, 0) }
-  100% { transform: translate3d(18px, 12px, 0) }
-}
-@keyframes starsTwinkle {
-  0%   { opacity: 0.95; background-position: 0px 0px, 120px 220px, 60px 140px, 13px 29px, 0 0, 120px 200px, 45px 78px; }
-  50%  { opacity: 0.7; background-position: -30px 20px, 150px 240px, 30px 160px, 43px 49px, 30px 30px, 150px 220px, 15px 118px; }
-  100% { opacity: 0.95; background-position: 0px 0px, 120px 220px, 60px 140px, 13px 29px, 0 0, 120px 200px, 45px 78px; }
+.tutoring-box {
+    background: linear-gradient(135deg, #2b2f77, #1b9aaa);
+    border-radius: 18px;
+    padding: 1.8rem 2rem;
+    margin: 2.5rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; }
-  body::after { animation: none; }
+.tutoring-title {
+    font-family: 'Forte', cursive;
+    font-size: 48px;
+    color: #ffffff;
+    margin-top: 0;
 }
 
-/* Content container */
+.tutoring-box p,
+.tutoring-box li {
+    color: #f2f6ff;
+}
+
 .site{
   max-width:var(--max-width);
   margin:32px auto;
@@ -120,38 +102,16 @@ body::after{
   position: relative;
   z-index: 0;
 }
-
-/* Main navigation */
-.main-nav{
-  display:flex;
-  gap:16px;
-  align-items:center;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-}
-.main-nav a{
-  color:var(--muted);
-  text-decoration:none;
-  padding:8px 12px;
-  border-radius:8px;
-  font-weight:600;
-}
-.main-nav a:hover{ color:var(--text); background: rgba(255,255,255,0.02); }
-.main-nav a.active{ color:var(--text); border-bottom:2px solid rgba(125,211,252,0.25); }
-
-/* Typography & links */
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-h1,h2,h3{margin:0 0 12px 0}
-h1{font-size:28px}
-h2{font-size:20px}
+h2{margin:0 0 20px 0}
 
 /* ================= HERO ================= */
 .hero{
   background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
   padding:24px;
   border-radius:var(--radius-lg);
-  margin-bottom:36px;
+  margin-bottom:56px;
 }
 .hero-card{
   display:flex;
@@ -162,7 +122,7 @@ h2{font-size:20px}
   padding:22px;
 }
 .avatar-img{
-  width:160px;height:160px;
+  width:250px;height:250px;
   border-radius:16px;
   object-fit:cover;
   box-shadow:var(--shadow);
@@ -194,39 +154,125 @@ h2{font-size:20px}
 }
 
 /* ================= SECTIONS ================= */
-.section{margin-bottom:48px}
+.section{margin-bottom:64px}
 
-/* ================= TIMELINE (used on education/experience) ================= */
+/* ================= TIMELINE ================= */
 .timeline {
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,.15);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+  cursor: pointer;
+}
+
+.timeline-item.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 1;
 }
 
 .timeline-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 16px;
+  padding: 16px 16px 16px 36px;
   position: relative;
 }
 
 .timeline-header {
-  display:flex;
-  gap:14px;
-  align-items:center;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-.timeline-header img{
-  width:48px;height:48px;object-fit:contain;
+
+.timeline-header img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
-.meta{font-size:14px;color:var(--muted)}
 
-/* Expanded timeline items for education/experience pages (no hidden content) */
-.timeline-item-title{font-weight:700;margin-bottom:4px}
-.timeline-item-sub{font-size:14px;color:var(--muted);margin-bottom:8px}
-.timeline-item-desc{line-height:1.6;color:var(--text)}
+.timeline-item.publication .timeline-header img {
+  width:100px;
+  height:100px;
+  object-fit:contain;
+}
 
-/* Publications */
+.meta{font-size:15px;color:var(--muted)}
+.timeline-card p{margin:8px 0 0}
+
+/* ================= TIMELINE EXPANDABLE ================= */
+.timeline-expand {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+  padding: 0 0;
+  margin-top: 8px;
+}
+.timeline-expand.open {
+  padding: 12px 16px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  max-height: 2000px;
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+}
+
+.expand-body{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.expand-body p{
+  font-size:15px;
+  line-height:1.7;
+  color:var(--text);
+  margin:10px 0 14px;
+  letter-spacing:0.1px;
+}
+
+.expand-gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:16px;
+  margin-top:14px;
+}
+
+.expand-gallery img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid var(--border);
+  box-shadow:0 8px 22px rgba(0,0,0,.6);
+}
+
+/* ================= PUBLICATIONS ================= */
 .pub{
   background:var(--card);
   border:1px solid var(--border);
@@ -237,7 +283,22 @@ h2{font-size:20px}
 .pub-title{font-weight:600}
 .pub-meta{font-size:13px;color:var(--muted)}
 
-/* Contact */
+/* ================= CONTACT ================= */
+form input,
+form textarea {
+    color: #ffffff;
+}
+
+form input::placeholder,
+form textarea::placeholder {
+    color: #ffffff;
+    opacity: 0.7;
+}
+
+.contact-item span {
+    color: #ffffff;
+}
+
 .contact-grid{
   display:grid;
   grid-template-columns:1fr 380px;
@@ -259,7 +320,9 @@ h2{font-size:20px}
   align-items:center;
   margin-bottom:12px;
 }
-.contact-item strong{font-weight:600}
+
+.contact-item strong{font-weight:600; color: #ffffff}
+
 .btn{
   display:inline-flex;
   align-items:center;
@@ -285,11 +348,11 @@ h2{font-size:20px}
 }
 
 .keywords span {
-  background: rgba(125, 211, 252, 0.12); /* light accent */
+  background: rgba(125, 211, 252, 0.2);
   color: var(--accent);
   padding: 6px 10px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -303,87 +366,11 @@ form input, form textarea{
 }
 form textarea{min-height:120px}
 
-/* Reduced motion for timeline animations if any */
+/* ================= REDUCED MOTION ================= */
 @media (prefers-reduced-motion: reduce){
-  *{transition:none!important;animation:none!important}
+  .timeline-item{opacity:1;transform:none;transition:none}
 }
 
-/* Responsive tweaks */
 @media(max-width:700px){
   .hero-card{flex-direction:column;align-items:center;text-align:center}
-  .avatar-img{width:130px;height:130px}
-}
-
-/* ================= RESTORED MAIN PAGE STYLING ================= */
-
-/* Smooth entrance animation */
-.timeline-card {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.timeline-card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Restore hero spacing and emphasis */
-.hero {
-  padding: 40px 32px;
-}
-
-.hero h1 {
-  font-size: 34px;
-  line-height: 1.2;
-}
-
-.hero p {
-  max-width: 720px;
-  line-height: 1.65;
-}
-
-/* Restore card depth */
-.card,
-.timeline-card,
-.pub {
-  backdrop-filter: blur(6px);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.55);
-}
-
-/* Publications spacing fix */
-.pub {
-  margin-bottom: 20px;
-}
-
-/* Navigation visual weight */
-.main-nav {
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-/* Social links alignment fix */
-.social-links a {
-  min-height: 40px;
-}
-
-/* Research keywords spacing */
-.keywords span {
-  box-shadow: inset 0 0 0 1px rgba(125,211,252,0.25);
-}
-
-/* Ensure main page sections breathe */
-.section {
-  margin-top: 56px;
-}
-
-/* Mobile hero restore */
-@media (max-width: 700px) {
-  .hero {
-    padding: 28px 20px;
-  }
-
-  .hero h1 {
-    font-size: 28px;
-  }
 }
