@@ -93,28 +93,6 @@ body::after{
   mix-blend-mode: screen;
 }
 
-/* Tutoring Section Styles */
-
-.tutoring-box {
-    background: linear-gradient(135deg, #2b2f77, #1b9aaa); /* eye-catching colors */
-    border-radius: 18px;
-    padding: 1.8rem 2rem;
-    margin: 2.5rem 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
-.tutoring-title {
-    font-family: 'Forte', cursive;
-    font-size: 48px;  /* adjust if needed */
-    color: #ffffff;
-    margin-top: 0;
-}
-
-.tutoring-box p,
-.tutoring-box li {
-    color: #f2f6ff; /* text color for readability */
-}
-
 
 
 .site{
@@ -311,26 +289,6 @@ h2{margin:0 0 20px 0}
 
 
 /* ================= CONTACT ================= */
-
-/* Make user-typed text in inputs and textarea white */
-form input,
-form textarea {
-    color: #ffffff;
-}
-
-/* Make placeholder text white (optional: slightly lighter) */
-form input::placeholder,
-form textarea::placeholder {
-    color: #ffffff;
-    opacity: 0.7;
-}
-
-/* Make contact info gray text white */
-.contact-item span {
-    color: #ffffff;
-}
-
-
 .contact-grid{
   display:grid;
   grid-template-columns:1fr 380px;
@@ -352,9 +310,7 @@ form textarea::placeholder {
   align-items:center;
   margin-bottom:12px;
 }
-
-.contact-item strong{font-weight:600; color: #ffffff}
-
+.contact-item strong{font-weight:600}
 .btn{
   display:inline-flex;
   align-items:center;
@@ -384,7 +340,7 @@ form textarea::placeholder {
   color: var(--accent);
   padding: 6px 10px;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -420,7 +376,7 @@ form textarea{min-height:120px}
     <div class="avatar-fallback" style="display:none">GM</div>
     <div>
       <h1>Gustavo Pinho Maia</h1>
-      <div class="role">PhD student in Chemistry (Astrobiology); Organic Chemistry Tutor </div>
+      <div class="role">PhD student in Chemistry (Astrobiology)</div>
       <p>
         Research on mechanochemical and shock-driven synthesis of organic molecules
         relevant to prebiotic chemistry and the origin of life.
@@ -865,53 +821,56 @@ form textarea{min-height:120px}
 </section>
 
 
-<!-- TUTORING + CONTACT -->
+<!-- TUTORING (added before Contact) -->
 <section class="section" id="tutoring">
-  <div class="tutoring-box">
-    <div class="tutoring-title-wrapper" style="display:flex; align-items:center; justify-content:space-between;">
-  <h2 style="font-family: 'Forte', cursive; font-size: 3.3em; margin:0;">Cientifica(mente)</h2>
-  <img src="images/portugal.png" alt="Portugal Flag" style="width:60px; height:auto; border-radius:6px;">
-</div>
-
-    
+  <h2 style="font-family: 'Forte', cursive; font-size: 48px;">Cientifica(mente) / Tutoring</h2>
+  <div class="card">
     <p>
-      <strong>Química não precisa de ser decorada — precisa de ser compreendida.</strong>  
+      <strong>Química Orgânica não precisa de ser decorada — precisa de ser compreendida.</strong>  
     </p>
     <p>
       A minha abordagem centra‑se em ajudar os alunos a entenderem verdadeiramente como e porquê as reações químicas acontecem, desenvolvendo o bom senso químico essencial para pensar e raciocinar como um químico. O percurso começa pelos fundamentos da química, abordando ligações químicas, estrutura molecular e a relação entre estrutura e propriedade, e evolui de forma lógica para a estereoquímica e para os principais tipos de reações em química orgânica, como substituições, eliminações e adições.
-      As aulas são personalizadas às necessidades de cada aluno, promovendo o pensamento crítico, a curiosidade científica e uma compreensão sólida e duradoura da matéria, com impacto direto no desempenho académico e na confiança perante a disciplina.
+As aulas são personalizadas às necessidades de cada aluno, promovendo o pensamento crítico, a curiosidade científica e uma compreensão sólida e duradoura da matéria, com impacto direto no desempenho académico e na confiança perante a disciplina.
     </p>
 
-     <div class="keywords" style="margin-top:30px">
-      <span>Química Geral </span>
-      <span>Química Orgânica </span>
-      <span>Escrita Cientifica </span>
+    <div class="keywords" style="margin-top:12px">
+      <span>General Chemistry</span>
+      <span>Spectroscopy (UV–Vis, NMR)</span>
+      <span>Chromatography (HPLC)</span>
+      <span>Data Analysis & Plotting</span>
+      <span>Scientific Writing</span>
     </div>
 
-    <p style="font-family: 'Forte', cursive; color: #a0e4f0; font-size: 2.2em; margin-top:24px">
-      Precisas de ajuda? Fala comigo!
-    </p>
-
-    <!-- CONTACT INSIDE TUTORING -->
-    <div class="contact-grid" style="margin-top:2rem; display:grid; grid-template-columns:1fr; gap:20px;">
-      <div class="card">
-        
-          <form id="contactForm" onsubmit="return handleContact(event)">
-          <input id="name" placeholder="Your name" required>
-          <input id="email" type="email" placeholder="Your email" required>
-          <input id="subject" placeholder="Subject" required>
-          <textarea id="message" placeholder="Message" required></textarea>
-          <div style="margin-top:10px;display:flex;gap:10px">
-            <button class="btn" type="submit">Send</button>
-            <button class="btn ghost" type="button" onclick="this.form.reset()">Clear</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
+    <p style="margin-top:12px">Rates and availability upon request. To enquire, please <a href="mailto:gustavopinho.maia@mnhn.fr">email for tutoring</a>.</p>
   </div>
 </section>
 
+<!-- CONTACT -->
+<section class="section">
+<h2>Contact</h2>
+<div class="contact-grid">
+
+<div class="card">
+  <div class="contact-item">
+    <strong>Email:</strong> <span id="emailValue">gustavopinho.maia(at)mnhn.fr</span>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="btn" id="copyEmailBtn">Copy email</button>
+    <a class="btn ghost" id="downloadVcard" download="gustavo_maia.vcf">Download vCard</a>
+  </div>
+
+  <form id="contactForm" onsubmit="return handleContact(event)">
+    <input id="name" placeholder="Your name" required>
+    <input id="email" type="email" placeholder="Your email" required>
+    <input id="subject" placeholder="Subject" required>
+    <textarea id="message" placeholder="Message" required></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button class="btn" type="submit">Send</button>
+      <button class="btn ghost" type="button" onclick="this.form.reset()">Clear</button>
+    </div>
+  </form>
+</div>
 
 </div>
 </section>

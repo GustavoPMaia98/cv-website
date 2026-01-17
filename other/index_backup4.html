@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Gustavo P. Maia — Academic CV</title>
+<meta name="description" content="Gustavo P. Maia — PhD student in Astrobiology. Research, education, publications, and contact.">
+
+<style>
+:root{
+  --bg:#0b1020;
+  --card:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.08);
+  --text:#e7edf6;
+  --muted:#9aa4b2;
+  --accent:#7dd3fc;
+  --accent-strong:#60a5fa;
+  --radius-lg:18px;
+  --radius-md:12px;
+  --shadow:0 10px 30px rgba(0,0,0,.6);
+  --max-width:1120px;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#070c1d,#0b1020 70%);
+  color:var(--text);
+}
+.site{
+  max-width:var(--max-width);
+  margin:32px auto;
+  padding:20px;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+h2{margin:0 0 20px 0}
+
+/* ================= HERO ================= */
+.hero{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  padding:24px;
+  border-radius:var(--radius-lg);
+  margin-bottom:56px;
+}
+.hero-card{
+  display:flex;
+  gap:24px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px;
+}
+.avatar-img{
+  width:250px;height:250px;
+  border-radius:16px;
+  object-fit:cover;
+  box-shadow:var(--shadow);
+}
+.avatar-fallback{
+  width:130px;height:130px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#0ea5a5,#60a5fa);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:32px;color:#03131e;
+}
+.role{color:var(--muted);margin-bottom:10px}
+
+/* ================= SOCIAL LINKS ================= */
+.social-links{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.social-links a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.04);
+  font-weight:600;
+}
+
+/* ================= SECTIONS ================= */
+.section{margin-bottom:64px}
+
+/* ================= TIMELINE ================= */
+.timeline{
+  position:relative;
+  padding-left:36px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:12px;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:rgba(255,255,255,.15);
+}
+.timeline-item{
+  position:relative;
+  margin-bottom:32px;
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .6s ease, transform .6s ease;
+  cursor:pointer;
+}
+.timeline-item.visible{
+  opacity:1;
+  transform:none;
+}
+.timeline-item::before{
+  content:"";
+  position:absolute;
+  left:-26px;
+  top:10px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--accent);
+}
+.timeline-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px;
+}
+.timeline-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.timeline-header img{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+}
+
+/* Publications timeline logos */
+.timeline-item.publication .timeline-header img {
+  width:100px;
+  height:100px;
+  object-fit:contain;
+}
+
+
+.meta{font-size:13px;color:var(--muted)}
+.timeline-card p{margin:8px 0 0}
+
+/* ================= TIMELINE EXPANDABLE ================= */
+.timeline-expand {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+  padding: 0 0;
+  margin-top: 8px;
+}
+.timeline-expand.open {
+  padding: 12px 16px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  max-height: 2000px;
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+}
+
+.expand-body{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.expand-body p{
+  font-size:15px;          /* ← change text size here */
+  line-height:1.7;
+  color:var(--text);
+  margin:10px 0 14px;
+  letter-spacing:0.1px;
+}
+
+.expand-gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:16px;
+  margin-top:14px;
+}
+
+.expand-gallery img{
+  width:100%;
+  height:160px;        /* ← CHANGE SIZE HERE */
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid var(--border);
+  box-shadow:0 8px 22px rgba(0,0,0,.6);
+}
+
+/* ================= PUBLICATIONS ================= */
+.pub{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;
+  margin-bottom:14px;
+}
+.pub-title{font-weight:600}
+.pub-meta{font-size:13px;color:var(--muted)}
+
+
+
+/* ================= CONTACT ================= */
+.contact-grid{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+}
+@media(max-width:900px){
+  .contact-grid{grid-template-columns:1fr}
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:18px;
+}
+.contact-item{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:12px;
+}
+.contact-item strong{font-weight:600}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-strong));
+  color:#04203a;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+.btn.ghost{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--accent);
+}
+
+form input, form textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:inherit;
+}
+form textarea{min-height:120px}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce){
+  .timeline-item{opacity:1;transform:none;transition:none}
+}
+
+@media(max-width:700px){
+  .hero-card{flex-direction:column;align-items:center;text-align:center}
+}
+</style>
+</head>
+
+<body>
+<div class="site">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-card">
+    <img src="images/avatar.jpg" alt="Gustavo Maia" class="avatar-img"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback" style="display:none">GM</div>
+    <div>
+      <h1>Gustavo Pinho Maia</h1>
+      <div class="role">PhD student in Chemistry (Astrobiology)</div>
+      <p>
+        Research on mechanochemical and shock-driven synthesis of organic molecules
+        relevant to prebiotic chemistry and the origin of life.
+      </p>
+      <div class="social-links">
+        <a href="https://orcid.org/0000-0001-5314-8816" target="_blank">
+          <img src="images/logos/orcid.png" width="20" height="20"> ORCID
+        </a>
+        <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank">
+          <img src="images/logos/linkedin.png" width="20" height="20"> LinkedIn
+        </a>
+        <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank">
+          <img src="images/logos/researchgate.png" width="20" height="20"> ResearchGate
+        </a>
+
+        <a href="mailto:gustavopinho.maia@mnhn.fr" id="emailLink" aria-label="Email Gustavo P. Maia" title="Email Gustavo P. Maia">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M2 6.5C2 5.67 2.67 5 3.5 5h17c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5h-17A1.5 1.5 0 0 1 2 17.5v-11zM4 7v.83l8 5.33 8-5.33V7l-8 5-8-5z"/>
+        </svg>
+        Email
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="section">
+<h2>Research Interests</h2>
+<div class="card">
+  <p class="meta">
+    Mechanochemical energy and prebiotic synthesis; mechanochemical reactivity of ribonucleosides;
+    shock-induced transformation and degradation of organic molecules in extraterrestrial materials;
+    analytical approaches to organic matter in meteorites.
+  </p>
+</div>
+</section>
+
+<!-- EDUCATION -->
+<section class="section">
+<h2>Education</h2>
+<div class="timeline">
+
+<!-- PhD -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>PhD in Chemistry (Astrobiology)</strong>
+        <div class="meta">2023–2027 · Ongoing · Universidade de Lisboa — Instituto Superior Técnico</div>
+      </div>
+    </div>
+    <p><em>Mechanochemical energy and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<!-- MSc -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="IST">
+      <div>
+        <strong>MSc in Chemistry</strong>
+        <div class="meta">2020–2022 · Concluded · Instituto Superior Técnico</div>
+      </div>
+    </div>
+    <p><em>Ribonucleoside stability and prebiotic synthesis</em></p>
+  </div>
+</div>
+
+<!-- BSc -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI">
+      <div>
+        <strong>BSc in Industrial Chemistry</strong>
+        <div class="meta">2017–2020 · Universidade da Beira Interior</div>
+      </div>
+    </div>
+    <p><em>Optimization of quinoline N-oxide synthesis</em></p>
+  </div>
+</div>
+
+</div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="section">
+<h2>Experience</h2>
+<div class="timeline">
+
+<!-- 1 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/mnhn.png" alt="MNHN — IMPMC">
+      <div>
+        <strong>Visiting Scientist</strong>
+        <div class="meta">Jan 2025 – Present · MNHN — IMPMC, France</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Collaborative research at MNHN focusing on mechanochemical synthesis, sample analysis, and astrobiology methods.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/mnhn1.jpg">
+        <img src="images/experiences/mnhn2.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Timeline Item -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/nasa.png" alt="NASA Goddard logo" class="org-logo">
+      <div class="timeline-title">
+        <strong>Visiting Scientist</strong>
+        <div class="meta">
+          Nov 2024 – Dec 2024 · NASA Goddard Space Flight Center, USA
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>
+        This study investigated the influence of mechanochemical processeson the extraction and recovery of organic compounds from extraterrestrial materials.
+        Controlled mechanical activation techniques were applied to evaluate their effects on extraction efficiency, molecular integrity, and degradation pathways.
+      </p>
+
+      <p>
+        Particular attention was given to understanding how mechanical forces impact sensitive organic molecules during sample preparation.
+        In parallel, extensive experience was gained in the development, optimisation, and application of
+        high-performance liquid chromatography–mass spectrometry (HPLC–MS).
+      </p>
+
+      <p>
+        Chromatographic conditions, ionisation parameters, and mass spectrometric settings were systematically optimised to enhance detection and characterisation of complex organic mixtures.
+        The project involved routine operation, troubleshooting, and refinement for reliable identification of low-abundance compounds.
+      </p>
+
+      <div class="expand-gallery">
+        <img src="images/nasa1.png" alt="Astrobiological Analysis Laboratory at NASA GSFC">
+        <img src="images/nasa2.png">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 3 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ist.png" alt="Instituto Superior Técnico">
+      <div>
+        <strong>Invited Assistant (University Teacher)</strong>
+        <div class="meta">Sep 2024 – Oct 2024 · Instituto Superior Técnico, Portugal</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Assisted in teaching undergraduate chemistry courses and supervised lab experiments.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ist1.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/aneq.png" alt="ANEQ">
+      <div>
+        <strong>President of the Fiscal Council</strong>
+        <div class="meta">Jun 2021 – May 2022 · ANEQ, Portugal</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Oversaw fiscal compliance, audited financial statements, and coordinated council meetings.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/aneq1.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/aneq.png" alt="ANEQ">
+      <div>
+        <strong>Vice President</strong>
+        <div class="meta">Jun 2020 – Jun 2021 · ANEQ, Portugal</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Assisted the president and managed organizational activities for student chemistry association.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/aneq2.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI — UBIQUÍMICA">
+      <div>
+        <strong>Vice-President — UBIQUÍMICA</strong>
+        <div class="meta">Sep 2019 – Dec 2020 · University of Beira Interior</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Managed student projects, coordinated events, and facilitated communication between members.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubiquimica1.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="Universidade da Beira Interior">
+      <div>
+        <strong>Research Intern</strong>
+        <div class="meta">Jul 2020 – Sep 2020 · Universidade da Beira Interior</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Conducted laboratory research on chemical synthesis under supervision of faculty researchers.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubi1.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="Universidade da Beira Interior">
+      <div>
+        <strong>Delegate of Industrial Chemistry Students</strong>
+        <div class="meta">Oct 2019 – Sep 2020 · Universidade da Beira Interior</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Represented the student body, conveyed concerns, and organized class activities and discussions.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubi2.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/nestle.png" alt="Nestlé Portugal">
+      <div>
+        <strong>Factory Worker</strong>
+        <div class="meta">Aug 2019 – Sep 2019 · Nestlé Portugal</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Performed operational tasks in the production line, quality control, and packaging processes.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/nestle1.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ubi.png" alt="UBI — UBIQUÍMICA">
+      <div>
+        <strong>Scientific Committee Member — UBIQUÍMICA</strong>
+        <div class="meta">Aug 2018 – Aug 2019 · University of Beira Interior</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Reviewed student projects and contributed to planning of academic events and workshops.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ubiquimica2.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="timeline-item">
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <img src="images/logos/ramada.png" alt="Ramada Aços">
+      <div>
+        <strong>Professional Internship</strong>
+        <div class="meta">Jun 2014 – Jul 2014 · Ramada Aços, S.A.</div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-expand">
+    <div class="expand-body">
+      <p>Gained practical experience in industrial processes, safety procedures, and workflow optimization.</p>
+      <div class="expand-gallery">
+        <img src="images/experiences/ramada1.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+
+<!-- PUBLICATIONS -->
+<section class="section">
+  <h2>Publications</h2>
+  <div class="timeline">
+
+    <!-- Example Publication 1 -->
+    <div class="timeline-item publication">
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <img src="images/logos/applied_sciences.png" alt="Applied Sciences">
+          <div>
+            <strong>Mechanochemical Reactivity of Ribonucleosides Mediated by Inorganic Species</strong>
+            <div class="meta">2025 · Applied Sciences</div>
+          </div>
+        </div>
+        <p><em>Study on mechanochemical reactivity of ribonucleosides, relevant to prebiotic chemistry and astrobiology.</em></p>
+        <p><a href="https://doi.org/10.3390/app12345678" target="_blank">doi.org/10.3390/app12345678</a></p>
+      </div>
+    </div>
+
+    <!-- Example Publication 2 -->
+    <div class="timeline-item publication">
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <img src="images/logos/molecules.png" alt="Molecules">
+          <div>
+            <strong>Shock-Induced Degradation of Guanosine and Uridine Promoted by Nickel and Carbonate</strong>
+            <div class="meta">2023 · Molecules</div>
+          </div>
+        </div>
+        <p><em>Investigation of shock-driven degradation of nucleosides with implications for meteoritic organic matter transformations.</em></p>
+        <p><a href="https://doi.org/10.3390/molecules12345678" target="_blank">doi.org/10.3390/molecules12345678</a></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <!-- Dynamically loaded BibTeX publications -->
+  <div id="pub-list"></div>
+</section>
+
+
+<!-- CONTACT -->
+<section class="section">
+<h2>Contact</h2>
+<div class="contact-grid">
+
+<div class="card">
+  <div class="contact-item">
+    <strong>Email:</strong> <span id="emailValue">gustavopinho.maia(at)mnhn.fr</span>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="btn" id="copyEmailBtn">Copy email</button>
+    <a class="btn ghost" id="downloadVcard" download="gustavo_maia.vcf">Download vCard</a>
+  </div>
+
+  <form id="contactForm" onsubmit="return handleContact(event)">
+    <input id="name" placeholder="Your name" required>
+    <input id="email" type="email" placeholder="Your email" required>
+    <input id="subject" placeholder="Subject" required>
+    <textarea id="message" placeholder="Message" required></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button class="btn" type="submit">Send</button>
+      <button class="btn ghost" type="button" onclick="this.form.reset()">Clear</button>
+    </div>
+  </form>
+</div>
+
+</div>
+</section>
+
+</div>
+
+<script>
+// Timeline fade-in animation
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll(".timeline-item").forEach(i=>observer.observe(i));
+
+
+// BibTeX + DOI placeholder (optional)
+fetch("publications.bib")
+.then(r=>r.text())
+.then(text=>{
+  const entries=text.split("@").slice(1);
+  const c=document.getElementById("pub-list");
+  entries.forEach(e=>{
+    const t=(e.match(/title\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const a=(e.match(/author\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const y=(e.match(/year\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    const d=(e.match(/doi\s*=\s*[{"]([^}"]+)/i)||[])[1];
+    if(!t) return;
+    c.innerHTML+=`
+      <div class="pub">
+        <div class="pub-title">${t}</div>
+        <div class="pub-meta">${a||""}${y?" · "+y:""}</div>
+        ${d?`<a href="https://doi.org/${d}" target="_blank">DOI: ${d}</a>`:""}</div>`;
+  });
+});
+
+// vCard
+(function(){
+  const vcard=[
+    'BEGIN:VCARD','VERSION:3.0',
+    'FN:Gustavo P. Maia',
+    'EMAIL:gustavopinho.maia(at)mnhn.fr',
+    'URL:https://orcid.org/0000-0001-5314-8816',
+    'END:VCARD'
+  ].join('\r\n');
+  document.getElementById('downloadVcard').href=
+    'data:text/vcard;charset=utf-8,'+encodeURIComponent(vcard);
+})();
+
+// Copy email
+document.getElementById('copyEmailBtn').onclick=async()=>{
+  await navigator.clipboard.writeText(
+    document.getElementById('emailValue').textContent
+  );
+};
+
+// Contact form
+function handleContact(e){
+  e.preventDefault();
+  const s=encodeURIComponent(subject.value);
+  const b=encodeURIComponent(message.value);
+  location.href=`mailto:gustavopinho.maia@mnhn.fr?subject=${s}&body=${b}`;
+  return false;
+}
+
+// Accordion expand for experiences
+document.querySelectorAll('.timeline-item').forEach(item=>{
+  item.addEventListener('click', e=>{
+    const expand = item.querySelector('.timeline-expand');
+    if(!expand) return;
+    const isOpen = expand.classList.contains('open');
+    // Close all others
+    document.querySelectorAll('.timeline-expand.open').forEach(el=>{
+      if(el!==expand) el.classList.remove('open');
+    });
+    if(!isOpen) expand.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>

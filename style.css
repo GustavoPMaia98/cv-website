@@ -1,106 +1,389 @@
-<!-- FILE: style.css -->
+:root{
+  --bg:#0b1020;
+  --card:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.08);
+  --text:#e7edf6;
+  --muted:#9aa4b2;
+  --accent:#7dd3fc;
+  --accent-strong:#60a5fa;
+  --radius-lg:18px;
+  --radius-md:12px;
+  --shadow:0 10px 30px rgba(0,0,0,.6);
+  --max-width:1120px;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:dark;
 }
 
-
+/* Basic reset */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html,body{height:100%}
 
-
-a{color:inherit}
-
-
-.site{min-height:100vh;display:flex;flex-direction:column}
-
-
-/* Header */
-.site-header{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:transparent}
-.brand-link{display:flex;align-items:center;text-decoration:none;color:inherit}
-.logo{width:56px;height:56px;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-right:14px}
-.brand-text .name{font-weight:700;font-size:16px}
-.brand-text .position{color:var(--muted);font-size:13px}
-
-
-.main-nav{display:flex;gap:12px}
-.nav-item{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-size:14px}
-.nav-item[aria-current="page"]{background:linear-gradient(90deg, rgba(11,107,99,0.08), rgba(24,49,83,0.04));color:var(--accent-2);font-weight:600}
-
-
-/* Hero */
-.hero{position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background-image:var(--hero-image);background-size:cover;background-position:center;filter:contrast(0.95) saturate(0.95);transform:scale(1.02)}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(15,23,36,0.18), rgba(11,107,99,0.06));mix-blend-mode:multiply}
-.hero-inner{position:relative;display:flex;justify-content:center;padding:64px 20px}
-
-
-.profile-card{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 320px;gap:28px;background:var(--glass);backdrop-filter:blur(var(--blur));border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
-
-
-.media{display:flex;align-items:center;gap:16px}
-.avatar-img{width:96px;height:96px;border-radius:12px;object-fit:cover;display:block}
-.avatar-fallback{width:96px;height:96px;border-radius:12px;background:linear-gradient(135deg,var(--accent-2),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px}
-
-
-.profile-body{padding-right:6px}
-.profile-name{margin:0 0 6px 0;font-size:22px}
-.profile-role{color:var(--muted);margin:0 0 12px 0}
-.intro{margin:0 0 12px 0;line-height:1.45}
-.kv{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.tag{background:rgba(255,255,255,0.9);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--accent-2);border:1px solid rgba(24,49,83,0.06)}
-
-
-.hero-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px}
-.btn.primary{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#fff}
-.btn.outline{background:transparent;border:1px solid rgba(15,23,36,0.06);color:var(--accent-2)}
-.btn.ghost{background:transparent;color:var(--accent-2)}
-
-
-.profile-meta{padding:6px 8px;border-left:1px solid rgba(15,23,36,0.04)}
-.meta-block h4{margin:0 0 6px 0;font-size:15px}
-.muted{color:var(--muted);font-size:14px}
-.links{padding-left:16px;margin:6px 0}
-.links a{text-decoration:underline}
-
-
-/* Overview cards */
-.sections{padding:34px 24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,36,0.04)}
-
-
-/* Contact page tweaks */
-.contact-page{padding:28px}
-.site-header.small{padding:12px 20px}
-.contact-card{max-width:760px;margin:28px auto}
-.table{width:100%;border-collapse:collapse}
-.table th{vertical-align:top;padding:10px 12px;color:var(--muted);text-align:left;width:140px}
-.table td{padding:10px 12px}
-
-
-/* Footer */
-.site-footer{padding:20px 32px;background:transparent}
-.footer-inner{display:flex;flex-direction:row;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;gap:18px}
-.footer-nav a{margin-left:12px;color:var(--muted);text-decoration:none}
-
-
-/* Responsive */
-@media (max-width:980px){
-.profile-card{grid-template-columns:1fr;gap:18px}
-.profile-meta{border-left:none;border-top:1px solid rgba(15,23,36,0.04);padding-top:12px}
-.hero-inner{padding:40px 18px}
-.main-nav{display:none}
+/* ========= Deep-space background (CSS-only) =========
+   - body background is a dark gradient fallback
+   - body::before = large blurred nebula layers (colored radial gradients)
+   - body::after  = starfield using multiple radial gradients positioned to look random
+*/
+body {
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(7,12,29,1), rgba(11,16,32,1) 70%);
+  overflow-x: hidden;
 }
 
-
-@media (max-width:520px){
-.logo{width:48px;height:48px;font-size:16px;margin-right:10px}
-.avatar-img,.avatar-fallback{width:80px;height:80px}
-.profile-name{font-size:20px}
+/* Nebula / interstellar medium: large blurred color blobs */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image:
+    radial-gradient(40vw 30vw at 10% 20%, rgba(124,58,237,0.14) 0%, rgba(124,58,237,0.06) 20%, transparent 40%),
+    radial-gradient(50vw 36vw at 75% 10%, rgba(34,211,238,0.12) 0%, rgba(34,211,238,0.05) 22%, transparent 45%),
+    radial-gradient(36vw 26vw at 40% 80%, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.04) 24%, transparent 48%),
+    radial-gradient(28vw 18vw at 85% 70%, rgba(236,72,153,0.06) 0%, rgba(236,72,153,0.03) 30%, transparent 60%);
+  filter: blur(60px) saturate(110%);
+  transform: translate3d(0,0,0);
+  mix-blend-mode: screen;
+  opacity: 0.95;
+  will-change: transform;
+  animation: nebulaShift 70s linear infinite alternate;
 }
 
+/* Starfield (multiple layers, visually random) */
+body::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
 
-/* Prefer reduced motion */
-@media (prefers-reduced-motion:reduce){
-*{transition:none!important}
+  background-image:
+    /* a few individually-positioned stars as 'anchors' */
+    radial-gradient(circle at 12% 23%, rgba(255,255,255,0.95) 1px, transparent 1.4px),
+    radial-gradient(circle at 77% 64%, rgba(255,255,255,0.85) 1.1px, transparent 1.6px),
+    radial-gradient(circle at 33% 81%, rgba(255,255,255,0.7) 0.9px, transparent 1.4px),
+    radial-gradient(circle at 58% 14%, rgba(255,255,255,0.8) 1px, transparent 1.5px),
+
+    /* repeated layers of small stars at different scales */
+    radial-gradient(circle, rgba(255,255,255,0.92) 1px, transparent 1.6px),
+    radial-gradient(circle, rgba(255,255,255,0.72) 0.9px, transparent 1.4px),
+    radial-gradient(circle, rgba(255,255,255,0.55) 0.7px, transparent 1.2px);
+
+  background-size:
+    300px 300px,
+    420px 420px,
+    560px 560px,
+    380px 380px,
+    140px 140px,
+    220px 220px,
+    90px 90px;
+
+  background-position:
+    13px 29px,
+    211px 97px,
+    87px 341px,
+    173px 61px,
+    0 0,
+    120px 200px,
+    45px 78px;
+
+  opacity: 0.95;
+  filter: brightness(105%) contrast(110%);
+  mix-blend-mode: screen;
+  animation: starsTwinkle 9s ease-in-out infinite;
 }
 
+@keyframes nebulaShift {
+  0%   { transform: translate3d(-18px, -12px, 0) }
+  100% { transform: translate3d(18px, 12px, 0) }
+}
+@keyframes starsTwinkle {
+  0%   { opacity: 0.95; background-position: 0px 0px, 120px 220px, 60px 140px, 13px 29px, 0 0, 120px 200px, 45px 78px; }
+  50%  { opacity: 0.7; background-position: -30px 20px, 150px 240px, 30px 160px, 43px 49px, 30px 30px, 150px 220px, 15px 118px; }
+  100% { opacity: 0.95; background-position: 0px 0px, 120px 220px, 60px 140px, 13px 29px, 0 0, 120px 200px, 45px 78px; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  body::after { animation: none; }
+}
+
+/* Content container */
+.site{
+  max-width:var(--max-width);
+  margin:32px auto;
+  padding:20px;
+  position: relative;
+  z-index: 0;
+}
+
+/* Main navigation */
+.main-nav{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+.main-nav a{
+  color:var(--muted);
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:600;
+}
+.main-nav a:hover{ color:var(--text); background: rgba(255,255,255,0.02); }
+.main-nav a.active{ color:var(--text); border-bottom:2px solid rgba(125,211,252,0.25); }
+
+/* Typography & links */
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3{margin:0 0 12px 0}
+h1{font-size:28px}
+h2{font-size:20px}
+
+/* ================= HERO ================= */
+.hero{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  padding:24px;
+  border-radius:var(--radius-lg);
+  margin-bottom:36px;
+}
+.hero-card{
+  display:flex;
+  gap:24px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px;
+}
+.avatar-img{
+  width:160px;height:160px;
+  border-radius:16px;
+  object-fit:cover;
+  box-shadow:var(--shadow);
+}
+.avatar-fallback{
+  width:130px;height:130px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#0ea5a5,#60a5fa);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:32px;color:#03131e;
+}
+.role{color:var(--muted);margin-bottom:10px}
+
+/* ================= SOCIAL LINKS ================= */
+.social-links{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.social-links a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.04);
+  font-weight:600;
+}
+
+/* ================= SECTIONS ================= */
+.section{margin-bottom:48px}
+
+/* ================= TIMELINE (used on education/experience) ================= */
+.timeline {
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.timeline-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  position: relative;
+}
+
+.timeline-header {
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.timeline-header img{
+  width:48px;height:48px;object-fit:contain;
+}
+.meta{font-size:14px;color:var(--muted)}
+
+/* Expanded timeline items for education/experience pages (no hidden content) */
+.timeline-item-title{font-weight:700;margin-bottom:4px}
+.timeline-item-sub{font-size:14px;color:var(--muted);margin-bottom:8px}
+.timeline-item-desc{line-height:1.6;color:var(--text)}
+
+/* Publications */
+.pub{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;
+  margin-bottom:14px;
+}
+.pub-title{font-weight:600}
+.pub-meta{font-size:13px;color:var(--muted)}
+
+/* Contact */
+.contact-grid{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+}
+@media(max-width:900px){
+  .contact-grid{grid-template-columns:1fr}
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:18px;
+}
+.contact-item{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:12px;
+}
+.contact-item strong{font-weight:600}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-strong));
+  color:#04203a;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+.btn.ghost{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--accent);
+}
+
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.keywords span {
+  background: rgba(125, 211, 252, 0.12); /* light accent */
+  color: var(--accent);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+form input, form textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:inherit;
+}
+form textarea{min-height:120px}
+
+/* Reduced motion for timeline animations if any */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* Responsive tweaks */
+@media(max-width:700px){
+  .hero-card{flex-direction:column;align-items:center;text-align:center}
+  .avatar-img{width:130px;height:130px}
+}
+
+/* ================= RESTORED MAIN PAGE STYLING ================= */
+
+/* Smooth entrance animation */
+.timeline-card {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Restore hero spacing and emphasis */
+.hero {
+  padding: 40px 32px;
+}
+
+.hero h1 {
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+.hero p {
+  max-width: 720px;
+  line-height: 1.65;
+}
+
+/* Restore card depth */
+.card,
+.timeline-card,
+.pub {
+  backdrop-filter: blur(6px);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.55);
+}
+
+/* Publications spacing fix */
+.pub {
+  margin-bottom: 20px;
+}
+
+/* Navigation visual weight */
+.main-nav {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Social links alignment fix */
+.social-links a {
+  min-height: 40px;
+}
+
+/* Research keywords spacing */
+.keywords span {
+  box-shadow: inset 0 0 0 1px rgba(125,211,252,0.25);
+}
+
+/* Ensure main page sections breathe */
+.section {
+  margin-top: 56px;
+}
+
+/* Mobile hero restore */
+@media (max-width: 700px) {
+  .hero {
+    padding: 28px 20px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+}
