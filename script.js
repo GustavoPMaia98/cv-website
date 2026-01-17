@@ -141,21 +141,35 @@ function handleContact(e) {
   return false;
 }
 
+// Experiments section setup
+function setupExperiments() {
+  const experimentItems = document.querySelectorAll('.experiment-item');
+  experimentItems.forEach(item => {
+    if (item.__wired) return;
+    item.__wired = true;
+
+    const button = item.querySelector('.expand-button');
+    const details = item.querySelector('.details');
+    if (button && details) {
+      button.addEventListener('click', () => {
+        details.classList.toggle('open');
+      });
+    }
+  });
+}
+
 // Initialize all scripts after sections are loaded
 function initializeScripts() {
   document.querySelectorAll(".timeline-item").forEach(i => observer.observe(i));
 
   wireUpTimelineItems();
 
-  if (document.getElementById("pub-list")) {
-    loadPublications();
-  }
+  if (document.getElementById("pub-list")) loadPublications();
 
   setupVCard();
   setupCopyEmail();
+  setupExperiments();
 
   const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.onsubmit = handleContact;
-  }
+  if (contactForm) contactForm.onsubmit = handleContact;
 }
