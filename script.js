@@ -36,6 +36,9 @@ function wireUpTimelineItems(){
 
 // BibTeX + DOI loader (dynamic publications)
 function loadPublications() {
+  if (publicationsLoaded) return;
+  publicationsLoaded = false;
+
   fetch("publications.bib")
   .then(r => {
     if(!r.ok) throw new Error('no bib');
@@ -47,44 +50,16 @@ function loadPublications() {
     if (!container) return;
 
     entries.forEach(e => {
-      const title = (e.match(/title\s*=\s*[{\"]([^}\"]+)/i) || [])[1];
-      const author = (e.match(/author\s*=\s*[{\"]([^}\"]+)/i) || [])[1];
-      const year = (e.match(/year\s*=\s*[{\"]([^}\"]+)/i) || [])[1];
-      const doi = (e.match(/doi\s*=\s*[{\"]([^}\"]+)/i) || [])[1];
-      const abstract = (e.match(/abstract\s*=\s*[{\"]([^}\"]+)/i) || [])[1] || "";
-
-      if(!title) return;
-
-      const item = document.createElement("div");
-      item.className = "timeline-item publication";
-      item.innerHTML = `
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <strong>${escapeHtml(title)}</strong>
-              <div class="meta">${escapeHtml(author || "")}${year ? " · " + escapeHtml(year) : ""}</div>
-            </div>
-          </div>
-          <p><em>Click to view abstract</em></p>
-        </div>
-        <div class="timeline-expand">
-          <div class="expand-body">
-            <p>${escapeHtml(abstract)}</p>
-            ${doi ? `<p><a href="https://doi.org/${encodeURIComponent(doi)}" target="_blank" rel="noopener noreferrer"><strong>doi.org/${escapeHtml(doi)}</strong></a></p>` : ""}
-          </div>
-        </div>
-      `;
-      container.appendChild(item);
-      observer.observe(item);
+      ...
     });
 
     wireUpTimelineItems();
   })
   .catch(err=>{
-    // if no publications.bib present, silently skip
     console.warn('publications.bib not loaded', err);
   });
 }
+
 
 // Utility: basic HTML escape
 function escapeHtml(str){
@@ -161,3 +136,6 @@ function initializeScripts() {
     contactForm.onsubmit = handleContact;
   }
 }
+
+// after the for loop in loadSections()
+initializeScripts();
