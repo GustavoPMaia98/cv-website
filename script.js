@@ -162,9 +162,5 @@ function initializeScripts() {
   }
 }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeScripts);
-} else {
-  initializeScripts();
-}
+// after the for loop in loadSections()
+initializeScripts();
