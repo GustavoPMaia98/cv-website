@@ -9,31 +9,31 @@
 </head>
 <body>
 <div class="site">
-  <!-- Load sections dynamically -->
+  <!-- Dynamic sections will load here -->
   <div id="content"></div>
 </div>
+
 <script src="script.js"></script>
 <script>
-async function loadSections() {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Include experiments in the loader
   const sections = ['hero', 'research', 'education', 'experience', 'experiments', 'publications', 'tutoring'];
   const content = document.getElementById('content');
 
   for (const section of sections) {
     try {
       const response = await fetch(`sections/${section}.html`);
-      if (!response.ok) throw new Error('Failed to load');
+      if (!response.ok) throw new Error(`Failed to load ${section}`);
       const html = await response.text();
       content.insertAdjacentHTML('beforeend', html);
     } catch (error) {
-      console.error(`Error loading ${section}.html:`, error);
+      console.error(error);
     }
   }
 
-  // Initialize exactly once, after all sections are loaded
+  // Initialize all scripts after sections are loaded
   initializeScripts();
-}
-
-loadSections();
+});
 </script>
 
 </body>
