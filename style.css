@@ -114,6 +114,12 @@ h2{margin:0 0 20px 0}
   border-radius:var(--radius-lg);
   margin-bottom:56px;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+
 .hero-card{
   display:flex;
   gap:24px;
