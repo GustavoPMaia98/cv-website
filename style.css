@@ -116,7 +116,7 @@ h2{margin:0 0 20px 0}
 }
 .hero-card{
   display:flex;
-  gap:24px;
+  gap:30px;
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius-lg);
