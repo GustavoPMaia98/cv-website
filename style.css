@@ -75,6 +75,7 @@ body::after{
   mix-blend-mode: screen;
 }
 
+
 .tutoring-box {
     background: linear-gradient(135deg, #2b2f77, #1b9aaa);
     border-radius: 18px;
@@ -188,6 +189,11 @@ h2{margin:0 0 20px 0}
 
 .hero-cta {
   margin-top: 1rem;
+  background: linear-gradient(135deg, #2b2f77, #1b9aaa);
+  border-radius: 18px;
+  padding: 1.8rem 2rem;
+  margin: 2.5rem 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .tutoring-button {
