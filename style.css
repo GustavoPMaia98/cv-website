@@ -279,7 +279,8 @@ h2{margin:0 0 20px 0}
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
   gap:16px;
-  margin-top:14px;
+  margin-top: 30px;
+
 }
 
 .expand-gallery img{
