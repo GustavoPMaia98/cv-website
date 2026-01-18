@@ -199,7 +199,7 @@ h2{margin:0 0 20px 0}
 .tutoring-button {
   padding: 0.3em 0.7em;
   border-radius: 999px;
-  background: #222;
+  background: linear-gradient(135deg, #2b2f77, #1b9aaa);
   color: white;
   text-decoration: none;
 }
