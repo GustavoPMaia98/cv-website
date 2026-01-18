@@ -416,12 +416,12 @@ form textarea{min-height:120px}
   .hero-card{flex-direction:column;align-items:center;text-align:center}
 }
 
-#presentation {
+#presentations {
   padding: 50px 20px;
   background-color: #f9f9f9; /* optional alternate background */
 }
 
-#presentation h2 {
+#presentations h2 {
   color: #333; /* heading color */
   font-size: 2em;
   margin-bottom: 20px;
@@ -432,6 +432,6 @@ form textarea{min-height:120px}
   margin-left: 20px;
 }
 
-#presentation li {
+#presentations li {
   margin-bottom: 10px;
 }

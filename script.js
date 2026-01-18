@@ -145,7 +145,11 @@ function setupExperiments() {
 
 // Initialize all scripts after sections are loaded
 function initializeScripts() {
-  document.querySelectorAll(".timeline-item").forEach(i => observer.observe(i));
+  document.querySelectorAll(".timeline-item:not(.observed)").forEach(i => {
+  i.classList.add("observed");
+  observer.observe(i);
+});
+
 
   wireUpTimelineItems();
 
