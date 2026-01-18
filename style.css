@@ -116,14 +116,14 @@ h2{margin:0 0 20px 0}
 }
 .hero-card{
   display:flex;
-  gap:30px;
+  gap:24px;
   background:var(--card);
   border:1px solid var(--border);
   border-radius:var(--radius-lg);
   padding:22px;
 }
 .avatar-img{
-  width:250px;height:250px;
+  width:230px;height:230px;
   border-radius:16px;
   object-fit:cover;
   box-shadow:var(--shadow);
@@ -190,7 +190,7 @@ h2{margin:0 0 20px 0}
 .hero-cta {
   margin-top: 1rem;
   background: linear-gradient(135deg, #2b2f77, #1b9aaa);
-  border-radius: 18px;
+  border-radius: 8px;
   padding: 1.8rem 2rem;
   margin: 2.5rem 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
