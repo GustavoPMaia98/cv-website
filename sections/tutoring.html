@@ -1,43 +1,80 @@
 <!-- TUTORING + CONTACT -->
 <section class="section" id="tutoring">
   <div class="tutoring-box">
+    
     <div class="tutoring-title-wrapper" style="display:flex; align-items:center; justify-content:space-between;">
-      <h2 style="font-family: 'Forte', cursive; font-size: 3.3em; margin:0;">Cientifica(mente)</h2>
+      <h2 style="font-family: 'Forte', cursive; font-size: 3.3em; margin:0;">
+        Cientifica(mente)
+      </h2>
       <img src="images/portugal.png" alt="Portugal Flag" style="width:60px; height:auto; border-radius:6px;">
     </div>
     
     <p>
-      <strong>Química não precisa de ser decorada — precisa de ser compreendida.</strong>  
+      <strong>Química não precisa de ser decorada — precisa de ser compreendida.</strong>
     </p>
+
     <p>
-      A minha abordagem centra‑se em ajudar os alunos a entenderem verdadeiramente como e porquê as reações químicas acontecem, desenvolvendo o bom senso químico essencial para pensar e raciocinar como um químico. O percurso começa pelos fundamentos da química, abordando ligações químicas, estrutura molecular e a relação entre estrutura e propriedade, e evolui de forma lógica para a estereoquímica e para os principais tipos de reações em química orgânica, como substituições, eliminações e adições.
+      A minha abordagem centra-se em ajudar os alunos a entenderem verdadeiramente como e porquê as reações químicas acontecem, desenvolvendo o bom senso químico essencial para pensar e raciocinar como um químico. O percurso começa pelos fundamentos da química, abordando ligações químicas, estrutura molecular e a relação entre estrutura e propriedade, e evolui de forma lógica para a estereoquímica e para os principais tipos de reações em química orgânica, como substituições, eliminações e adições.
       As aulas são personalizadas às necessidades de cada aluno, promovendo o pensamento crítico, a curiosidade científica e uma compreensão sólida e duradoura da matéria, com impacto direto no desempenho académico e na confiança perante a disciplina.
     </p>
 
     <div class="keywords" style="margin-top:30px">
-      <span>Química Geral </span>
-      <span>Química Orgânica </span>
-      <span>Escrita Cientifica </span>
+      <span>Química Geral</span>
+      <span>Química Orgânica</span>
+      <span>Escrita Científica</span>
     </div>
 
-    <p style="font-family: 'Forte', cursive; color: #a0e4f0; font-size: 2.2em; margin-top:24px">
+    <p style="font-family: 'Forte', cursive; color:#a0e4f0; font-size:2.2em; margin-top:24px">
       Precisas de ajuda? Fala comigo!
     </p>
 
-    <!-- CONTACT INSIDE TUTORING -->
+    <!-- CONTACT FORM (FORMSPREE) -->
     <div class="contact-grid" style="margin-top:2rem; display:grid; grid-template-columns:1fr; gap:20px;">
       <div class="card">
-        <form id="contactForm" onsubmit="return handleContact(event)">
-          <input id="name" placeholder="Your name" required>
-          <input id="email" type="email" placeholder="Your email" required>
-          <input id="subject" placeholder="Subject" required>
-          <textarea id="message" placeholder="Message" required></textarea>
-          <div style="margin-top:10px;display:flex;gap:10px">
+
+        <form 
+          action="https://formspree.io/f/abcdwxyz"
+          method="POST"
+        >
+          <input 
+            type="text" 
+            name="name" 
+            placeholder="Your name" 
+            required
+          >
+
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="Your email" 
+            required
+          >
+
+          <input 
+            type="text" 
+            name="subject" 
+            placeholder="Subject" 
+            required
+          >
+
+          <textarea 
+            name="message" 
+            placeholder="Message" 
+            required
+          ></textarea>
+
+          <!-- Formspree options -->
+          <input type="hidden" name="_subject" value="New message from Cientifica(mente)">
+          <input type="hidden" name="_template" value="table">
+
+          <div style="margin-top:10px; display:flex; gap:10px">
             <button class="btn" type="submit">Send</button>
-            <button class="btn ghost" type="button" onclick="this.form.reset()">Clear</button>
+            <button class="btn ghost" type="reset">Clear</button>
           </div>
         </form>
+
       </div>
     </div>
+
   </div>
 </section>
