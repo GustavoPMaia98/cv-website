@@ -1,47 +1,56 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gustavo P. Maia — Academic CV</title>
-<meta name="description" content="Gustavo P. Maia — PhD student in Astrobiology. Research, education, publications, and contact.">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gustavo Pinho Maia - Astrobiology Research</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="site">
-  
-  <!-- Dynamic sections will load here -->
-  <div id="content"></div>
-</div>
+  <div class="site" id="mainContent">
+    <!-- Sections will be dynamically loaded here -->
+  </div>
 
-<script src="script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const sections = ['hero', 'education', 'experience', 'publications', 'presentations' ,'tutoring'];
-  const content = document.getElementById('content');
+  <script>
+    // Load all sections dynamically
+    async function loadSections() {
+      const sections = [
+        'hero',
+        'education',
+        'experience',
+        'presentations',
+        'publications',
+        'tutoring'
+      ];
 
-  for (const section of sections) {
-    try {
-      const response = await fetch(`sections/${section}.html`);
-      if (!response.ok) throw new Error(`Failed to load ${section}`);
-      const html = await response.text();
-      content.insertAdjacentHTML('beforeend', html);
-      console.log(`Loaded section: ${section}`);
-    } catch (error) {
-      console.error(error);
+      const container = document.getElementById('mainContent');
 
-      // Fallback: add empty section to keep page structure
-      const fallback = document.createElement('div');
-      fallback.id = section;
-      fallback.className = 'section';
-      fallback.innerHTML = `<h2>${section.charAt(0).toUpperCase() + section.slice(1)}</h2><p>Content unavailable.</p>`;
-      content.appendChild(fallback);
+      for (const section of sections) {
+        try {
+          const response = await fetch(`sections/${section}.html`);
+          if (response.ok) {
+            const html = await response.text();
+            container.insertAdjacentHTML('beforeend', html);
+          }
+        } catch (error) {
+          console.warn(`Could not load ${section}.html`, error);
+        }
+      }
+
+      // Initialize all scripts after sections are loaded
+      if (typeof initializeScripts === 'function') {
+        initializeScripts();
+      }
     }
-  }
 
-  // Initialize scripts after all sections are loaded
-  initializeScripts();
-});
-</script>
+    // Load sections when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSections);
+    } else {
+      loadSections();
+    }
+  </script>
+  
+  <script src="script.js"></script>
 </body>
 </html>
