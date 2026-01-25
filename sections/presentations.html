@@ -27,25 +27,9 @@
       min-height: 100vh;
       position: relative;
       color: var(--text);
-      background: linear-gradient(180deg, rgba(7,12,29,1), rgba(11,16,32,1) 70%);
+      background: var(--bg);
       overflow-x: hidden;
       padding: 40px 20px;
-    }
-
-    body::before{
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
-      background-image:
-        radial-gradient(40vw 30vw at 10% 20%, rgba(124,58,237,0.14), transparent 40%),
-        radial-gradient(50vw 36vw at 75% 10%, rgba(34,211,238,0.12), transparent 45%),
-        radial-gradient(36vw 26vw at 40% 80%, rgba(59,130,246,0.10), transparent 48%),
-        radial-gradient(28vw 18vw at 85% 70%, rgba(236,72,153,0.06), transparent 60%);
-      filter: blur(60px) saturate(110%);
-      mix-blend-mode: screen;
-      opacity: 0.95;
     }
 
     .site{
