@@ -86,10 +86,9 @@
     }
 
     .timeline-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px 16px 16px 36px;
+      background: transparent;
+      border: none;
+      padding: 0 0 0 36px;
       position: relative;
     }
 
@@ -100,13 +99,29 @@
     }
 
     .timeline-header img {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       object-fit: contain;
+      border-radius: 8px;
     }
 
-    .meta{font-size:15px;color:var(--muted)}
-    .timeline-card p{margin:8px 0 0}
+    .timeline-header strong {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .meta{
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    .timeline-card p{
+      margin: 8px 0 0;
+      font-size: 15px;
+      font-style: italic;
+      color: var(--muted);
+    }
 
     .timeline-expand {
       overflow: hidden;
