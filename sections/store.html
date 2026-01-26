@@ -1,0 +1,121 @@
+<!-- store.html (SAFE / public-ready) -->
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cientifica(mente) — Store</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="site">
+    <!-- STORE PAGE -->
+    <section class="section" id="store">
+      <div class="tutoring-box">
+        <div class="tutoring-title-wrapper" style="display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="font-family: 'Forte', cursive; font-size: 3.3em; margin:0;">Cientifica(mente) Store</h2>
+          <img src="images/portugal.png" alt="Portugal Flag" style="width:60px; height:auto; border-radius:6px;">
+        </div>
+
+        <p><strong>Aprende química de forma moderna, prática e segura.</strong></p>
+        <p>Escolhe entre e-documents, vídeos explicativos, aulas de tutoria personalizadas ou bundles exclusivos. Para segurança e privacidade, ficheiros e documentos são entregues apenas via links temporários após pagamento.</p>
+
+        <div class="contact-grid" style="margin-top:2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px;">
+          <div class="card">
+            <h3>E-documentos</h3>
+            <p>PDFs detalhados sobre Química Geral e Orgânica.</p>
+            <p><strong>Preço:</strong> 15€</p>
+            <button class="btn purchase" data-product="edoc-basic">Comprar</button>
+          </div>
+
+          <div class="card">
+            <h3>Vídeos Explicativos</h3>
+            <p>Séries de vídeos estruturados por tema.</p>
+            <p><strong>Preço:</strong> 25€</p>
+            <button class="btn purchase" data-product="videos-basic">Comprar</button>
+          </div>
+
+          <div class="card">
+            <h3>Aulas de Tutoria</h3>
+            <p>Sessões individuais online (reserva e pagamento através do contacto).</p>
+            <p><strong>Preço:</strong> 40€/hora</p>
+            <button class="btn" id="contactReserve">Reservar</button>
+          </div>
+
+          <div class="card">
+            <h3>Bundle E-documents + Vídeos</h3>
+            <p>Pacote para estudo completo.</p>
+            <p><strong>Preço:</strong> 35€</p>
+            <button class="btn purchase" data-product="bundle-basic">Comprar Bundle</button>
+          </div>
+
+          <div class="card">
+            <h3>Bundle Completo</h3>
+            <p>E-documents + vídeos + 1 hora de tutoria.</p>
+            <p><strong>Preço:</strong> 60€</p>
+            <button class="btn purchase" data-product="bundle-premium">Comprar Bundle Completo</button>
+          </div>
+        </div>
+
+        <p style="font-family: 'Forte', cursive; color: #a0e4f0; font-size: 2.2em; margin-top:40px; text-align:center;">
+          Tens dúvidas ou queres personalizar um pacote? Contacta-me!
+        </p>
+        <div style="text-align:center; margin-top:1rem;">
+          <a id="contactBtn" href="mailto:YOUR_PUBLIC_CONTACT_EMAIL?subject=Informações%20Store" class="btn" style="font-size:1.1em; padding:12px 22px; border-radius:999px;">
+            Contactar
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  // Client-side purchase flow: safe — no secrets here.
+  document.querySelectorAll('.purchase').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const product = btn.dataset.product;
+      btn.disabled = true;
+      btn.textContent = 'A processar…';
+
+      try {
+        // call your server-side checkout endpoint (no secrets in client)
+        const res = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ product })
+        });
+
+        if (!res.ok) throw new Error('Failed to create session');
+
+        const data = await res.json();
+
+        // if using Stripe Checkout, server returns { url }
+        if (data.url) {
+          window.location = data.url;
+          return;
+        }
+
+        // if server returns a signed download link directly (for free items)
+        if (data.downloadUrl) {
+          window.location = data.downloadUrl;
+          return;
+        }
+
+        alert('Aconteceu um erro. Por favor tente novamente.');
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao iniciar compra — por favor contacte o proprietário.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Comprar';
+      }
+    });
+  });
+
+  document.getElementById('contactReserve').addEventListener('click', () => {
+    // open mail client with prefilled subject/body; replace email on server when deployed
+    window.location = 'mailto:YOUR_PUBLIC_CONTACT_EMAIL?subject=Reserva%20Tutoria&body=Olá,%0D%0AGostaria%20de%20reservar%20uma%20sessão%20de%20tutoria.%0D%0A';
+  });
+  </script>
+</body>
+</html>
