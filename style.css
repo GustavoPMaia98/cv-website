@@ -429,3 +429,33 @@ form textarea{min-height:120px}
 #presentations li {
   margin-bottom: 10px;
 }
+
+/* ================= STORE SEPARATOR ================= */
+.store-separator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 48px 0;
+  position: relative;
+}
+
+.separator-wrapper {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  max-width: var(--max-width);
+}
+
+.separator-line {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  margin: 0 auto 12px auto;
+}
+
+.separator-text {
+  font-family: 'Forte', cursive;
+  font-size: 2em;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
