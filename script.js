@@ -11,7 +11,7 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.2 });
 
-// Wire up timeline items for accordion behavior (UPDATED)
+// Wire up timeline items for accordion behavior
 function wireUpTimelineItems() {
   document.querySelectorAll('.timeline-item').forEach(item => {
     if (item.__wired) return;
@@ -20,13 +20,14 @@ function wireUpTimelineItems() {
     const expand = item.querySelector('.timeline-expand');
     if (!expand) return;
 
+    // Toggle this item on click
     item.addEventListener('click', e => {
       const t = e.target.tagName.toLowerCase();
       if (['a', 'button', 'input', 'textarea'].includes(t)) return;
 
       const isOpen = expand.classList.contains('open');
 
-      // Close all others
+      // Close all other open items
       document.querySelectorAll('.timeline-expand.open').forEach(el => {
         if (el !== expand) el.classList.remove('open');
       });
@@ -126,13 +127,13 @@ function setupCopyEmail() {
   }
 }
 
-// Contact form
-function handleContact(e) {
-  e.preventDefault();
-  const s = encodeURIComponent(document.getElementById('subject').value || '');
-  const b = encodeURIComponent(document.getElementById('message').value || '');
-  location.href = `mailto:gustavopinhomaia@gmail.com?subject=${s}&body=${b}`;
-  return false;
+// Contact button (opens email client)
+function setupContactButton(buttonId, email) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    window.location = `mailto:${email}?subject=Contact from Website`;
+  });
 }
 
 // Experiments section setup
@@ -162,6 +163,7 @@ function initializeScripts() {
   setupCopyEmail();
   setupExperiments();
 
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) contactForm.onsubmit = handleContact;
+  // Setup contact buttons for email (replace YOUR_PUBLIC_CONTACT_EMAIL with deployment-safe address)
+  setupContactButton('contactBtn', 'YOUR_PUBLIC_CONTACT_EMAIL');
+  setupContactButton('contactReserve', 'YOUR_PUBLIC_CONTACT_EMAIL');
 }
