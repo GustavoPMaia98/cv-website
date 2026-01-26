@@ -11,28 +11,32 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.2 });
 
-// Wire up timeline items for accordion behavior
+// Wire up timeline items for accordion behavior (UPDATED)
 function wireUpTimelineItems() {
   document.querySelectorAll('.timeline-item').forEach(item => {
     if (item.__wired) return;
     item.__wired = true;
 
+    const expand = item.querySelector('.timeline-expand');
+    if (!expand) return;
+
     item.addEventListener('click', e => {
       const t = e.target.tagName.toLowerCase();
       if (['a', 'button', 'input', 'textarea'].includes(t)) return;
 
-      const expand = item.querySelector('.timeline-expand');
-      if (!expand) return;
       const isOpen = expand.classList.contains('open');
 
-      // Close others
+      // Close all others
       document.querySelectorAll('.timeline-expand.open').forEach(el => {
         if (el !== expand) el.classList.remove('open');
       });
 
       // Toggle this one
-      if (!isOpen) expand.classList.add('open');
+      expand.classList.toggle('open', !isOpen);
     });
+
+    // Prevent clicks inside expanded content from bubbling
+    expand.addEventListener('click', e => e.stopPropagation());
   });
 }
 
@@ -146,10 +150,9 @@ function setupExperiments() {
 // Initialize all scripts after sections are loaded
 function initializeScripts() {
   document.querySelectorAll(".timeline-item:not(.observed)").forEach(i => {
-  i.classList.add("observed");
-  observer.observe(i);
-});
-
+    i.classList.add("observed");
+    observer.observe(i);
+  });
 
   wireUpTimelineItems();
 
