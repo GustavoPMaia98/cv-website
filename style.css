@@ -416,20 +416,14 @@ form textarea{min-height:120px}
   .hero-card{flex-direction:column;align-items:center;text-align:center}
 }
 
-#presentations {
-  padding: 50px 20px;
-  background-color: #f9f9f9; /* optional alternate background */
-}
-
-#presentations h2 {
-  color: #333; /* heading color */
-  font-size: 2em;
-  margin-bottom: 20px;
-}
-
 #presentation ul {
   list-style-type: disc;
   margin-left: 20px;
+}
+
+#presentations .timeline-card p em {
+  color: var(--muted);
+  font-size: 14px;
 }
 
 #presentations li {
