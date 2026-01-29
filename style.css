@@ -305,12 +305,21 @@ html {
 
 .expand-gallery img {
   width: 100%;
-  height: 240px;          /* fixed height for consistency */
-  object-fit: contain;     /* keeps image fully visible */
+  height: 100%;         /* fill the grid cell */
+  object-fit: contain;   /* maintain aspect ratio */
   border-radius: 12px;
   border: 1px solid var(--border);
   box-shadow: 0 8px 22px rgba(0,0,0,.6);
-  background: rgba(0,0,0,.2); /* optional: improves transparency look */
+  background: rgba(0,0,0,.2);
+}
+
+/* Make each image cell match the tallest image */
+.expand-gallery::after {
+  content: "";
+  display: block;
+  grid-column: 1 / -1;
+  width: 0;
+  padding-top: 0; /* trick to let the grid auto-size */
 }
 
 /* ================= PUBLICATIONS ================= */
