@@ -460,3 +460,10 @@ form textarea{min-height:120px}
   color: var(--accent);
   letter-spacing: 2px;
 }
+
+@media (max-width: 600px) {
+  .expand-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
