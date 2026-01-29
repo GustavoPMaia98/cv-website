@@ -305,12 +305,12 @@ html {
 }
 
 .expand-gallery img{
-  width:100%;
-  height:250px;
-  object-fit:cover;
-  border-radius:12px;
-  border:1px solid var(--border);
-  box-shadow:0 8px 22px rgba(0,0,0,.6);
+    width: 100%;
+    height: auto;        /* let height scale automatically */
+    object-fit: contain; /* show full image without cropping */
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 22px rgba(0,0,0,.6);
 }
 
 /* ================= PUBLICATIONS ================= */
