@@ -296,22 +296,21 @@ html {
   letter-spacing:0.1px;
 }
 
-.expand-gallery{
+.expand-gallery {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
   margin-top: 14px;
-
 }
 
-.expand-gallery img{
+.expand-gallery img {
   width: 100%;
-  height: 240px;          /* pick a height that looks right for your content */
-  object-fit: contain;   /* or 'cover' if you prefer cropping */
+  height: 240px;          /* fixed height for consistency */
+  object-fit: contain;     /* keeps image fully visible */
   border-radius: 12px;
   border: 1px solid var(--border);
   box-shadow: 0 8px 22px rgba(0,0,0,.6);
-  background: rgba(0,0,0,.2); /* optional: helps with transparency */
+  background: rgba(0,0,0,.2); /* optional: improves transparency look */
 }
 
 /* ================= PUBLICATIONS ================= */
