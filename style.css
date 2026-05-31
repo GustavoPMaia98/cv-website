@@ -302,17 +302,13 @@ html {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 16px;
   margin-top: 14px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .expand-gallery img {
-  width: 100%;            /* fill the column, matching the text box width */
-  aspect-ratio: 4 / 3;    /* uniform frame size for every image */
-  object-fit: contain;    /* maintain aspect ratio, never crop */
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, .6);
-  background: rgba(0, 0, 0, .25);
+  width: 100%;       /* fill the column, matching the text box width */
+  height: auto;      /* natural height — no surrounding box/letterboxing */
+  display: block;
 }
 
 /* ================= PUBLICATIONS ================= */
