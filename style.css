@@ -208,12 +208,11 @@ html {
 }
 
 .hero-cta {
-  margin-top: 1rem;
+  margin: 1rem 0;
   background: linear-gradient(135deg, #2b2f77, #1b9aaa);
   border-radius: 18px;
   padding: 0.2rem 0.3rem;
-  margin: 1rem 0.9;
-  box-shadow: 0 10px 30px linear-gradient(135deg, #2b2f77, #1b9aaa);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .tutoring-button {
@@ -298,28 +297,22 @@ html {
 
 .expand-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* Equal-width columns that fill the text box. `min(100%, 260px)` lets a
+     single image span the full width and prevents overflow on narrow screens. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 16px;
   margin-top: 14px;
+  align-items: stretch;
 }
 
 .expand-gallery img {
-  width: 100%;
-  height: 100%;         /* fill the grid cell */
-  object-fit: contain;   /* maintain aspect ratio */
+  width: 100%;            /* fill the column, matching the text box width */
+  aspect-ratio: 4 / 3;    /* uniform frame size for every image */
+  object-fit: contain;    /* maintain aspect ratio, never crop */
   border-radius: 12px;
   border: 1px solid var(--border);
-  box-shadow: 0 8px 22px rgba(0,0,0,.6);
-  background: rgba(0,0,0,.2);
-}
-
-/* Make each image cell match the tallest image */
-.expand-gallery::after {
-  content: "";
-  display: block;
-  grid-column: 1 / -1;
-  width: 0;
-  padding-top: 0; /* trick to let the grid auto-size */
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .6);
+  background: rgba(0, 0, 0, .25);
 }
 
 /* ================= PUBLICATIONS ================= */
@@ -425,7 +418,7 @@ form textarea{min-height:120px}
   .hero-card{flex-direction:column;align-items:center;text-align:center}
 }
 
-#presentation ul {
+#presentations ul {
   list-style-type: disc;
   margin-left: 20px;
 }
@@ -475,3 +468,109 @@ form textarea{min-height:120px}
   }
 }
 
+
+/* ================= NEWS WINDOW ================= */
+#news {
+  margin-bottom: 56px;
+}
+
+.news-window {
+  max-width: 560px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.news-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #2b2f77, #1b9aaa);
+  border-bottom: 1px solid var(--border);
+}
+
+.news-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.news-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+}
+
+.news-title {
+  font-weight: 700;
+  letter-spacing: .3px;
+  color: #ffffff;
+}
+
+.news-linkedin {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  opacity: .9;
+}
+.news-linkedin:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.news-body {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px 14px;
+}
+
+.news-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.news-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-date {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.news-headline a,
+.news-headline {
+  font-weight: 600;
+  color: var(--text);
+}
+.news-headline a:hover {
+  color: var(--accent);
+}
+
+.news-text {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.news-empty {
+  padding: 14px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .news-window { max-width: 100%; }
+}
