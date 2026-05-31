@@ -1,6 +1,9 @@
 // Guard to prevent publications from loading multiple times
 let publicationsLoaded = false;
 
+// Guard to prevent news from loading multiple times
+let newsLoaded = false;
+
 // IntersectionObserver for fade-in
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
@@ -90,6 +93,87 @@ function loadPublications() {
     .catch(err => console.warn('publications.bib not loaded', err));
 }
 
+// Strip HTML tags from a string (used for RSS descriptions)
+function stripHtml(str) {
+  const div = document.createElement("div");
+  div.innerHTML = str || "";
+  return (div.textContent || "").trim();
+}
+
+// Render news items into the News window
+function renderNewsItems(items) {
+  const list = document.getElementById("news-list");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (!items || !items.length) {
+    list.innerHTML = '<li class="news-empty">No updates yet — check back soon.</li>';
+    return;
+  }
+
+  items.forEach(it => {
+    const li = document.createElement("li");
+    li.className = "news-item";
+
+    const date = it.date ? `<span class="news-date">${escapeHtml(it.date)}</span>` : "";
+    const headline = it.url
+      ? `<a href="${encodeURI(it.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title || "")}</a>`
+      : escapeHtml(it.title || "");
+    const text = it.text ? `<p class="news-text">${escapeHtml(it.text)}</p>` : "";
+
+    li.innerHTML = `${date}<div class="news-headline">${headline}</div>${text}`;
+    list.appendChild(li);
+  });
+}
+
+// Dynamic news loader (manual news.json, with optional LinkedIn->RSS feed)
+function loadNews() {
+  if (newsLoaded) return;
+  newsLoaded = true;
+
+  fetch("news.json")
+    .then(r => r.ok ? r.json() : Promise.reject("no news.json"))
+    .then(async data => {
+      const link = document.getElementById("newsLinkedin");
+      if (link && data.linkedin) link.href = data.linkedin;
+
+      let items = Array.isArray(data.items) ? data.items.slice() : [];
+
+      // Optional: auto-pull from a LinkedIn->RSS feed if one is configured.
+      // Uses a public RSS->JSON service to avoid cross-origin issues.
+      if (data.feedUrl) {
+        try {
+          const res = await fetch(
+            "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(data.feedUrl)
+          );
+          if (res.ok) {
+            const feed = await res.json();
+            if (feed && Array.isArray(feed.items) && feed.items.length) {
+              items = feed.items.map(i => ({
+                date: (i.pubDate || "").slice(0, 10),
+                title: i.title || "LinkedIn post",
+                text: stripHtml(i.description).slice(0, 160),
+                url: i.link
+              }));
+            }
+          }
+        } catch (e) {
+          console.warn("News feed fetch failed; using manual items", e);
+        }
+      }
+
+      // Newest first
+      items.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+
+      renderNewsItems(items);
+    })
+    .catch(err => {
+      console.warn("news.json not loaded", err);
+      renderNewsItems([]);
+    });
+}
+
 // HTML escape utility
 function escapeHtml(str) {
   if (!str) return "";
@@ -158,6 +242,7 @@ function initializeScripts() {
   wireUpTimelineItems();
 
   if (document.getElementById("pub-list")) loadPublications();
+  if (document.getElementById("news-list")) loadNews();
 
   setupVCard();
   setupCopyEmail();
