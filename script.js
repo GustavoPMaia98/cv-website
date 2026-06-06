@@ -7,6 +7,15 @@ const CROSSREF_URL = "https://api.crossref.org/works/";
 // Used only for the Crossref "polite pool" (better/faster responses). Not secret.
 const CONTACT_MAILTO = "gustavopinho.maia@mnhn.fr";
 
+// Only these work types are imported — peer-reviewed papers only.
+// Presentations (conference-paper / conference-abstract / conference-poster /
+// lecture-speech), preprints, datasets, reports, theses, etc. are excluded.
+// To also import e.g. review articles or book chapters, add "review" /
+// "book-chapter" below.
+const ORCID_ALLOWED_TYPES = ["journal-article"];
+// Crossref's equivalent type strings (used only by the fallback path).
+const CROSSREF_ALLOWED_TYPES = ["journal-article"];
+
 // Guard to prevent publications from loading multiple times
 let publicationsLoaded = false;
 
@@ -137,6 +146,10 @@ async function fetchOrcidWorks() {
       }
     });
 
+    // Skip anything that is not a peer-reviewed paper (e.g. presentations).
+    const type = (s.type || "").toLowerCase();
+    if (!ORCID_ALLOWED_TYPES.includes(type)) return;
+
     const title = s.title && s.title.title && s.title.title.value;
     const journal = s["journal-title"] && s["journal-title"].value;
     const yearVal = s["publication-date"] && s["publication-date"].year && s["publication-date"].year.value;
@@ -159,7 +172,9 @@ async function fetchCrossrefByOrcid() {
   if (!res.ok) throw new Error("Crossref ORCID request failed: " + res.status);
   const json = await res.json();
   const items = (json.message && json.message.items) || [];
-  return items.map(parseCrossrefItem);
+  return items
+    .map(parseCrossrefItem)
+    .filter(w => CROSSREF_ALLOWED_TYPES.includes(w.type));
 }
 
 // Fetch rich metadata for one DOI from Crossref.
@@ -195,7 +210,7 @@ function parseCrossrefItem(m) {
 
   const abstract = m.abstract ? stripJats(m.abstract) : "";
 
-  return { title, journal, year, authors, abstract, doi: m.DOI || "" };
+  return { title, journal, year, authors, abstract, doi: m.DOI || "", type: (m.type || "").toLowerCase() };
 }
 
 // Crossref abstracts arrive as JATS XML — strip tags and the leading "Abstract" label.
