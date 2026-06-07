@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gustavo Pinho Maia - Astrobiology Research</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated meteoroid background -->
+  <canvas id="bgCanvas" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- SPA content container -->
+  <div class="site" id="mainContent">
+    <!-- Sections will be dynamically loaded here -->
+  </div>
+
+  <script>
+    // Load all sections dynamically
+    async function loadSections() {
+      const sections = [
+        'hero',
+        'education',
+        'experience',
+        'presentations',
+        'publications',
+        'tutoring'
+      ];
+
+      const container = document.getElementById('mainContent');
+
+      for (const section of sections) {
+        try {
+          const response = await fetch(`sections/${section}.html`);
+          if (response.ok) {
+            const html = await response.text();
+            container.insertAdjacentHTML('beforeend', html);
+          }
+        } catch (error) {
+          console.warn(`Could not load ${section}.html`, error);
+        }
+      }
+
+      // Initialize scripts after sections are loaded
+      if (typeof initializeScripts === 'function') {
+        initializeScripts();
+      }
+    }
+
+    // Load sections when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSections);
+    } else {
+      loadSections();
+    }
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
