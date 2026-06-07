@@ -375,3 +375,76 @@ a:focus-visible,button:focus-visible,.timeline-card[role="button"]:focus-visible
   .scroll-top-btn{transition:none}
   .timeline-expand{transition:max-height .01s linear, padding .01s linear}
 }
+
+/* ================================================================
+   ENHANCEMENTS — buttons, interactions, publication sync states
+   ================================================================ */
+
+/* --- Button polish: sheen on hover + ripple container --- */
+.btn,
+.cta-pill,
+.scroll-top-btn{
+  position:relative;
+  overflow:hidden;
+  background-size:200% 100%;
+  background-position:0 0;
+  transition:filter .2s, transform .12s, box-shadow .25s, background-position .5s ease;
+}
+.btn:hover,
+.scroll-top-btn:hover{
+  background-position:100% 0;
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(96,165,250,.35);
+}
+.btn:active,
+.scroll-top-btn:active{transform:translateY(0)}
+.btn.ghost:hover{box-shadow:0 8px 22px rgba(255,255,255,.10)}
+.cta-pill:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(27,154,170,.4)}
+
+/* Click ripple (added by script.js) */
+.btn-ripple{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  background:rgba(255,255,255,.45);
+  transform:scale(0);
+  opacity:.6;
+  animation:btnRipple .6s ease-out forwards;
+}
+@keyframes btnRipple{to{transform:scale(2.4);opacity:0}}
+
+/* --- Social links: gentle lift --- */
+.social-links a:hover{transform:translateY(-2px)}
+.social-links a{transition:background .2s, border-color .2s, transform .15s}
+
+/* --- Active nav link underline --- */
+.nav-links a.active{position:relative}
+.nav-links a.active::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:5px;height:2px;
+  background:var(--accent);border-radius:2px;
+}
+
+/* --- Timeline card hover lift --- */
+.timeline-item.has-expand .timeline-card:hover{transform:translateY(-2px)}
+
+/* --- Publication sync status note --- */
+.pub-status{
+  color:var(--muted);
+  font-size:.92rem;
+  font-style:italic;
+  margin:0 0 16px;
+  padding:11px 16px;
+  border:1px dashed var(--border);
+  border-radius:var(--radius-md);
+  background:rgba(255,255,255,.02);
+}
+
+/* --- Tutoring flag spacing (new tutoring-head markup) --- */
+.tutoring-head .lang-flag{flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+
+@media (prefers-reduced-motion: reduce){
+  .btn,.cta-pill,.scroll-top-btn{transition:none}
+  .btn:hover,.cta-pill:hover,.scroll-top-btn:hover,
+  .social-links a:hover,.timeline-item.has-expand .timeline-card:hover{transform:none}
+  .btn-ripple{display:none}
+}

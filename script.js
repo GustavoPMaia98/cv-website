@@ -16,14 +16,22 @@
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Guards so init() can be safely re-run after dynamic sections load.
+  let starfieldWired = false;
+  let navToggleWired = false;
+  let scrollspyWired = false;
+  let rippleWired = false;
+
   // ============================================================
   //  ANIMATED STARFIELD (canvas, GPU-light, drifts left -> right)
   // ============================================================
   function initStarfield() {
+    if (starfieldWired) return;
     const canvas = document.getElementById("starfield");
     if (!canvas) return;
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
+    starfieldWired = true;
 
     let w = 0, h = 0, dpr = 1, stars = [], shooting = [], raf = null, last = 0;
 
@@ -164,7 +172,8 @@
     const toggle = document.getElementById("navToggle");
     const links = document.getElementById("navLinks");
 
-    if (toggle && links) {
+    if (toggle && links && !navToggleWired) {
+      navToggleWired = true;
       toggle.addEventListener("click", () => {
         const open = links.classList.toggle("open");
         toggle.classList.toggle("open", open);
@@ -179,12 +188,16 @@
       }));
     }
 
+    // Scrollspy: only set up once, and only when the target sections exist
+    // (they are injected asynchronously, so this may run on a later call).
+    if (scrollspyWired) return;
     const navMap = {};
     document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => {
       navMap[a.getAttribute("href").slice(1)] = a;
     });
     const sections = Object.keys(navMap).map(id => document.getElementById(id)).filter(Boolean);
     if (!sections.length) return;
+    scrollspyWired = true;
 
     const spy = new IntersectionObserver(entries => {
       entries.forEach(e => {
@@ -282,6 +295,9 @@
 
     const container = document.getElementById("pub-list");
     if (!container) return;
+    const status = document.getElementById("pub-status");
+    const setStatus = (msg) => { if (status) status.textContent = msg; };
+    const clearStatus = () => { if (status) status.remove(); };
 
     const seenDois = new Set();
     document.querySelectorAll('.timeline-item.publication a[href*="doi.org/"]').forEach(a => {
@@ -295,11 +311,16 @@
     } catch (err) {
       console.warn("ORCID fetch failed, trying Crossref fallback:", err);
       try { works = await fetchCrossrefByOrcid(); }
-      catch (err2) { console.warn("Could not load publications automatically:", err2); return; }
+      catch (err2) {
+        console.warn("Could not load publications automatically:", err2);
+        setStatus("Live sync unavailable right now — the publications listed above are current.");
+        return;
+      }
     }
 
     works.sort((a, b) => (b.year || 0) - (a.year || 0));
 
+    let added = 0;
     for (const wk of works) {
       const key = wk.doi ? wk.doi.toLowerCase() : null;
       if (key && seenDois.has(key)) continue;
@@ -315,8 +336,10 @@
       };
       if (key) seenDois.add(key);
       renderPublication(container, pub);
+      added++;
     }
 
+    clearStatus();
     observeReveals(container);
     wireAccordions();
   }
@@ -432,6 +455,27 @@
   }
 
   // ============================================================
+  //  BUTTON RIPPLE (progressive enhancement, pointer feedback)
+  // ============================================================
+  function setupButtonRipple() {
+    if (rippleWired || prefersReduced) return;
+    rippleWired = true;
+    document.addEventListener("click", e => {
+      const btn = e.target.closest(".btn, .cta-pill, .scroll-top-btn");
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      const dia = Math.max(rect.width, rect.height);
+      const span = document.createElement("span");
+      span.className = "btn-ripple";
+      span.style.width = span.style.height = dia + "px";
+      span.style.left = (e.clientX - rect.left - dia / 2) + "px";
+      span.style.top = (e.clientY - rect.top - dia / 2) + "px";
+      btn.appendChild(span);
+      span.addEventListener("animationend", () => span.remove());
+    });
+  }
+
+  // ============================================================
   //  INIT
   // ============================================================
   function init() {
@@ -440,8 +484,12 @@
     observeReveals(document);
     wireAccordions();
     setupScrollTopButton();
+    setupButtonRipple();
     if (document.getElementById("pub-list")) loadPublications();
   }
+
+  // Exposed so the section loader can re-run init() after injecting content.
+  window.SiteApp = { init: init };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
