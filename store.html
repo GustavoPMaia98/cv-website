@@ -10,7 +10,32 @@
 </head>
 
 <body>
-  <main class="site">
+
+  <!-- ===================== PRIVATE STORE GATE =====================
+       The store is not linked anywhere on the public site and is
+       hidden behind this passcode prompt. Change PASSCODE below to
+       whatever you like.
+
+       NOTE: this is a client-side gate. It hides the page from
+       casual visitors, but it is NOT real security — the page
+       source is still downloadable. For true privacy, protect the
+       page server-side (e.g. HTTP basic auth or a login) or keep
+       store.html off the public server entirely.
+  ================================================================ -->
+  <div id="storeGate" style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px; background:linear-gradient(180deg, rgba(7,12,29,1), rgba(11,16,32,1) 70%);">
+    <div class="card" style="max-width:360px; width:100%; text-align:center;">
+      <h2 style="font-family:'Forte', cursive; font-size:2.2em; margin:0 0 8px;">Private Store</h2>
+      <p style="color:var(--muted); margin-top:0;">Enter the passcode to continue.</p>
+      <input id="storePass" type="password" placeholder="Passcode" autocomplete="off"
+             style="margin:8px 0 14px; text-align:center;">
+      <div>
+        <button id="storeEnter" class="btn" style="width:100%; justify-content:center; padding:10px 16px; border-radius:999px;">Enter</button>
+      </div>
+      <p id="storeErr" style="color:#fca5a5; min-height:1.2em; margin:10px 0 0; font-size:14px;"></p>
+    </div>
+  </div>
+
+  <main class="site" id="storeMain" style="display:none">
     <!-- STORE SEPARATOR -->
     <section class="section store-separator">
       <div class="separator-wrapper">
@@ -80,6 +105,30 @@
   </main>
 
   <script>
+  /* ---------- Private store passcode gate ---------- */
+  (function () {
+    const PASSCODE = 'change-me';   // <-- set your own passcode here
+    const gate  = document.getElementById('storeGate');
+    const main  = document.getElementById('storeMain');
+    const input = document.getElementById('storePass');
+    const btn   = document.getElementById('storeEnter');
+    const err   = document.getElementById('storeErr');
+
+    function unlock() {
+      if (input.value === PASSCODE) {
+        gate.style.display = 'none';
+        main.style.display = '';
+      } else {
+        err.textContent = 'Incorrect passcode.';
+        input.value = '';
+        input.focus();
+      }
+    }
+    btn.addEventListener('click', unlock);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+    input.focus();
+  })();
+
   // Client-side purchase flow: safe — no secrets here.
   document.querySelectorAll('.purchase').forEach(btn => {
     btn.addEventListener('click', async () => {
