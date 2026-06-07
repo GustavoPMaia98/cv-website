@@ -559,3 +559,31 @@ a:focus-visible,button:focus-visible,.timeline-card[role="button"]:focus-visible
   .lightbox-close{ transition:none; }
   .lightbox img{ transform:none; }
 }
+
+/* ================================================================
+   ACADEMIC TREE — live embed of academictree.org
+   ================================================================ */
+.tree-embed{
+  position:relative;
+  width:100%;
+  height:min(72vh, 640px);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  background:#f7fafc;                 /* academictree renders on a light page */
+  box-shadow:var(--shadow);
+}
+.tree-embed iframe{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  border:0;
+}
+.tree-fallback{
+  margin-top:14px;
+  color:var(--muted);
+  font-size:.92rem;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+@media (max-width:520px){
+  .tree-embed{height:min(70vh, 460px)}
+}
