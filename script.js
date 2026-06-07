@@ -21,6 +21,7 @@
   let navToggleWired = false;
   let scrollspyWired = false;
   let rippleWired = false;
+  let lightboxWired = false;
 
   // ============================================================
   //  ANIMATED STARFIELD (canvas, GPU-light, drifts left -> right)
@@ -476,6 +477,71 @@
   }
 
   // ============================================================
+  //  LIGHTBOX — click any photo to view the full, uncropped image
+  // ============================================================
+  function setupLightbox() {
+    if (lightboxWired) return;
+    lightboxWired = true;
+
+    let overlay, imgEl, capEl, closeBtn, lastFocus;
+
+    function build() {
+      overlay = document.createElement("div");
+      overlay.className = "lightbox";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-hidden", "true");
+      overlay.setAttribute("aria-label", "Image viewer");
+      overlay.innerHTML =
+        '<button type="button" class="lightbox-close" aria-label="Close image">&times;</button>' +
+        '<figure class="lightbox-fig"><img alt=""><figcaption></figcaption></figure>';
+      document.body.appendChild(overlay);
+      imgEl = overlay.querySelector("img");
+      capEl = overlay.querySelector("figcaption");
+      closeBtn = overlay.querySelector(".lightbox-close");
+
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay || e.target.closest(".lightbox-close")) close();
+      });
+    }
+
+    function open(src, alt) {
+      if (!overlay) build();
+      lastFocus = document.activeElement;
+      imgEl.src = src;
+      imgEl.alt = alt || "";
+      const caption = (alt || "").trim();
+      capEl.textContent = caption;
+      capEl.style.display = caption ? "" : "none";
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function close() {
+      if (!overlay) return;
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    // Capture phase so it fires even though accordions stop click propagation.
+    document.addEventListener("click", e => {
+      const img = e.target.closest(".expand-gallery img, .avatar-img");
+      if (!img || !img.getAttribute("src")) return;
+      e.preventDefault();
+      e.stopPropagation();
+      open(img.currentSrc || img.src, img.alt);
+    }, true);
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && overlay && overlay.classList.contains("open")) close();
+    });
+  }
+
+  // ============================================================
   //  INIT
   // ============================================================
   function init() {
@@ -485,6 +551,7 @@
     wireAccordions();
     setupScrollTopButton();
     setupButtonRipple();
+    setupLightbox();
     if (document.getElementById("pub-list")) loadPublications();
   }
 
