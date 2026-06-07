@@ -239,7 +239,26 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 16px)}
   grid-template-columns:repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap:14px;margin-top:14px;align-items:start;
 }
-.expand-gallery img{width:100%;height:auto;display:block;border-radius:10px}
+.expand-gallery img{
+  width:100%;
+  height:auto;
+  aspect-ratio:4 / 3;        /* equal size for images sitting side by side */
+  object-fit:cover;
+  display:block;
+  border-radius:10px;
+  box-shadow:
+    0 0 0 1px rgba(125,211,252,.22),
+    0 6px 20px rgba(0,0,0,.40),
+    0 0 18px rgba(125,211,252,.18);   /* soft glow */
+  transition:box-shadow .3s ease, transform .25s ease;
+}
+.expand-gallery img:hover{
+  box-shadow:
+    0 0 0 1px rgba(125,211,252,.40),
+    0 8px 26px rgba(0,0,0,.50),
+    0 0 26px rgba(125,211,252,.32);
+  transform:translateY(-2px);
+}
 
 /* ================= EQUIPMENT ================= */
 .equip-title{margin:20px 0 4px;font-size:1.05rem;color:var(--accent)}
@@ -382,22 +401,19 @@ a:focus-visible,button:focus-visible,.timeline-card[role="button"]:focus-visible
 
 /* --- Button polish: sheen on hover + ripple container --- */
 .btn,
-.cta-pill,
-.scroll-top-btn{
+.cta-pill{
   position:relative;
   overflow:hidden;
   background-size:200% 100%;
   background-position:0 0;
   transition:filter .2s, transform .12s, box-shadow .25s, background-position .5s ease;
 }
-.btn:hover,
-.scroll-top-btn:hover{
+.btn:hover{
   background-position:100% 0;
   transform:translateY(-2px);
   box-shadow:0 8px 22px rgba(96,165,250,.35);
 }
-.btn:active,
-.scroll-top-btn:active{transform:translateY(0)}
+.btn:active{transform:translateY(0)}
 .btn.ghost:hover{box-shadow:0 8px 22px rgba(255,255,255,.10)}
 .cta-pill:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(27,154,170,.4)}
 
@@ -443,8 +459,49 @@ a:focus-visible,button:focus-visible,.timeline-card[role="button"]:focus-visible
 .tutoring-head .lang-flag{flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 
 @media (prefers-reduced-motion: reduce){
-  .btn,.cta-pill,.scroll-top-btn{transition:none}
-  .btn:hover,.cta-pill:hover,.scroll-top-btn:hover,
+  .btn,.cta-pill{transition:none}
+  .btn:hover,.cta-pill:hover,
   .social-links a:hover,.timeline-item.has-expand .timeline-card:hover{transform:none}
   .btn-ripple{display:none}
+}
+
+/* ================================================================
+   SCROLL-TO-TOP ("Slides up") — horizontally centered, translucent
+   so it floats over content without obscuring it. Overrides the
+   earlier corner-anchored rules via cascade order.
+   ================================================================ */
+.scroll-top-btn{
+  position:fixed;
+  left:50%;
+  right:auto;
+  bottom:28px;
+  transform:translate(-50%, 20px);
+  overflow:hidden;
+  opacity:0;
+  pointer-events:none;
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  box-shadow:0 8px 24px rgba(0,0,0,.30);
+  transition:opacity .35s ease, transform .35s ease, filter .2s ease, box-shadow .25s ease;
+}
+.scroll-top-btn.show{
+  opacity:.55;                 /* slightly transparent at rest */
+  transform:translate(-50%, 0);
+  pointer-events:auto;
+}
+.scroll-top-btn:hover{
+  opacity:.95;                 /* becomes solid on hover */
+  filter:brightness(1.05);
+  transform:translate(-50%, -2px);
+}
+.scroll-top-btn:active{transform:translate(-50%, 0)}
+
+@media (max-width:520px){
+  .scroll-top-btn{left:50%;right:auto;bottom:18px}
+}
+@media (prefers-reduced-motion: reduce){
+  .scroll-top-btn{transition:opacity .2s ease}
+  .scroll-top-btn.show,
+  .scroll-top-btn:hover,
+  .scroll-top-btn:active{transform:translate(-50%, 0)}
 }
