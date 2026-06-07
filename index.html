@@ -36,6 +36,7 @@
         <a href="#education">Education</a>
         <a href="#experience">Experience</a>
         <a href="#presentations">Presentations</a>
+        <a href="#funding">Funding</a>
         <a href="#publications">Publications</a>
         <a href="#tree">Academic Tree</a>
         <a href="#tutoring">Tutoring</a>
@@ -78,7 +79,7 @@
     }
 
     async function loadSections() {
-      const sections = ['hero', 'education', 'experience', 'presentations', 'publications', 'tree', 'tutoring'];
+      const sections = ['hero', 'education', 'experience', 'presentations', 'funding', 'publications', 'tree', 'tutoring'];
       const container = document.getElementById('mainContent');
       for (const name of sections) {
         const html = await fetchSection(name);
