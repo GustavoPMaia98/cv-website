@@ -561,59 +561,85 @@ a:focus-visible,button:focus-visible,.timeline-card[role="button"]:focus-visible
 }
 
 /* ================================================================
-   ACADEMIC TREE — hand-rendered genealogy
+   ACADEMIC TREE — graph layout (academictree-style, our styling)
+   Mentors rise above the focal person via a vertical flip; node
+   content is flipped back upright. Horizontally scrollable.
    ================================================================ */
-.tree-root,
-.tree-root ul{ list-style:none; margin:0; padding:0; }
-.tree-root ul{ padding-left:36px; position:relative; }
-
-/* vertical spine for each set of mentors */
-.tree-root ul::before{
-  content:""; position:absolute; left:15px; top:-2px; bottom:24px;
-  width:2px; background:linear-gradient(180deg, rgba(125,211,252,.5), rgba(255,255,255,.10));
+.at-wrap{
+  overflow-x:auto; overflow-y:hidden;
+  padding:6px 2px 16px;
+  -webkit-overflow-scrolling:touch;
 }
-.tree-root li{ position:relative; margin:14px 0; }
-
-/* horizontal connector from spine to each node */
-.tree-root ul > li::before{
-  content:""; position:absolute; left:-21px; top:33px;
-  width:21px; height:2px; background:rgba(125,211,252,.32);
+.at-tree{
+  display:inline-block;
+  min-width:100%;
+  transform:scaleY(-1);              /* flip so mentors sit ABOVE the focal node */
+}
+.at-tree ul{
+  display:flex; justify-content:center; position:relative;
+  list-style:none; margin:0; padding:36px 0 0;
+}
+.at-tree li{
+  position:relative; padding:36px 8px 0; text-align:center;
+}
+/* connector lines */
+.at-tree li::before,
+.at-tree li::after{
+  content:""; position:absolute; top:0; right:50%;
+  width:50%; height:36px; border-top:2px solid rgba(125,211,252,.40);
+}
+.at-tree li::after{ right:auto; left:50%; border-left:2px solid rgba(125,211,252,.40); }
+.at-tree li:only-child::before,
+.at-tree li:only-child::after{ display:none; }
+.at-tree li:only-child{ padding-top:36px; }
+.at-tree li:first-child::before,
+.at-tree li:last-child::after{ border:0 none; }
+.at-tree li:last-child::before{ border-right:2px solid rgba(125,211,252,.40); border-radius:0 7px 0 0; }
+.at-tree li:first-child::after{ border-radius:7px 0 0 0; }
+.at-tree ul ul::before{
+  content:""; position:absolute; top:0; left:50%;
+  width:0; height:36px; border-left:2px solid rgba(125,211,252,.40);
 }
 
-.tree-node{
-  display:flex; align-items:center; gap:14px;
-  background:var(--card); border:1px solid var(--border);
-  border-radius:var(--radius-md); padding:10px 16px;
-  transition:border-color .2s ease, background .2s ease, transform .15s ease;
+.at-node{
+  position:relative;
+  display:inline-flex; flex-direction:column; align-items:center; gap:6px;
+  width:152px; padding:12px 10px; box-sizing:border-box;
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+  transform:scaleY(-1);              /* un-flip the content */
+  transition:border-color .2s ease, background .2s ease;
 }
-.tree-node:hover{ border-color:var(--border-strong); background:var(--card-hover); transform:translateX(2px); }
-.tree-self{
+.at-node:hover{ border-color:var(--border-strong); background:var(--card-hover); }
+.at-self{
   border-color:var(--border-strong);
   background:linear-gradient(135deg, rgba(43,47,119,.55), rgba(27,154,170,.30));
 }
-
-.tree-avatar{
+.at-avatar{
   position:relative; flex-shrink:0;
-  width:46px; height:46px; border-radius:50%;
+  width:54px; height:54px; border-radius:50%; overflow:hidden;
   display:flex; align-items:center; justify-content:center;
-  overflow:hidden;
   background:linear-gradient(135deg,#0ea5a5,#60a5fa);
   box-shadow:0 0 0 1px var(--border), 0 0 14px rgba(125,211,252,.22);
 }
-.tree-initials{ font-weight:800; font-size:.92rem; color:#03131e; }
-.tree-avatar img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.at-avatar img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.at-initials{ font-weight:800; font-size:1rem; color:#03131e; }
+.at-name{ font-weight:700; font-size:.85rem; line-height:1.22; color:var(--text); }
+.at-name:hover{ color:var(--accent); }
+.at-role{ font-size:.67rem; color:var(--accent); line-height:1.25; }
+.at-inst{ font-size:.69rem; color:var(--muted); line-height:1.3; }
+.at-inst:hover{ color:var(--accent); }
 
-.tree-info{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-.tree-name{ font-weight:700; font-size:1rem; color:var(--text); line-height:1.25; }
-.tree-name:hover{ color:var(--accent); }
-.tree-role{ font-size:.78rem; color:var(--accent); }
-.tree-inst{ font-size:.84rem; color:var(--muted); }
-.tree-inst:hover{ color:var(--accent); }
+.at-hint{ color:var(--muted); font-size:.82rem; margin:0 0 6px; }
 
 @media (max-width:520px){
-  .tree-root ul{ padding-left:28px; }
-  .tree-root ul::before{ left:11px; }
-  .tree-root ul > li::before{ left:-17px; width:17px; top:31px; }
-  .tree-node{ padding:9px 12px; gap:11px; }
-  .tree-avatar{ width:40px; height:40px; }
+  .at-node{ width:132px; padding:10px 8px; }
+  .at-avatar{ width:46px; height:46px; }
+  .at-tree ul{ padding-top:30px; }
+  .at-tree li{ padding:30px 5px 0; }
+  .at-tree li::before, .at-tree li::after{ height:30px; }
+  .at-tree ul ul::before{ height:30px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .at-node{ transition:none; }
 }
