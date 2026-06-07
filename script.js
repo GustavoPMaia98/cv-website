@@ -22,6 +22,10 @@
   let scrollspyWired = false;
   let rippleWired = false;
   let lightboxWired = false;
+  let progressWired = false;
+  let langWired = false;
+  let mapWired = false;
+  let currentLang = (function(){ try { return localStorage.getItem("lang") || "en"; } catch(e){ return "en"; } })();
 
   // ============================================================
   //  ANIMATED STARFIELD (canvas, GPU-light, drifts left -> right)
@@ -343,6 +347,8 @@
     clearStatus();
     observeReveals(container);
     wireAccordions();
+    buildPublicationFilter();
+    updateMetrics();
   }
 
   async function fetchOrcidWorks() {
@@ -544,6 +550,175 @@
   // ============================================================
   //  INIT
   // ============================================================
+  // ============================================================
+  //  v2 FEATURES
+  // ============================================================
+  const I18N = {
+    nav_news:{en:"News",pt:"Novidades"}, nav_education:{en:"Education",pt:"Educação"},
+    nav_experience:{en:"Experience",pt:"Experiência"}, nav_presentations:{en:"Presentations",pt:"Apresentações"},
+    nav_funding:{en:"Funding",pt:"Financiamento"}, nav_publications:{en:"Publications",pt:"Publicações"},
+    nav_tree:{en:"Tree",pt:"Árvore"}, nav_map:{en:"Map",pt:"Mapa"}, nav_tutoring:{en:"Tutoring",pt:"Explicações"},
+    role:{en:"PhD Researcher in Chemistry · Astrobiology",pt:"Investigador de Doutoramento em Química · Astrobiologia"},
+    bio:{en:"Research on mechanochemical and shock-driven synthesis of organic molecules relevant to prebiotic chemistry and the origin of life.",
+         pt:"Investigação em síntese mecanoquímica e por impacto de moléculas orgânicas relevantes para a química prebiótica e a origem da vida."},
+    tag1:{en:"Mechanochemistry",pt:"Mecanoquímica"}, tag2:{en:"Prebiotic Chemistry",pt:"Química Prebiótica"},
+    tag3:{en:"Astrobiology",pt:"Astrobiologia"}, tag4:{en:"Origin of Life",pt:"Origem da Vida"},
+    m_pubs:{en:"Publications",pt:"Publicações"}, m_talks:{en:"Talks & posters",pt:"Comunicações"},
+    m_areas:{en:"Research areas",pt:"Áreas de investigação"}, cv:{en:"Download CV",pt:"Descarregar CV"}
+  };
+  const HEADINGS = {
+    "Education":"Educação", "Experience":"Experiência", "Presentations":"Apresentações",
+    "Funding":"Financiamento", "Publications":"Publicações", "Academic Tree":"Árvore Académica",
+    "News":"Novidades", "Where I’ve Presented":"Onde Apresentei"
+  };
+
+  // Section heading icons (Lucide)
+  function injectHeadingIcons() {
+    const ICONS = { news:"newspaper", education:"graduation-cap", experience:"briefcase",
+      presentations:"presentation", funding:"banknote", publications:"book-open",
+      tree:"git-fork", map:"map-pin", tutoring:"flask-conical" };
+    document.querySelectorAll(".section > h2").forEach(h => {
+      if (h.querySelector(".h2-label")) return;
+      const sec = h.closest("section"); const id = sec ? sec.id : "";
+      const txt = h.textContent.trim();
+      h.textContent = "";
+      if (ICONS[id]) {
+        const i = document.createElement("i");
+        i.className = "h2-ico"; i.setAttribute("data-lucide", ICONS[id]);
+        h.appendChild(i);
+      }
+      const span = document.createElement("span");
+      span.className = "h2-label"; span.textContent = txt;
+      h.appendChild(span);
+    });
+    if (window.lucide) try { lucide.createIcons(); } catch(e){}
+  }
+
+  // Language
+  function applyLang() {
+    const lang = currentLang;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const t = I18N[el.getAttribute("data-i18n")];
+      if (t && t[lang]) el.textContent = t[lang];
+    });
+    document.querySelectorAll(".h2-label").forEach(s => {
+      if (!s.dataset.en) s.dataset.en = s.textContent.trim();
+      s.textContent = (lang === "pt" && HEADINGS[s.dataset.en]) ? HEADINGS[s.dataset.en] : s.dataset.en;
+    });
+    const lb = document.getElementById("langToggle");
+    if (lb) lb.textContent = lang === "en" ? "PT" : "EN";
+    document.documentElement.setAttribute("lang", lang);
+  }
+  function setupLangToggle() {
+    const btn = document.getElementById("langToggle");
+    if (btn && !langWired) {
+      langWired = true;
+      btn.addEventListener("click", () => {
+        currentLang = currentLang === "en" ? "pt" : "en";
+        try { localStorage.setItem("lang", currentLang); } catch(e){}
+        applyLang();
+      });
+    }
+    applyLang();
+  }
+
+  // Theme
+  function setupThemeToggle() {
+    const btn = document.getElementById("themeToggle");
+    if (!btn || btn.__wired) return;
+    btn.__wired = true;
+    const setIcon = () => {
+      const dark = document.documentElement.getAttribute("data-theme") !== "light";
+      btn.innerHTML = '<i data-lucide="' + (dark ? "sun" : "moon") + '"></i>';
+      if (window.lucide) try { lucide.createIcons(); } catch(e){}
+    };
+    setIcon();
+    btn.addEventListener("click", () => {
+      const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch(e){}
+      setIcon();
+    });
+  }
+
+  // Scroll progress
+  function setupScrollProgress() {
+    if (progressWired) return;
+    const bar = document.getElementById("scrollProgress");
+    if (!bar) return;
+    progressWired = true;
+    const upd = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.width = max > 0 ? (h.scrollTop / max * 100) + "%" : "0%";
+    };
+    window.addEventListener("scroll", upd, { passive: true });
+    window.addEventListener("resize", upd);
+    upd();
+  }
+
+  // Publication year filter + metrics
+  function buildPublicationFilter() {
+    const wrap = document.getElementById("pub-filter");
+    if (!wrap) return;
+    const pubs = Array.prototype.slice.call(document.querySelectorAll("#publications .timeline-item.publication"));
+    if (!pubs.length) return;
+    const years = new Set();
+    pubs.forEach(p => {
+      const meta = p.querySelector(".meta");
+      const y = ((meta && meta.textContent) || "").match(/\b(?:19|20)\d{2}\b/);
+      if (y) { p.dataset.year = y[0]; years.add(y[0]); }
+    });
+    const sorted = Array.prototype.slice.call(years).sort((a, b) => b - a);
+    wrap.innerHTML = "";
+    const mk = (label, val) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = label; b.dataset.val = val;
+      b.addEventListener("click", () => {
+        wrap.querySelectorAll("button").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        pubs.forEach(p => p.classList.toggle("pub-hidden", val !== "all" && p.dataset.year !== val));
+      });
+      return b;
+    };
+    const all = mk(currentLang === "pt" ? "Todos" : "All", "all");
+    all.classList.add("active");
+    wrap.appendChild(all);
+    sorted.forEach(y => wrap.appendChild(mk(y, y)));
+  }
+  function updateMetrics() {
+    const el = document.querySelector('[data-metric="pubs"]');
+    if (!el) return;
+    const n = document.querySelectorAll("#publications .timeline-item.publication").length;
+    if (n) el.textContent = n;
+  }
+
+  // Presentation map (Leaflet)
+  function initPresoMap() {
+    if (mapWired) return;
+    const el = document.getElementById("presoMap");
+    if (!el || !window.L) return;
+    mapWired = true;
+    const map = L.map(el, { scrollWheelZoom: false }).setView([44, 2], 3);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18, attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+    const pts = [
+      { n:"Lisbon, Portugal", c:[38.7369,-9.1366], d:"IST · EuChemS · CQE Days · SPQ · IST PhD Open Day" },
+      { n:"Paris, France", c:[48.8443,2.3562], d:"MNHN–IMPMC · IPGP “Small Bodies Day” · AbGradE’25" },
+      { n:"Greenbelt, MD, USA", c:[38.9961,-76.8483], d:"NASA Goddard — Astrobiology Analytical Lab" },
+      { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"Universidade da Beira Interior · CICS-UBI" }
+    ];
+    const bounds = [];
+    pts.forEach(p => {
+      L.circleMarker(p.c, { radius:8, color:"#2563a8", fillColor:"#7dd3fc", fillOpacity:.9, weight:2 })
+        .addTo(map).bindPopup("<strong>" + p.n + "</strong><br>" + p.d);
+      bounds.push(p.c);
+    });
+    try { map.fitBounds(bounds, { padding:[40,40] }); } catch(e){}
+    setTimeout(() => map.invalidateSize(), 200);
+  }
+
   function init() {
     initStarfield();
     initNav();
@@ -552,6 +727,13 @@
     setupScrollTopButton();
     setupButtonRipple();
     setupLightbox();
+    injectHeadingIcons();
+    setupThemeToggle();
+    setupLangToggle();
+    setupScrollProgress();
+    buildPublicationFilter();
+    updateMetrics();
+    initPresoMap();
     if (document.getElementById("pub-list")) loadPublications();
   }
 

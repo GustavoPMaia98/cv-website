@@ -3,22 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gustavo Pinho Maia — PhD researcher in Chemistry (Astrobiology): mechanochemical and shock-driven synthesis of organic molecules relevant to the origin of life.">
-  <title>Gustavo Pinho Maia · Astrobiology Research</title>
 
-  <!-- Fonts used by the design system -->
+  <!-- ============ PRIMARY / SEO ============ -->
+  <title>Gustavo Pinho Maia · Astrobiology Research</title>
+  <meta name="description" content="Gustavo Pinho Maia — PhD researcher in Chemistry (Astrobiology). Mechanochemical and shock-driven synthesis of organic molecules relevant to prebiotic chemistry and the origin of life.">
+  <meta name="author" content="Gustavo Pinho Maia">
+  <meta name="theme-color" content="#0b1020">
+  <!-- TODO: replace YOUR-DOMAIN with your live domain (e.g. https://gustavopinhomaia.com) -->
+  <link rel="canonical" href="https://YOUR-DOMAIN/">
+
+  <!-- Google Search Console: paste your verification token, then uncomment -->
+  <!-- <meta name="google-site-verification" content="PASTE_TOKEN_HERE"> -->
+
+  <!-- ============ OPEN GRAPH / TWITTER ============ -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gustavo Pinho Maia">
+  <meta property="og:title" content="Gustavo Pinho Maia · Astrobiology Research">
+  <meta property="og:description" content="PhD researcher in Chemistry (Astrobiology): mechanochemical and shock-driven synthesis of organic molecules relevant to the origin of life.">
+  <meta property="og:url" content="https://YOUR-DOMAIN/">
+  <meta property="og:image" content="https://YOUR-DOMAIN/images/avatar.jpg">
+  <meta property="og:image:alt" content="Gustavo Pinho Maia">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gustavo Pinho Maia · Astrobiology Research">
+  <meta name="twitter:description" content="PhD researcher in Chemistry (Astrobiology): mechanochemistry, prebiotic chemistry, and the origin of life.">
+  <meta name="twitter:image" content="https://YOUR-DOMAIN/images/avatar.jpg">
+
+  <!-- ============ ICONS ============ -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="favicon.svg">
+
+  <!-- ============ FONTS ============ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- ============ MAP (Leaflet) ============ -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <!-- Apply saved/system theme before CSS to avoid a flash -->
+  <script>(function(){try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- ============ STRUCTURED DATA ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Gustavo Pinho Maia",
+    "givenName": "Gustavo",
+    "familyName": "Pinho Maia",
+    "jobTitle": "PhD Researcher in Chemistry (Astrobiology)",
+    "image": "https://YOUR-DOMAIN/images/avatar.jpg",
+    "url": "https://YOUR-DOMAIN/",
+    "email": "mailto:gustavopinho.maia@mnhn.fr",
+    "knowsAbout": ["Mechanochemistry","Prebiotic chemistry","Astrobiology","Origin of life","Mass spectrometry"],
+    "affiliation": [
+      {"@type":"Organization","name":"Centro de Química Estrutural, Instituto Superior Técnico, Universidade de Lisboa"},
+      {"@type":"Organization","name":"Muséum national d’Histoire naturelle — IMPMC"}
+    ],
+    "sameAs": [
+      "https://orcid.org/0000-0001-5314-8816",
+      "https://www.linkedin.com/in/gustavopinhomaia",
+      "https://www.researchgate.net/profile/Gustavo_Maia2",
+      "https://cienciavitae.pt/portal/en/8212-CEE3-E928"
+    ]
+  }
+  </script>
 </head>
 <body>
 
-  <!-- Skip link for keyboard / screen-reader users -->
+  <!-- Scroll progress bar -->
+  <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+
   <a class="skip-link" href="#mainContent">Skip to content</a>
 
-  <!-- Animated starfield (script.js -> initStarfield) -->
+  <!-- Animated starfield -->
   <canvas id="starfield" aria-hidden="true"></canvas>
 
   <!-- ================= NAV ================= -->
@@ -26,28 +87,93 @@
     <div class="nav-inner">
       <a class="nav-logo" href="#about" aria-label="Gustavo Pinho Maia — home">G<span>P</span>M</a>
 
-      <button class="nav-toggle" id="navToggle" type="button"
-              aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
-        <span></span><span></span><span></span>
-      </button>
-
       <nav class="nav-links" id="navLinks" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#education">Education</a>
-        <a href="#experience">Experience</a>
-        <a href="#presentations">Presentations</a>
-        <a href="#funding">Funding</a>
-        <a href="#publications">Publications</a>
-        <a href="#tree">Academic Tree</a>
-        <a href="#tutoring">Tutoring</a>
+        <a href="#news" data-i18n="nav_news">News</a>
+        <a href="#education" data-i18n="nav_education">Education</a>
+        <a href="#experience" data-i18n="nav_experience">Experience</a>
+        <a href="#presentations" data-i18n="nav_presentations">Presentations</a>
+        <a href="#funding" data-i18n="nav_funding">Funding</a>
+        <a href="#publications" data-i18n="nav_publications">Publications</a>
+        <a href="#tree" data-i18n="nav_tree">Tree</a>
+        <a href="#map" data-i18n="nav_map">Map</a>
+        <a href="#tutoring" data-i18n="nav_tutoring">Tutoring</a>
       </nav>
+
+      <div class="nav-tools">
+        <button class="icon-btn" id="langToggle" type="button" aria-label="Switch language">PT</button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch theme">
+          <i data-lucide="moon"></i>
+        </button>
+        <button class="nav-toggle" id="navToggle" type="button"
+                aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- ================= SPA CONTENT ================= -->
   <main class="site" id="mainContent">
-    <!-- Sections are injected here by loadSections() -->
+
+    <!-- HERO is inlined (not fetched) so crawlers & social cards see it -->
+    <section class="hero" id="about">
+      <div class="hero-card reveal">
+        <div class="avatar-wrapper">
+          <img src="images/avatar.jpg" alt="Gustavo Pinho Maia" class="avatar-img" width="220" height="230"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-fallback" style="display:none">GM</div>
+          <div class="avatar-credit"><em>Credit: IMPMC — Cécile Duflot</em></div>
+        </div>
+
+        <div class="hero-body">
+          <h1>Gustavo Pinho Maia</h1>
+          <div class="role" data-i18n="role">PhD Researcher in Chemistry · Astrobiology</div>
+          <p data-i18n="bio">
+            Research on mechanochemical and shock-driven synthesis of organic molecules
+            relevant to prebiotic chemistry and the origin of life.
+          </p>
+
+          <div class="hero-tags">
+            <span data-i18n="tag1">Mechanochemistry</span>
+            <span data-i18n="tag2">Prebiotic Chemistry</span>
+            <span data-i18n="tag3">Astrobiology</span>
+            <span data-i18n="tag4">Origin of Life</span>
+          </div>
+
+          <div class="metrics" aria-label="Highlights">
+            <div class="metric"><span class="metric-num" data-metric="pubs">3</span><span class="metric-label" data-i18n="m_pubs">Publications</span></div>
+            <div class="metric"><span class="metric-num">11</span><span class="metric-label" data-i18n="m_talks">Talks &amp; posters</span></div>
+            <div class="metric"><span class="metric-num">4</span><span class="metric-label" data-i18n="m_areas">Research areas</span></div>
+          </div>
+
+          <div class="social-links">
+            <a href="cv.pdf" class="btn" download data-i18n="cv">Download CV</a>
+            <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener noreferrer">
+              <img src="images/logos/orcid.png" width="20" height="20" alt=""> ORCID</a>
+            <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener noreferrer">
+              <img src="images/logos/linkedin.png" width="20" height="20" alt=""> LinkedIn</a>
+            <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank" rel="noopener noreferrer">
+              <img src="images/logos/researchgate.png" width="20" height="20" alt=""> ResearchGate</a>
+            <a href="mailto:gustavopinho.maia@mnhn.fr" aria-label="Email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2 6.5C2 5.67 2.67 5 3.5 5h17c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5h-17A1.5 1.5 0 0 1 2 17.5v-11zM4 7v.83l8 5.33 8-5.33V7l-8 5-8-5z"/></svg>
+              Email</a>
+            <a href="#tutoring" class="cta-pill">Cientifica(mente)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Remaining sections injected here -->
   </main>
+
+  <noscript>
+    <div style="max-width:1120px;margin:0 auto;padding:20px;color:#e7edf6">
+      This site loads its sections with JavaScript. Key info: <strong>Gustavo Pinho Maia</strong>,
+      PhD researcher in Chemistry (Astrobiology) at Instituto Superior Técnico (Universidade de Lisboa)
+      and visiting scientist at MNHN–IMPMC. Contact: gustavopinho.maia@mnhn.fr ·
+      ORCID 0000-0001-5314-8816.
+    </div>
+  </noscript>
 
   <!-- ================= FOOTER ================= -->
   <footer class="footer">
@@ -57,50 +183,44 @@
         <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener noreferrer">ORCID</a>
         <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a href="https://www.researchgate.net/profile/Gustavo_Maia2" target="_blank" rel="noopener noreferrer">ResearchGate</a>
+        <a href="https://cienciavitae.pt/portal/en/8212-CEE3-E928" target="_blank" rel="noopener noreferrer">CiênciaVitae</a>
         <a href="mailto:gustavopinho.maia@mnhn.fr">Email</a>
       </nav>
     </div>
   </footer>
 
+  <!-- Libraries -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <script>
-    // ---- Dynamic section loader ----------------------------------------
-    // Tries sections/<name>.html first (folder layout), then <name>.html
-    // (flat layout) so it works regardless of how the files are deployed.
+    // Apply saved theme ASAP to avoid a flash
+    (function(){
+      try {
+        var t = localStorage.getItem('theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch(e) {}
+    })();
+
     async function fetchSection(name) {
-      const paths = [`sections/${name}.html`, `${name}.html`];
-      for (const p of paths) {
-        try {
-          const res = await fetch(p);
-          if (res.ok) return await res.text();
-        } catch (e) { /* try next path */ }
+      for (const p of [`sections/${name}.html`, `${name}.html`]) {
+        try { const r = await fetch(p); if (r.ok) return await r.text(); } catch(e){}
       }
-      console.warn(`Could not load section: ${name}`);
+      console.warn('Could not load section: ' + name);
       return "";
     }
-
     async function loadSections() {
-      const sections = ['hero', 'education', 'experience', 'presentations', 'funding', 'publications', 'tree', 'tutoring'];
-      const container = document.getElementById('mainContent');
-      for (const name of sections) {
-        const html = await fetchSection(name);
-        if (html) container.insertAdjacentHTML('beforeend', html);
-      }
-      // Re-run the app now that the dynamic content exists.
-      if (window.SiteApp && typeof window.SiteApp.init === 'function') {
-        window.SiteApp.init();
-      }
+      const sections = ['news','education','experience','presentations','funding','publications','tree','map','tutoring'];
+      const c = document.getElementById('mainContent');
+      for (const n of sections) { const html = await fetchSection(n); if (html) c.insertAdjacentHTML('beforeend', html); }
+      if (window.SiteApp && SiteApp.init) SiteApp.init();
     }
-
-    const yEl = document.getElementById('footerYear');
-    if (yEl) yEl.textContent = new Date().getFullYear();
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadSections);
-    } else {
-      loadSections();
-    }
+    var y = document.getElementById('footerYear'); if (y) y.textContent = new Date().getFullYear();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadSections);
+    else loadSections();
   </script>
-
   <script src="script.js"></script>
 </body>
 </html>
