@@ -78,9 +78,14 @@
       }
     }
 
+    function palette() {
+      const light = document.documentElement.getAttribute("data-theme") === "light";
+      return light ? { star: "#475569", trail: "51,65,85" } : { star: "#dbeafe", trail: "255,255,255" };
+    }
+
     function drawStars(animate, dt) {
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = "#dbeafe";
+      ctx.fillStyle = palette().star;
       for (const s of stars) {
         if (animate) {
           s.x += s.sp * dt;
@@ -105,9 +110,10 @@
         sh.life += dt;
         sh.x += sh.sp * dt * 0.9;
         sh.y += sh.sp * dt * 0.5;
+        const trail = palette().trail;
         const grad = ctx.createLinearGradient(sh.x, sh.y, sh.x - sh.len, sh.y - sh.len * 0.55);
-        grad.addColorStop(0, "rgba(255,255,255,0.9)");
-        grad.addColorStop(1, "rgba(255,255,255,0)");
+        grad.addColorStop(0, "rgba(" + trail + ",0.9)");
+        grad.addColorStop(1, "rgba(" + trail + ",0)");
         ctx.globalAlpha = Math.max(0, 1 - sh.life / 1.1);
         ctx.strokeStyle = grad;
         ctx.lineWidth = 2;
@@ -564,7 +570,7 @@
     tag1:{en:"Mechanochemistry",pt:"Mecanoquímica"}, tag2:{en:"Prebiotic Chemistry",pt:"Química Prebiótica"},
     tag3:{en:"Astrobiology",pt:"Astrobiologia"}, tag4:{en:"Origin of Life",pt:"Origem da Vida"},
     m_pubs:{en:"Publications",pt:"Publicações"}, m_talks:{en:"Talks & posters",pt:"Comunicações"},
-    m_areas:{en:"Research areas",pt:"Áreas de investigação"}, cv:{en:"Download CV",pt:"Descarregar CV"}
+    m_areas:{en:"Research areas",pt:"Áreas de investigação"}, m_hindex:{en:"h-index",pt:"índice h"}, cv:{en:"Download CV",pt:"Descarregar CV"}
   };
   const HEADINGS = {
     "Education":"Educação", "Experience":"Experiência", "Presentations":"Apresentações",

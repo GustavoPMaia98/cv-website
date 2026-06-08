@@ -664,7 +664,7 @@ html[data-theme="light"] body{
     radial-gradient(55vw 40vw at 82% 4%, rgba(34,211,238,.07), transparent 48%),
     linear-gradient(180deg,#ffffff,#eef2f8 70%);
 }
-html[data-theme="light"] #starfield{ display:none; }
+/* starfield stays visible in light mode (stars/meteors recolour via JS) */
 html[data-theme="light"] .nav{ background:rgba(255,255,255,.72); }
 html[data-theme="light"] .footer{ background:rgba(255,255,255,.6); }
 html[data-theme="light"] .avatar-credit{ color:#586072; }
@@ -756,16 +756,19 @@ html[data-theme="light"] .equip-tasks{ color:var(--muted); }
 
 /* ---- Map legend + reset control ---- */
 .map-legend{
-  background:var(--card); border:1px solid var(--border); border-radius:10px;
-  padding:8px 11px; font-size:.8rem; color:var(--text); line-height:1.7;
-  box-shadow:0 4px 14px rgba(0,0,0,.3); backdrop-filter:blur(6px);
+  background:rgba(11,16,32,.9); border:1px solid rgba(255,255,255,.22); border-radius:10px;
+  padding:8px 11px; font-size:.8rem; color:#e7edf6; line-height:1.7;
+  box-shadow:0 4px 14px rgba(0,0,0,.45); backdrop-filter:blur(6px);
 }
-html[data-theme="light"] .map-legend{ background:rgba(255,255,255,.9); }
 .map-legend .dot{ display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:7px; vertical-align:-1px; }
 .map-reset{
-  background:var(--card); border:1px solid var(--border); color:var(--text);
+  background:rgba(11,16,32,.9); border:1px solid rgba(255,255,255,.22); color:#e7edf6;
   width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:1.1rem; line-height:1;
   display:flex; align-items:center; justify-content:center;
 }
-html[data-theme="light"] .map-reset{ background:rgba(255,255,255,.92); }
 .map-reset:hover{ border-color:var(--border-strong); color:var(--accent); }
+
+/* h-index tile links to Google Scholar */
+.metric-link{ text-decoration:none; color:inherit; }
+.metric-link:hover .metric-num{ color:var(--accent-strong); }
+.metric-link:hover{ text-decoration:none; }
