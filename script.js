@@ -25,7 +25,6 @@
   let progressWired = false;
   let langWired = false;
   let mapWired = false;
-  let blogCanvasWired = false;
   let currentLang = (function(){ try { return localStorage.getItem("lang") || "en"; } catch(e){ return "en"; } })();
 
   // ============================================================
@@ -565,7 +564,7 @@
     nav_news:{en:"News",pt:"Novidades"}, nav_education:{en:"Education",pt:"Educação"},
     nav_experience:{en:"Experience",pt:"Experiência"}, nav_presentations:{en:"Presentations",pt:"Apresentações"},
     nav_funding:{en:"Funding",pt:"Financiamento"}, nav_publications:{en:"Publications",pt:"Publicações"},
-    nav_tree:{en:"Tree",pt:"Árvore"}, nav_map:{en:"Map",pt:"Mapa"}, nav_tutoring:{en:"Tutoring",pt:"Explicações"}, nav_blog:{en:"Blog",pt:"Blog"},
+    nav_tree:{en:"Tree",pt:"Árvore"}, nav_map:{en:"Map",pt:"Mapa"}, nav_tutoring:{en:"Tutoring",pt:"Explicações"},
     role:{en:"PhD Researcher in Chemistry · Astrobiology",pt:"Investigador de Doutoramento em Química · Astrobiologia"},
     bio:{en:"Research on mechanochemical and shock-driven synthesis of organic molecules relevant to prebiotic chemistry and the origin of life.",
          pt:"Investigação em síntese mecanoquímica e por impacto de moléculas orgânicas relevantes para a química prebiótica e a origem da vida."},
@@ -577,14 +576,14 @@
   const HEADINGS = {
     "Education":"Educação", "Experience":"Experiência", "Presentations":"Apresentações",
     "Funding":"Financiamento", "Publications":"Publicações", "Academic Tree":"Árvore Académica",
-    "News":"Novidades", "Where I have been":"Por onde andei", "Blog":"Blog"
+    "News":"Novidades", "Where I have been":"Por onde andei"
   };
 
   // Section heading icons (Lucide)
   function injectHeadingIcons() {
     const ICONS = { news:"newspaper", education:"graduation-cap", experience:"briefcase",
       presentations:"presentation", funding:"banknote", publications:"book-open",
-      tree:"git-fork", map:"map-pin", tutoring:"flask-conical", blog:"pen-line" };
+      tree:"git-fork", map:"map-pin", tutoring:"flask-conical" };
     document.querySelectorAll(".section > h2").forEach(h => {
       if (h.querySelector(".h2-label")) return;
       const sec = h.closest("section"); const id = sec ? sec.id : "";
@@ -790,86 +789,6 @@
     setTimeout(() => map.invalidateSize(), 200);
   }
 
-  // Blog: connected-particle "constellation" canvas (blends with the starfield)
-  function initBlogCanvas() {
-    if (blogCanvasWired) return;
-    const canvas = document.getElementById("blogCanvas");
-    if (!canvas) return;
-    const section = canvas.closest("section") || canvas.parentElement;
-    const ctx = canvas.getContext("2d", { alpha: true });
-    if (!ctx) return;
-    blogCanvasWired = true;
-
-    let w = 0, h = 0, dpr = 1, nodes = [], raf = null, last = 0, visible = true;
-    const rand = (a, b) => a + Math.random() * (b - a);
-
-    function pal() {
-      const light = document.documentElement.getAttribute("data-theme") === "light";
-      return light ? { dot: "71,85,105", line: "71,85,105" } : { dot: "125,211,252", line: "125,211,252" };
-    }
-    function size() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = section.clientWidth;
-      h = section.clientHeight || 220;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      canvas.style.width = w + "px";
-      canvas.style.height = h + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      build();
-    }
-    function build() {
-      let count = Math.round((w * h) / 16000);
-      count = Math.max(14, Math.min(count, 46));
-      nodes = [];
-      for (let i = 0; i < count; i++) {
-        nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: rand(-12, 12), vy: rand(-12, 12), r: rand(1.1, 2.2) });
-      }
-    }
-    function draw(dt) {
-      ctx.clearRect(0, 0, w, h);
-      const p = pal(), max = 130;
-      for (const n of nodes) {
-        n.x += n.vx * dt; n.y += n.vy * dt;
-        if (n.x < -10) n.x = w + 10; else if (n.x > w + 10) n.x = -10;
-        if (n.y < -10) n.y = h + 10; else if (n.y > h + 10) n.y = -10;
-      }
-      ctx.lineWidth = 1;
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i], b = nodes[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < max) {
-            ctx.strokeStyle = "rgba(" + p.line + "," + ((1 - d / max) * 0.45).toFixed(3) + ")";
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-          }
-        }
-      }
-      ctx.fillStyle = "rgba(" + p.dot + ",0.85)";
-      for (const n of nodes) { ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill(); }
-    }
-    function frame(t) {
-      const dt = Math.min((t - last) / 1000, 0.05) || 0; last = t;
-      draw(dt);
-      raf = requestAnimationFrame(frame);
-    }
-    function start() { if (!raf && !prefersReduced && visible) { last = performance.now(); raf = requestAnimationFrame(frame); } }
-    function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-
-    let rt;
-    window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { size(); if (prefersReduced) draw(0); }, 160); }, { passive: true });
-    if ("ResizeObserver" in window) {
-      try { new ResizeObserver(() => { size(); if (prefersReduced) draw(0); }).observe(section); } catch (e) {}
-    }
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(es => { es.forEach(e => { visible = e.isIntersecting; if (visible) start(); else stop(); }); }, { threshold: 0 }).observe(section);
-    }
-    document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); else start(); });
-
-    size();
-    if (prefersReduced) draw(0); else start();
-  }
-
   // Performance: lazy-load below-the-fold images
   function setupLazyImages() {
     document.querySelectorAll("img:not([loading]):not(.avatar-img)").forEach(img => {
@@ -894,7 +813,6 @@
     buildPublicationFilter();
     updateMetrics();
     initPresoMap();
-    initBlogCanvas();
     if (document.getElementById("pub-list")) loadPublications();
   }
 

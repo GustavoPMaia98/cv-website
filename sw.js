@@ -1,10 +1,10 @@
 /* Service worker: app-shell caching + offline fallback.
    Network-first for HTML (so content stays fresh), cache-first for static assets. */
-const CACHE = "gpm-v1";
+const CACHE = "gpm-v2";
 const CORE = [
   "./", "index.html", "style.css", "script.js", "favicon.svg", "manifest.webmanifest", "cv.pdf",
   "news.html", "education.html", "experience.html", "presentations.html", "funding.html",
-  "publications.html", "tree.html", "map.html", "tutoring.html", "blog.html"
+  "publications.html", "tree.html", "map.html", "tutoring.html"
 ];
 
 self.addEventListener("install", e => {

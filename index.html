@@ -103,7 +103,6 @@
         <a href="#tree" data-i18n="nav_tree">Tree</a>
         <a href="#map" data-i18n="nav_map">Map</a>
         <a href="#tutoring" data-i18n="nav_tutoring">Tutoring</a>
-        <a href="#blog" data-i18n="nav_blog">Blog</a>
       </nav>
 
       <div class="nav-tools">
@@ -224,7 +223,7 @@
       return "";
     }
     async function loadSections() {
-      const sections = ['news','education','experience','presentations','funding','publications','tree','map','tutoring','blog'];
+      const sections = ['news','education','experience','presentations','funding','publications','tree','map','tutoring'];
       const c = document.getElementById('mainContent');
       const results = await Promise.all(sections.map(fetchSection));
       c.insertAdjacentHTML('beforeend', results.join(''));
