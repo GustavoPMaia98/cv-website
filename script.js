@@ -605,6 +605,10 @@
       if (!s.dataset.en) s.dataset.en = s.textContent.trim();
       s.textContent = (lang === "pt" && HEADINGS[s.dataset.en]) ? HEADINGS[s.dataset.en] : s.dataset.en;
     });
+    document.querySelectorAll("[data-pt]").forEach(el => {
+      if (el.dataset.enHtml === undefined) el.dataset.enHtml = el.innerHTML;
+      el.innerHTML = (lang === "pt") ? el.dataset.pt : el.dataset.enHtml;
+    });
     const lb = document.getElementById("langToggle");
     if (lb) lb.textContent = lang === "en" ? "PT" : "EN";
     document.documentElement.setAttribute("lang", lang);
@@ -699,23 +703,69 @@
     const el = document.getElementById("presoMap");
     if (!el || !window.L) return;
     mapWired = true;
-    const map = L.map(el, { scrollWheelZoom: false }).setView([44, 2], 3);
+
+    const LAB = "#22d3ee";   // laboratories / research
+    const PRES = "#fbbf24";  // oral / poster presentations
+
+    const labs = [
+      { n:"CQE — Instituto Superior Técnico, Lisbon", c:[38.7369,-9.1366], d:"PhD researcher · Invited teaching assistant" },
+      { n:"IMPMC — MNHN, Paris", c:[48.8443,2.3562], d:"Visiting Scientist (2025–present)" },
+      { n:"NASA Goddard Space Flight Center, Greenbelt MD", c:[38.9961,-76.8483], d:"Visiting Scientist (2024)" },
+      { n:"Universidade da Beira Interior, Covilhã", c:[40.2784,-7.5046], d:"BSc · Research intern" }
+    ];
+    const pres = [
+      { n:"Lisbon, Portugal", c:[38.7369,-9.1366], d:"EANA 2025 (poster) · AbGradE’25 · NInTec 2024 · EuChemS ECC8 2022 · IST PhD Open Days 2024 · CQE Days 2022" },
+      { n:"Paris, France", c:[48.8443,2.3562], d:"IPGP “Small Bodies Day” 2025 · IMPMC PhD Students’ Day 2025" },
+      { n:"Reykjavik, Iceland", c:[64.1466,-21.9426], d:"BEACON 2025 (oral)" },
+      { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"XV CICS-UBI Symposium 2020 (poster)" }
+    ];
+
+    const map = L.map(el, { scrollWheelZoom: false });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18, attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
-    const pts = [
-      { n:"Lisbon, Portugal", c:[38.7369,-9.1366], d:"IST · EuChemS · CQE Days · SPQ · IST PhD Open Day" },
-      { n:"Paris, France", c:[48.8443,2.3562], d:"MNHN–IMPMC · IPGP “Small Bodies Day” · AbGradE’25" },
-      { n:"Greenbelt, MD, USA", c:[38.9961,-76.8483], d:"NASA Goddard — Astrobiology Analytical Lab" },
-      { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"Universidade da Beira Interior · CICS-UBI" }
-    ];
-    const bounds = [];
-    pts.forEach(p => {
-      L.circleMarker(p.c, { radius:8, color:"#2563a8", fillColor:"#7dd3fc", fillOpacity:.9, weight:2 })
-        .addTo(map).bindPopup("<strong>" + p.n + "</strong><br>" + p.d);
-      bounds.push(p.c);
+
+    const all = [];
+    // Presentation markers first (larger, drawn underneath) so overlaps show as an amber ring
+    pres.forEach(p => {
+      L.circleMarker(p.c, { radius:12, color:PRES, weight:3, fillColor:PRES, fillOpacity:.28 })
+        .addTo(map).bindPopup("<strong>" + p.n + "</strong><br><em>Presentations</em><br>" + p.d);
+      all.push(p.c);
     });
-    try { map.fitBounds(bounds, { padding:[40,40] }); } catch(e){}
+    // Laboratory markers on top (smaller, solid)
+    labs.forEach(p => {
+      L.circleMarker(p.c, { radius:7, color:"#0b1020", weight:1.5, fillColor:LAB, fillOpacity:.95 })
+        .addTo(map).bindPopup("<strong>" + p.n + "</strong><br><em>Laboratory / research</em><br>" + p.d);
+      all.push(p.c);
+    });
+
+    const defaultBounds = L.latLngBounds(all).pad(0.15);
+    const fit = () => map.fitBounds(defaultBounds);
+    fit();
+
+    // Legend
+    const legend = L.control({ position: "bottomleft" });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create("div", "map-legend");
+      div.innerHTML =
+        '<span class="dot" style="background:' + LAB + '"></span>Laboratories &amp; research<br>' +
+        '<span class="dot" style="background:' + PRES + '"></span>Oral &amp; poster presentations';
+      return div;
+    };
+    legend.addTo(map);
+
+    // Reset-to-default-view control
+    const reset = L.control({ position: "topright" });
+    reset.onAdd = function () {
+      const b = L.DomUtil.create("button", "map-reset");
+      b.type = "button"; b.title = "Reset view"; b.setAttribute("aria-label", "Reset view");
+      b.innerHTML = "⌖";
+      L.DomEvent.disableClickPropagation(b);
+      L.DomEvent.on(b, "click", function (e) { L.DomEvent.preventDefault(e); fit(); });
+      return b;
+    };
+    reset.addTo(map);
+
     setTimeout(() => map.invalidateSize(), 200);
   }
 
