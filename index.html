@@ -9,6 +9,8 @@
   <meta name="description" content="Gustavo Pinho Maia — PhD researcher in Chemistry (Astrobiology). Mechanochemical and shock-driven synthesis of organic molecules relevant to prebiotic chemistry and the origin of life.">
   <meta name="author" content="Gustavo Pinho Maia">
   <meta name="theme-color" content="#0b1020">
+  <meta name="color-scheme" content="dark light">
+  <link rel="manifest" href="manifest.webmanifest">
   <!-- TODO: replace YOUR-DOMAIN with your live domain (e.g. https://gustavopinhomaia.com) -->
   <link rel="canonical" href="https://YOUR-DOMAIN/">
 
@@ -35,6 +37,9 @@
   <!-- ============ FONTS ============ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- ============ MAP (Leaflet) ============ -->
@@ -230,5 +235,13 @@
     else loadSections();
   </script>
   <script src="script.js"></script>
+  <script>
+    // Progressive Web App: register the service worker on secure origins
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>
