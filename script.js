@@ -563,7 +563,7 @@
     nav_news:{en:"News",pt:"Novidades"}, nav_education:{en:"Education",pt:"Educação"},
     nav_experience:{en:"Experience",pt:"Experiência"}, nav_presentations:{en:"Presentations",pt:"Apresentações"},
     nav_funding:{en:"Funding",pt:"Financiamento"}, nav_publications:{en:"Publications",pt:"Publicações"},
-    nav_tree:{en:"Tree",pt:"Árvore"}, nav_map:{en:"Map",pt:"Mapa"}, nav_tutoring:{en:"Tutoring",pt:"Explicações"},
+    nav_tree:{en:"Tree",pt:"Árvore"}, nav_map:{en:"Map",pt:"Mapa"}, nav_tutoring:{en:"Tutoring",pt:"Explicações"}, nav_blog:{en:"Blog",pt:"Blog"},
     role:{en:"PhD Researcher in Chemistry · Astrobiology",pt:"Investigador de Doutoramento em Química · Astrobiologia"},
     bio:{en:"Research on mechanochemical and shock-driven synthesis of organic molecules relevant to prebiotic chemistry and the origin of life.",
          pt:"Investigação em síntese mecanoquímica e por impacto de moléculas orgânicas relevantes para a química prebiótica e a origem da vida."},
@@ -575,14 +575,14 @@
   const HEADINGS = {
     "Education":"Educação", "Experience":"Experiência", "Presentations":"Apresentações",
     "Funding":"Financiamento", "Publications":"Publicações", "Academic Tree":"Árvore Académica",
-    "News":"Novidades", "Where I’ve Presented":"Onde Apresentei"
+    "News":"Novidades", "Where I have been":"Por onde andei", "Blog":"Blog"
   };
 
   // Section heading icons (Lucide)
   function injectHeadingIcons() {
     const ICONS = { news:"newspaper", education:"graduation-cap", experience:"briefcase",
       presentations:"presentation", funding:"banknote", publications:"book-open",
-      tree:"git-fork", map:"map-pin", tutoring:"flask-conical" };
+      tree:"git-fork", map:"map-pin", tutoring:"flask-conical", blog:"pen-line" };
     document.querySelectorAll(".section > h2").forEach(h => {
       if (h.querySelector(".h2-label")) return;
       const sec = h.closest("section"); const id = sec ? sec.id : "";
@@ -699,7 +699,13 @@
   function updateMetrics() {
     const el = document.querySelector('[data-metric="pubs"]');
     if (!el) return;
-    const n = document.querySelectorAll("#publications .timeline-item.publication").length;
+    let n = 0;
+    document.querySelectorAll("#publications .timeline-item.publication").forEach(it => {
+      if (it.classList.contains("preprint")) return;
+      const meta = (it.querySelector(".meta") || {}).textContent || "";
+      if (/pre-?print|arxiv|chemrxiv|biorxiv|ssrn|research\s*square|preprints\.org/i.test(meta)) return;
+      n++;
+    });
     if (n) el.textContent = n;
   }
 
@@ -782,6 +788,14 @@
     setTimeout(() => map.invalidateSize(), 200);
   }
 
+  // Performance: lazy-load below-the-fold images
+  function setupLazyImages() {
+    document.querySelectorAll("img:not([loading]):not(.avatar-img)").forEach(img => {
+      img.loading = "lazy";
+      img.decoding = "async";
+    });
+  }
+
   function init() {
     initStarfield();
     initNav();
@@ -791,6 +805,7 @@
     setupButtonRipple();
     setupLightbox();
     injectHeadingIcons();
+    setupLazyImages();
     setupThemeToggle();
     setupLangToggle();
     setupScrollProgress();

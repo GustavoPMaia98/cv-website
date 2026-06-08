@@ -98,6 +98,7 @@
         <a href="#tree" data-i18n="nav_tree">Tree</a>
         <a href="#map" data-i18n="nav_map">Map</a>
         <a href="#tutoring" data-i18n="nav_tutoring">Tutoring</a>
+        <a href="#blog" data-i18n="nav_blog">Blog</a>
       </nav>
 
       <div class="nav-tools">
@@ -218,9 +219,10 @@
       return "";
     }
     async function loadSections() {
-      const sections = ['news','education','experience','presentations','funding','publications','tree','map','tutoring'];
+      const sections = ['news','education','experience','presentations','funding','publications','tree','map','tutoring','blog'];
       const c = document.getElementById('mainContent');
-      for (const n of sections) { const html = await fetchSection(n); if (html) c.insertAdjacentHTML('beforeend', html); }
+      const results = await Promise.all(sections.map(fetchSection));
+      c.insertAdjacentHTML('beforeend', results.join(''));
       if (window.SiteApp && SiteApp.init) SiteApp.init();
     }
     var y = document.getElementById('footerYear'); if (y) y.textContent = new Date().getFullYear();
