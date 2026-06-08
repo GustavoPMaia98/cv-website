@@ -1,30 +1,44 @@
 <!-- BLOG -->
 <section class="section" id="blog">
+  <canvas id="blogCanvas" class="section-canvas" aria-hidden="true"></canvas>
+
   <h2>Blog</h2>
   <p class="section-note">Notes, ideas, and reflections — on astrobiology and mechanochemistry, on research life,
-    and occasionally on anything else worth writing down. Click a post to read it.</p>
+    and occasionally on anything else worth writing down.</p>
+
+  <div class="blog-maint-banner" role="status">
+    <span class="blog-maint-ico" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 1 5.4-5.4l-2.6 2.6-2-2 2.6-2.6Z"/></svg>
+    </span>
+    <div>
+      <strong data-pt="Em manutenção">Under maintenance</strong>
+      <span data-pt="Esta secção está a ser preparada — em breve com novos textos.">This section is being prepared — new writing is coming soon.</span>
+    </div>
+  </div>
 
   <!--
-    TO ADD A POST: copy one <article class="blog-post"> block below, change the
-    data-date, title, tags, excerpt and the text inside <div class="blog-full">.
-    Newest posts go first. Everything works automatically (expand on click, keyboard, reveal).
+    Posts are kept below as the future structure (currently disabled / under maintenance).
+    TO GO LIVE: remove the "is-maintenance" class from .blog-list and delete the overlay div.
+    TO ADD A POST: copy one <article class="blog-post"> block, edit date / title / tags / text.
   -->
-  <div class="blog-list">
+  <div class="blog-list is-maintenance" aria-hidden="true">
+    <div class="blog-maint-overlay"><span data-pt="Em manutenção">Under maintenance</span></div>
 
     <article class="blog-post timeline-item reveal">
       <div class="timeline-card blog-card">
         <div class="blog-head">
-          <span class="blog-date">May 2026</span>
+          <span class="blog-date">Soon</span>
           <div class="blog-tags"><span>Astrobiology</span><span>Mechanochemistry</span></div>
         </div>
-        <h3 class="blog-title">TEST them</h3>
-        <p class="blog-excerpt">TEST</p>
+        <h3 class="blog-title">Why I grind meteorite analogues instead of dissolving them</h3>
+        <p class="blog-excerpt">Most prebiotic chemistry starts in water. But impacts, accretion and atmospheric
+          entry are dry, violent, mechanical events — so what happens to organic molecules when the energy comes
+          from force rather than solvent?</p>
       </div>
       <div class="timeline-expand">
         <div class="expand-body blog-full">
-          <p>TEST</p>
-          <p>TEST</p>
-          <p>TEST</p>
+          <p>Placeholder text for the first post.</p>
         </div>
       </div>
     </article>
@@ -32,16 +46,16 @@
     <article class="blog-post timeline-item reveal">
       <div class="timeline-card blog-card">
         <div class="blog-head">
-          <span class="blog-date">Mar 2026</span>
+          <span class="blog-date">Soon</span>
           <div class="blog-tags"><span>Research life</span></div>
         </div>
-        <h3 class="blog-title">TEST</h3>
-        <p class="blog-excerpt">TEST</p>
+        <h3 class="blog-title">From a robotics workshop in Espinho to a lab at NASA</h3>
+        <p class="blog-excerpt">A few thoughts on an unlikely path — and why a background in mechatronics turned out
+          to be a surprisingly good foundation for experimental chemistry.</p>
       </div>
       <div class="timeline-expand">
         <div class="expand-body blog-full">
-          <p>TEST</p>
-          <p>TEST</p>
+          <p>Placeholder text for the second post.</p>
         </div>
       </div>
     </article>
