@@ -50,6 +50,7 @@
   <script>(function(){try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ui-extra.css">
 
   <!-- ============ STRUCTURED DATA ============ -->
   <script type="application/ld+json">
@@ -106,6 +107,9 @@
       </nav>
 
       <div class="nav-tools">
+        <button class="icon-btn" id="searchToggle" type="button" aria-label="Search the site" title="Search ( / or Ctrl/⌘ K )">
+          <i data-lucide="search"></i>
+        </button>
         <button class="icon-btn" id="langToggle" type="button" aria-label="Switch language">PT</button>
         <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch theme">
           <i data-lucide="moon"></i>
@@ -185,6 +189,22 @@
     </div>
   </noscript>
 
+  <!-- ================= SITE SEARCH ================= -->
+  <div class="search-overlay" id="searchOverlay" hidden role="dialog" aria-modal="true" aria-label="Site search">
+    <div class="search-box" role="search">
+      <div class="search-field">
+        <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="searchInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Search research, publications, experience…"
+               aria-label="Search the site" aria-controls="searchResults">
+        <kbd class="search-kbd">Esc</kbd>
+        <button id="searchClose" type="button" class="search-close" aria-label="Close search">&times;</button>
+      </div>
+      <ul id="searchResults" class="search-results" role="listbox" aria-label="Search results"></ul>
+      <p id="searchHint" class="search-hint"></p>
+    </div>
+  </div>
+
   <!-- ================= FOOTER ================= -->
   <footer class="footer">
     <div class="footer-inner">
@@ -207,15 +227,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <script>
-    // Apply saved theme ASAP to avoid a flash
-    (function(){
-      try {
-        var t = localStorage.getItem('theme');
-        if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch(e) {}
-    })();
-
     async function fetchSection(name) {
       for (const p of [`sections/${name}.html`, `${name}.html`]) {
         try { const r = await fetch(p); if (r.ok) return await r.text(); } catch(e){}
@@ -235,6 +246,14 @@
     else loadSections();
   </script>
   <script src="script.js"></script>
+
+  <!-- Site search (command palette) -->
+  <script src="search.js" defer></script>
+
+  <!-- AI assistant: data first, then the widget that consumes it -->
+  <script src="assistant-data.js"></script>
+  <script src="assistant.js" defer></script>
+
   <script>
     // Progressive Web App: register the service worker on secure origins
     if ("serviceWorker" in navigator && location.protocol === "https:") {
