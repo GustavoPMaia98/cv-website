@@ -1,0 +1,13 @@
+{
+  "name": "Gustavo Pinho Maia — Astrobiology Research",
+  "short_name": "G. P. Maia",
+  "description": "PhD researcher in Chemistry (Astrobiology): mechanochemistry, prebiotic chemistry, and the origin of life.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

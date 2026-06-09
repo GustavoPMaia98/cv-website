@@ -78,9 +78,14 @@
       }
     }
 
+    function palette() {
+      const light = document.documentElement.getAttribute("data-theme") === "light";
+      return light ? { star: "#475569", trail: "51,65,85" } : { star: "#dbeafe", trail: "255,255,255" };
+    }
+
     function drawStars(animate, dt) {
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = "#dbeafe";
+      ctx.fillStyle = palette().star;
       for (const s of stars) {
         if (animate) {
           s.x += s.sp * dt;
@@ -105,9 +110,10 @@
         sh.life += dt;
         sh.x += sh.sp * dt * 0.9;
         sh.y += sh.sp * dt * 0.5;
+        const trail = palette().trail;
         const grad = ctx.createLinearGradient(sh.x, sh.y, sh.x - sh.len, sh.y - sh.len * 0.55);
-        grad.addColorStop(0, "rgba(255,255,255,0.9)");
-        grad.addColorStop(1, "rgba(255,255,255,0)");
+        grad.addColorStop(0, "rgba(" + trail + ",0.9)");
+        grad.addColorStop(1, "rgba(" + trail + ",0)");
         ctx.globalAlpha = Math.max(0, 1 - sh.life / 1.1);
         ctx.strokeStyle = grad;
         ctx.lineWidth = 2;
@@ -223,6 +229,7 @@
   function wireAccordions() {
     document.querySelectorAll(".timeline-item").forEach(item => {
       if (item.__wired) return;
+      if (item.closest(".is-maintenance")) return;   // leave maintenance posts inert
       item.__wired = true;
 
       const expand = item.querySelector(".timeline-expand");
@@ -564,12 +571,12 @@
     tag1:{en:"Mechanochemistry",pt:"Mecanoquímica"}, tag2:{en:"Prebiotic Chemistry",pt:"Química Prebiótica"},
     tag3:{en:"Astrobiology",pt:"Astrobiologia"}, tag4:{en:"Origin of Life",pt:"Origem da Vida"},
     m_pubs:{en:"Publications",pt:"Publicações"}, m_talks:{en:"Talks & posters",pt:"Comunicações"},
-    m_areas:{en:"Research areas",pt:"Áreas de investigação"}, cv:{en:"Download CV",pt:"Descarregar CV"}
+    m_areas:{en:"Research areas",pt:"Áreas de investigação"}, m_hindex:{en:"h-index",pt:"índice h"}, cv:{en:"Download CV",pt:"Descarregar CV"}
   };
   const HEADINGS = {
     "Education":"Educação", "Experience":"Experiência", "Presentations":"Apresentações",
     "Funding":"Financiamento", "Publications":"Publicações", "Academic Tree":"Árvore Académica",
-    "News":"Novidades", "Where I’ve Presented":"Onde Apresentei"
+    "News":"Novidades", "Where I have been":"Por onde andei"
   };
 
   // Section heading icons (Lucide)
@@ -604,6 +611,10 @@
     document.querySelectorAll(".h2-label").forEach(s => {
       if (!s.dataset.en) s.dataset.en = s.textContent.trim();
       s.textContent = (lang === "pt" && HEADINGS[s.dataset.en]) ? HEADINGS[s.dataset.en] : s.dataset.en;
+    });
+    document.querySelectorAll("[data-pt]").forEach(el => {
+      if (el.dataset.enHtml === undefined) el.dataset.enHtml = el.innerHTML;
+      el.innerHTML = (lang === "pt") ? el.dataset.pt : el.dataset.enHtml;
     });
     const lb = document.getElementById("langToggle");
     if (lb) lb.textContent = lang === "en" ? "PT" : "EN";
@@ -689,7 +700,13 @@
   function updateMetrics() {
     const el = document.querySelector('[data-metric="pubs"]');
     if (!el) return;
-    const n = document.querySelectorAll("#publications .timeline-item.publication").length;
+    let n = 0;
+    document.querySelectorAll("#publications .timeline-item.publication").forEach(it => {
+      if (it.classList.contains("preprint")) return;
+      const meta = (it.querySelector(".meta") || {}).textContent || "";
+      if (/pre-?print|arxiv|chemrxiv|biorxiv|ssrn|research\s*square|preprints\.org/i.test(meta)) return;
+      n++;
+    });
     if (n) el.textContent = n;
   }
 
@@ -699,24 +716,85 @@
     const el = document.getElementById("presoMap");
     if (!el || !window.L) return;
     mapWired = true;
-    const map = L.map(el, { scrollWheelZoom: false }).setView([44, 2], 3);
+
+    const EDU  = "#34d399";  // studies / education
+    const LAB  = "#22d3ee";  // laboratories / research
+    const PRES = "#fbbf24";  // oral / poster presentations
+
+    const education = [
+      { n:"Instituto Superior Técnico, Lisbon", c:[38.7369,-9.1366], d:"MSc in Chemistry (2020–2022) · PhD in Chemistry / Astrobiology (2023–present)" },
+      { n:"Universidade da Beira Interior, Covilhã", c:[40.2784,-7.5046], d:"BSc in Industrial Chemistry (2017–2020)" },
+      { n:"Escola Profissional de Espinho (ESPE)", c:[41.0073,-8.6415], d:"Mechatronics Technician, Level IV (2013–2016)" }
+    ];
+    const labs = [
+      { n:"CQE — Instituto Superior Técnico, Lisbon", c:[38.7369,-9.1366], d:"PhD researcher · Invited teaching assistant" },
+      { n:"IMPMC — MNHN, Paris", c:[48.8443,2.3562], d:"Visiting Scientist (2025–present)" },
+      { n:"NASA Goddard Space Flight Center, Greenbelt MD", c:[38.9961,-76.8483], d:"Visiting Scientist (2024)" },
+      { n:"Universidade da Beira Interior, Covilhã", c:[40.2784,-7.5046], d:"Research intern (2020)" }
+    ];
+    const pres = [
+      { n:"Lisbon, Portugal", c:[38.7369,-9.1366], d:"EANA 2025 (poster · award) · AbGradE’25 · NInTec 2024 · EuChemS ECC8 2022 · IST PhD Open Days 2024 · CQE Days 2022" },
+      { n:"Paris, France", c:[48.8443,2.3562], d:"IPGP “Small Bodies Day” 2025 · IMPMC PhD Students’ Day 2025" },
+      { n:"Reykjavik, Iceland", c:[64.1466,-21.9426], d:"BEACON 2025 (oral)" },
+      { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"XV CICS-UBI Symposium 2020 (poster)" }
+    ];
+
+    const map = L.map(el, { scrollWheelZoom: false });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18, attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
-    const pts = [
-      { n:"Lisbon, Portugal", c:[38.7369,-9.1366], d:"IST · EuChemS · CQE Days · SPQ · IST PhD Open Day" },
-      { n:"Paris, France", c:[48.8443,2.3562], d:"MNHN–IMPMC · IPGP “Small Bodies Day” · AbGradE’25" },
-      { n:"Greenbelt, MD, USA", c:[38.9961,-76.8483], d:"NASA Goddard — Astrobiology Analytical Lab" },
-      { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"Universidade da Beira Interior · CICS-UBI" }
-    ];
-    const bounds = [];
-    pts.forEach(p => {
-      L.circleMarker(p.c, { radius:8, color:"#2563a8", fillColor:"#7dd3fc", fillOpacity:.9, weight:2 })
-        .addTo(map).bindPopup("<strong>" + p.n + "</strong><br>" + p.d);
-      bounds.push(p.c);
+
+    const all = [];
+    const tip = (n, label, color, d) =>
+      '<strong>' + n + '</strong><br><span style="color:' + color + ';font-weight:600">' + label + '</span><br>' + d;
+    const place = (arr, opts, label, color) => arr.forEach(p => {
+      L.circleMarker(p.c, opts).addTo(map)
+        .bindTooltip(tip(p.n, label, color, p.d), { direction:"top", offset:[0,-4], opacity:0.97 });
+      all.push(p.c);
     });
-    try { map.fitBounds(bounds, { padding:[40,40] }); } catch(e){}
+
+    // Largest first (drawn underneath) so overlapping cities show as nested coloured rings
+    place(education, { radius:15, color:EDU,  weight:3,   fillColor:EDU,  fillOpacity:.12 }, "Studies", EDU);
+    place(pres,      { radius:11, color:PRES, weight:3,   fillColor:PRES, fillOpacity:.14 }, "Presentations", PRES);
+    place(labs,      { radius:6.5,color:"#0b1020", weight:1.5, fillColor:LAB, fillOpacity:.96 }, "Laboratory / research", LAB);
+
+    const defaultBounds = L.latLngBounds(all).pad(0.15);
+    const fit = () => map.fitBounds(defaultBounds);
+    fit();
+
+    // Legend
+    const legend = L.control({ position: "bottomleft" });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create("div", "map-legend");
+      div.innerHTML =
+        '<span class="dot" style="background:' + EDU  + '"></span>Studies (ESPE · UBI · Técnico)<br>' +
+        '<span class="dot" style="background:' + LAB  + '"></span>Laboratories &amp; research<br>' +
+        '<span class="dot" style="background:' + PRES + '"></span>Oral &amp; poster presentations';
+      return div;
+    };
+    legend.addTo(map);
+
+    // Reset-to-default-view control
+    const reset = L.control({ position: "topright" });
+    reset.onAdd = function () {
+      const b = L.DomUtil.create("button", "map-reset");
+      b.type = "button"; b.title = "Reset view"; b.setAttribute("aria-label", "Reset view");
+      b.innerHTML = "⌖";
+      L.DomEvent.disableClickPropagation(b);
+      L.DomEvent.on(b, "click", function (e) { L.DomEvent.preventDefault(e); fit(); });
+      return b;
+    };
+    reset.addTo(map);
+
     setTimeout(() => map.invalidateSize(), 200);
+  }
+
+  // Performance: lazy-load below-the-fold images
+  function setupLazyImages() {
+    document.querySelectorAll("img:not([loading]):not(.avatar-img)").forEach(img => {
+      img.loading = "lazy";
+      img.decoding = "async";
+    });
   }
 
   function init() {
@@ -728,6 +806,7 @@
     setupButtonRipple();
     setupLightbox();
     injectHeadingIcons();
+    setupLazyImages();
     setupThemeToggle();
     setupLangToggle();
     setupScrollProgress();
