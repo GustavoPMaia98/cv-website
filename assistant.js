@@ -21,6 +21,7 @@
   const history = [];          // {role:"user"|"assistant", content:"..."} for the AI tier
   let usedOffline = false;     // becomes true once we fall back, so we stop retrying the API
   let pending = false;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   // ---------- Build DOM ----------
   const root = document.createElement("div");
@@ -41,7 +42,8 @@
             <span class="ai-mode" id="aiMode">research &amp; CV assistant</span>
           </div>
         </div>
-        <button class="ai-x" id="aiClose" type="button" aria-label="Close chat">&times;</button>
+        <button class="ai-min" id="aiMin" type="button" aria-label="Minimise chat" title="Minimise">&minus;</button>
+        <button class="ai-x" id="aiClose" type="button" aria-label="Close chat" title="Close">&times;</button>
       </header>
 
       <div class="ai-log" id="aiLog" aria-live="polite"></div>
@@ -67,6 +69,7 @@
   const fab = root.querySelector("#aiFab");
   const panel = root.querySelector("#aiPanel");
   const closeBtn = root.querySelector("#aiClose");
+  const minBtn = root.querySelector("#aiMin");
   const log = root.querySelector("#aiLog");
   const form = root.querySelector("#aiForm");
   const input = root.querySelector("#aiText");
@@ -125,6 +128,7 @@
   }
   fab.addEventListener("click", () => (panel.hidden ? open() : close()));
   closeBtn.addEventListener("click", close);
+  minBtn.addEventListener("click", close);   // minimise = collapse to bubble, conversation kept
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !panel.hidden) close(); });
 
   // ---------- Send ----------
@@ -144,6 +148,8 @@
 
     pending = true;
     const t = typing();
+    const started = Date.now();
+    const think = 1500 + Math.random() * 1000; // 1.5–2.5s of visible "thinking"
 
     let answer = null;
     if (ASSISTANT_ENDPOINT && !usedOffline) {
@@ -151,6 +157,10 @@
       if (answer == null) { usedOffline = true; setMode("offline"); }
     }
     if (answer == null) answer = DATA.offlineAnswer(q);
+
+    // Keep the thinking animation visible for a natural beat, even if the answer was instant
+    const elapsed = Date.now() - started;
+    if (elapsed < think) await sleep(think - elapsed);
 
     t.remove();
     add("assistant", answer);

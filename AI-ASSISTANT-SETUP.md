@@ -32,7 +32,14 @@ GitHub Pages can't run functions, so either:
   `ASSISTANT_ENDPOINT` at that Vercel URL (CORS is already handled).
 
 ## Notes
-- Model is `claude-3-5-haiku-latest` (fast/cheap). Change it in `api/chat.js` if you like.
+- Model is `claude-sonnet-4-6` (fluid answers). Change `MODEL` in `api/chat.js` if you like —
+  e.g. `claude-3-5-sonnet-latest` for broad availability or `claude-haiku-4-5` for the lowest cost.
+- The assistant does **not** scrape LinkedIn / ResearchGate / Scholar live (those sites block
+  automated access). Instead, the relevant public information is compiled into the knowledge base
+  (`assistant-data.js`) and the relay's `PROFILE`, so answers are instant and reliable. When a
+  question isn't covered, the assistant replies "Sorry, I'm not able to answer that."
+- The chat shows a short "thinking" animation (~1.5–2.5 s) before each answer, and can be
+  minimised (–) or closed (×) at any time; the conversation is kept when minimised.
 - The relay has a basic per-instance rate limit and optional origin allow-list.
 - To update what the assistant knows, edit `assistant-data.js` (offline tier) and the
   `PROFILE` block in `api/chat.js` (AI tier) — keep them roughly in sync.

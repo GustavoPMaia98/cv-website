@@ -56,6 +56,20 @@ OUTREACH / MEDIA
 
 TUTORING
 - Runs "Cientifica(mente)", personalised chemistry tutoring (General Chemistry, Organic Chemistry, scientific writing), in Portuguese. Contact via gustavopinhomaia@gmail.com.
+
+MEDIA / INTERVIEWS
+- Maré Viva (Sep 2025): "O percurso improvável de Gustavo Maia levou-o de Ovar até à NASA".
+- Praça Pública (Dec 2024): on deepening his research at NASA's Astrobiology Analytical Laboratory.
+- Diferencial, IST student journal (Nov 2024): interview.
+
+OUTREACH / EVENTS
+- Co-organised the Digital Colloquium of Chemistry Students in Portugal (2021) and the +FUTURO sessions (ANEQ, 2022).
+- Helped organise the Junior Chemistry Olympiad semifinals (UBI, 2019) and the 6th Conference on Chemistry and Biochemistry (UBIQUÍMICA, Covilhã, 2019).
+- Completed the RED "Basics in Astrobiology" training school (2025). As a teenager, competed at RoboCup (Leipzig 2016) and several Portuguese National Robotics Festivals.
+
+PROFILES / METRICS
+- ResearchGate lists 6 research items (3 journal articles plus conference contributions). Google Scholar profile: user TTVIFykAAAAJ.
+- Based between Lisbon/Seixal (Portugal) and Paris (France); originally from Ovar, Portugal.
 `.trim();
 
   // ---- Offline answers: each entry = {keywords, answer}. First best match wins. ----
@@ -87,11 +101,19 @@ TUTORING
     { k: ["robot", "mechatron", "espinho", "robocup"], a:
       "Before chemistry, Gustavo trained as a Level-IV Mechatronics Technician at the Escola Profissional de Espinho (2013–2016) and built an autonomous robot for the RoboCupJunior Rescue Line — an experimental, problem-solving foundation he still draws on at the bench." },
     { k: ["origin of life", "prebiotic", "prebiót", "abiogenesis", "vida"], a:
-      "A central question in his work is how the building blocks of life could have formed and survived in extreme, non-aqueous, high-energy environments — an alternative to the classic 'warm little pond', emphasising mechanical/impact-driven chemistry and the exogenous delivery of organics to the early Earth." }
+      "A central question in his work is how the building blocks of life could have formed and survived in extreme, non-aqueous, high-energy environments — an alternative to the classic 'warm little pond', emphasising mechanical/impact-driven chemistry and the exogenous delivery of organics to the early Earth." },
+    { k: ["how many", "number of publications", "researchgate", "scholar", "metrics", "quantos"], a:
+      "He has three peer-reviewed journal articles (2023–2025); his ResearchGate profile lists six research items in total, including conference contributions. You can see them on Google Scholar (user TTVIFykAAAAJ), ResearchGate and ORCID, all linked in the header." },
+    { k: ["where", "based", "location", "live", "city", "onde", "vive", "localiza"], a:
+      "He works between Lisbon/Seixal in Portugal (CQE–IST) and Paris in France (MNHN–IMPMC), and is originally from Ovar, Portugal." },
+    { k: ["language", "languages", "portuguese", "english", "idioma", "língua"], a:
+      "Portuguese is his native language and he works in English at a C1 level." },
+    { k: ["media", "interview", "news", "press", "notícia", "entrevista"], a:
+      "He has been featured in Maré Viva (2025, 'O percurso improvável de Gustavo Maia levou-o de Ovar até à NASA'), Praça Pública (2024) and the IST student journal Diferencial (2024) — see the News section." }
   ];
 
   const FALLBACK =
-    "I can answer questions about Gustavo's research, publications, education, experience, presentations, funding, awards, tutoring, or how to contact him. Try asking about his mechanochemistry research, his time at NASA Goddard, or his publications — or use the section links above.";
+    "Sorry, I'm not able to answer that. I can help with questions about Gustavo Pinho Maia — his research, publications, education, experience, presentations, funding, awards, tutoring, or how to get in touch.";
 
   const GREETING =
     "Hi! I'm an assistant for Gustavo Pinho Maia's site. Ask me anything about his research, CV, publications, or how to get in touch.";

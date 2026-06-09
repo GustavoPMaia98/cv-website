@@ -839,6 +839,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible,
 .ai-status-dot.off{ background:#fbbf24; box-shadow:0 0 0 3px rgba(251,191,36,.18); }
 .ai-x{ background:none; border:none; color:var(--muted); font-size:1.5rem; line-height:1; cursor:pointer; padding:0 4px; }
 .ai-x:hover{ color:var(--text); }
+.ai-min{ background:none; border:none; color:var(--muted); font-size:1.5rem; line-height:1; cursor:pointer; padding:0 4px; }
+.ai-min:hover{ color:var(--text); }
 
 .ai-log{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
 .ai-msg{ display:flex; }

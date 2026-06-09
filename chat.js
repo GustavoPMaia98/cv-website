@@ -22,12 +22,26 @@ PRESENTATIONS: orals at IPGP "Small Bodies Day" (Paris, Oct 2025), AbGradE'25 (L
 FUNDING: FCT Doctoral Grant 2023.01099.BD (2023–2027); Research Fellow on an FCT RNA-biosensor project at CQE (2023); CQE unit funding (FCT UIDB/00100/2020).
 DISTINCTIONS: "Excellent Teachers 2024/2025" (IST); EANA 2025 Poster Award.
 TUTORING: runs "Cientifica(mente)", personalised chemistry tutoring (PT). Tutoring contact: gustavopinhomaia@gmail.com.
+MEDIA: Maré Viva (2025, "O percurso improvável de Gustavo Maia levou-o de Ovar até à NASA"), Praça Pública (2024), Diferencial / IST student journal (2024).
+OUTREACH: co-organised the Digital Colloquium of Chemistry Students in Portugal (2021), +FUTURO sessions (ANEQ), Junior Chemistry Olympiad (UBI 2019), 6th Conference on Chemistry and Biochemistry (UBIQUÍMICA, 2019); completed the RED "Basics in Astrobiology" school (2025); competed at RoboCup (2016).
+PROFILES/METRICS: ResearchGate lists 6 research items (3 journal articles + conference contributions); Google Scholar user TTVIFykAAAAJ. Based between Lisbon/Seixal (PT) and Paris (FR); originally from Ovar, Portugal.
 `.trim();
 
-const SYSTEM = `You are the assistant on Gustavo Pinho Maia's personal academic website. Answer questions about Gustavo — his research, CV, publications, education, experience, presentations, funding, awards, tutoring, and how to contact him — using ONLY the profile below. Be concise, warm and professional. If something isn't in the profile, say you don't have that detail and point to his contact email or linked profiles. You may answer general scientific questions about his research topics (mechanochemistry, prebiotic chemistry, astrobiology, the origin of life) to give context, but do not invent facts about Gustavo. If asked something unrelated to Gustavo or his field, gently steer back. Default to the language the user writes in (English or Portuguese).
+const SYSTEM = `You are the friendly AI assistant on Gustavo Pinho Maia's personal academic website. Talk naturally and conversationally — warm, clear, and genuinely helpful, like a knowledgeable colleague introducing Gustavo's work. Vary your phrasing, keep answers fluid and well-structured, and match the language the user writes in (English or Portuguese).
+
+Your knowledge is the PROFILE below: a compilation of Gustavo's public information drawn from his CV, CiênciaVitae, ORCID, ResearchGate, Google Scholar and LinkedIn. Treat it as your source of truth. You cannot browse the web live, so rely on this compiled information rather than claiming to look things up in real time.
+
+Rules:
+- Answer questions about Gustavo (research, CV, publications, education, experience, presentations, funding, awards, tutoring, contact) using the PROFILE. You may add light, accurate context about his scientific fields (mechanochemistry, prebiotic chemistry, astrobiology, origin of life) to make answers richer, but never invent specific facts about Gustavo.
+- If a detail genuinely isn't in the PROFILE, or the question is unrelated to Gustavo or his field, reply exactly: "Sorry, I'm not able to answer that." — then, in one short sentence, offer what you can help with or point to his contact email (gustavopinho.maia@mnhn.fr) or linked profiles.
+- Be concise by default; expand when the user asks for detail.
 
 PROFILE:
 ${PROFILE}`;
+
+// Model for the AI tier. claude-sonnet-4-6 gives fluid answers.
+// Alternatives: "claude-3-5-sonnet-latest" (broad availability) or "claude-haiku-4-5" (cheapest).
+const MODEL = "claude-sonnet-4-6";
 
 // --- Optional: lock the relay to your own site(s). Add your domain(s) here. ---
 const ALLOWED_ORIGINS = [
@@ -83,8 +97,8 @@ export default async function handler(req, res) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-3-5-haiku-latest", // fast & inexpensive; swap to a larger model if you prefer
-        max_tokens: 600,
+        model: MODEL,
+        max_tokens: 700,
         system: SYSTEM,
         messages
       })
