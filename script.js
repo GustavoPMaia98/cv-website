@@ -25,6 +25,7 @@
   let progressWired = false;
   let langWired = false;
   let mapWired = false;
+  let mapLangUpdate = null;   // set once the map legend exists; called by applyLang
   let currentLang = (function(){ try { return localStorage.getItem("lang") || "en"; } catch(e){ return "en"; } })();
 
   // ============================================================
@@ -619,6 +620,7 @@
     const lb = document.getElementById("langToggle");
     if (lb) lb.textContent = lang === "en" ? "PT" : "EN";
     document.documentElement.setAttribute("lang", lang);
+    if (typeof mapLangUpdate === "function") mapLangUpdate(lang);
   }
   function setupLangToggle() {
     const btn = document.getElementById("langToggle");
@@ -775,7 +777,7 @@
       { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"XV CICS-UBI Symposium 2020 (poster)" }
     ];
 
-    const map = L.map(el, { scrollWheelZoom: false });
+    const map = L.map(el, { scrollWheelZoom: true });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18, attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
@@ -798,14 +800,21 @@
     const fit = () => map.fitBounds(defaultBounds);
     fit();
 
-    // Legend
+    // Legend (text follows the current language; updated live on language toggle)
+    const legendText = lang => lang === "pt"
+      ? ['Estudos (ESPE · UBI · Técnico)', 'Laboratórios e investigação', 'Comunicações orais e painéis']
+      : ['Studies (ESPE · UBI · Técnico)', 'Laboratories &amp; research', 'Oral &amp; poster presentations'];
+    const legendHTML = lang => {
+      const t = legendText(lang);
+      return '<span class="dot" style="background:' + EDU  + '"></span>' + t[0] + '<br>' +
+             '<span class="dot" style="background:' + LAB  + '"></span>' + t[1] + '<br>' +
+             '<span class="dot" style="background:' + PRES + '"></span>' + t[2];
+    };
     const legend = L.control({ position: "bottomleft" });
     legend.onAdd = function () {
       const div = L.DomUtil.create("div", "map-legend");
-      div.innerHTML =
-        '<span class="dot" style="background:' + EDU  + '"></span>Studies (ESPE · UBI · Técnico)<br>' +
-        '<span class="dot" style="background:' + LAB  + '"></span>Laboratories &amp; research<br>' +
-        '<span class="dot" style="background:' + PRES + '"></span>Oral &amp; poster presentations';
+      div.innerHTML = legendHTML(currentLang);
+      mapLangUpdate = lang => { div.innerHTML = legendHTML(lang); };
       return div;
     };
     legend.addTo(map);

@@ -113,12 +113,12 @@
   }
 
   // ---------- Open / close ----------
-  function open() {
+  function open(auto) {
     panel.hidden = false;
     fab.setAttribute("aria-expanded", "true");
     root.classList.add("open");
     greet();
-    setTimeout(() => input.focus(), 60);
+    if (!auto) setTimeout(() => input.focus(), 60);
   }
   function close() {
     panel.hidden = true;
@@ -190,4 +190,8 @@
       clearTimeout(timer);
     }
   }
+
+  // Open the chat by default when the site loads. Minimising (−) collapses it to
+  // the bubble; the conversation is kept and it can be reopened from the bubble.
+  open(true);
 })();

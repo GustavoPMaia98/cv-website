@@ -126,10 +126,25 @@
   function go(entry) {
     close();
     const el = entry.el;
+    // If the result is (or sits inside) a collapsible timeline item, open it so the
+    // hidden abstract, equipment and photos are revealed when we land on it.
+    const item = el.classList && el.classList.contains("timeline-item")
+      ? el
+      : (el.closest ? el.closest(".timeline-item") : null);
+    const target = item || el;
+    if (item) {
+      const expand = item.querySelector(".timeline-expand");
+      const card = item.querySelector(".timeline-card");
+      if (expand && card) {
+        expand.classList.add("open");
+        item.classList.add("open");
+        card.setAttribute("aria-expanded", "true");
+      }
+    }
     setTimeout(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-      el.classList.add("search-hit");
-      setTimeout(() => el.classList.remove("search-hit"), 1800);
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      target.classList.add("search-hit");
+      setTimeout(() => target.classList.remove("search-hit"), 1800);
     }, 80);
   }
 

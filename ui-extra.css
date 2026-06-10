@@ -239,3 +239,14 @@ html[data-theme="light"] .search-close:hover{ background:rgba(15,23,42,.06); }
   background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.30);
 }
 html[data-theme="light"] .preso-poster{ color:#a16207; background:rgba(161,98,7,.1); border-color:rgba(161,98,7,.28); }
+
+/* =====================================================================
+   4) TUTORING KEYWORD CHIPS — the tutoring box has a fixed dark gradient
+      background in every theme, so in light mode the accent-coloured text
+      lost contrast. Keep the legible light-cyan chips regardless of theme.
+   ===================================================================== */
+html[data-theme="light"] #tutoring .keywords span{
+  background:rgba(125,211,252,.18);
+  color:#7dd3fc;
+  border-color:rgba(125,211,252,.4);
+}

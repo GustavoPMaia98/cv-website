@@ -208,7 +208,7 @@
   <!-- ================= FOOTER ================= -->
   <footer class="footer">
     <div class="footer-inner">
-      <p class="footer-copy">© <span id="footerYear"></span> Gustavo Pinho Maia · Astrobiology Research</p>
+      <p class="footer-copy">© <span id="footerYear"></span> Gustavo Pinho Maia · Astrobiology Research<span class="footer-updated"> · <span data-pt="Atualizado em">Updated</span> <span id="footerUpdated"></span></span></p>
       <nav class="footer-social" aria-label="Profiles">
         <a href="https://orcid.org/0000-0001-5314-8816" target="_blank" rel="noopener noreferrer">ORCID</a>
         <a href="https://www.linkedin.com/in/gustavopinhomaia" target="_blank" rel="noopener noreferrer">LinkedIn</a>
@@ -242,6 +242,13 @@
       if (window.SiteApp && SiteApp.init) SiteApp.init();
     }
     var y = document.getElementById('footerYear'); if (y) y.textContent = new Date().getFullYear();
+    (function(){
+      var u = document.getElementById('footerUpdated'); if (!u) return;
+      var d = new Date(document.lastModified);
+      if (isNaN(d.getTime())) d = new Date();
+      var pad = n => String(n).padStart(2, '0');
+      u.textContent = pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
+    })();
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadSections);
     else loadSections();
   </script>
