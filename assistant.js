@@ -1,17 +1,25 @@
 /* =====================================================================
    assistant.js — floating AI chat widget for the site.
-   Tier 1 (real AI): POSTs to ASSISTANT_ENDPOINT (your Vercel relay), which
-                     calls Claude with the profile from assistant-data.js.
-   Tier 2 (offline): if no endpoint is set, or the request fails, answers
-                     locally from the knowledge base. The chat always works.
-   No API key lives here — the key stays as a Vercel environment variable.
+   Tier 1 (your relay):  if ASSISTANT_ENDPOINT is set, POSTs to your Vercel
+                         relay, which calls Claude with the CV profile.
+   Tier 2 (free online): a keyless, no-signup public AI endpoint
+                         (Pollinations) given the same CV profile as context.
+                         Works with no backend and no API key.
+   Tier 3 (offline):     if the network fails, answers locally from the
+                         knowledge base. The chat always works.
    ===================================================================== */
 (function () {
   "use strict";
 
-  // 1) SET THIS after you deploy the Vercel function (e.g. "https://your-app.vercel.app/api/chat").
-  //    Leave "" to run offline-only.
+  // 1) OPTIONAL: set this to your own Vercel relay (Claude) if you deploy one.
+  //    Leave "" to use the free online tier below instead.
   const ASSISTANT_ENDPOINT = "";
+
+  // 2) Free, keyless online AI (no account, no API key). Set ONLINE_AI = false
+  //    to disable it and run offline-only from the knowledge base.
+  const ONLINE_AI = true;
+  const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai";
+  const ONLINE_AI_MODEL = "openai";
 
   const DATA = window.ASSISTANT_DATA || {
     offlineAnswer: function () { return "Knowledge base failed to load."; },
@@ -77,7 +85,8 @@
   const dot = root.querySelector("#aiDot");
   const suggest = root.querySelector("#aiSuggest");
 
-  if (!ASSISTANT_ENDPOINT) { usedOffline = true; setMode("offline"); }
+  const onlineAvailable = !!ASSISTANT_ENDPOINT || ONLINE_AI;
+  setMode(onlineAvailable ? "online" : "offline");
 
   function setMode(m) {
     if (m === "offline") { modeEl.textContent = "offline · from CV & site"; dot.classList.add("off"); }
@@ -124,6 +133,11 @@
     panel.hidden = true;
     fab.setAttribute("aria-expanded", "false");
     root.classList.remove("open");
+    // Clear the conversation so reopening always starts fresh.
+    history.length = 0;
+    log.innerHTML = "";
+    greeted = false;
+    suggest.style.display = "";
     fab.focus();
   }
   fab.addEventListener("click", () => (panel.hidden ? open() : close()));
@@ -151,12 +165,19 @@
     const started = Date.now();
     const think = 1500 + Math.random() * 1000; // 1.5–2.5s of visible "thinking"
 
-    let answer = null;
-    if (ASSISTANT_ENDPOINT && !usedOffline) {
+    let answer = null, fromOnline = false;
+    const canTryOnline = navigator.onLine !== false;
+
+    if (ASSISTANT_ENDPOINT && canTryOnline) {
       answer = await askAI(q).catch(() => null);
-      if (answer == null) { usedOffline = true; setMode("offline"); }
+      if (answer != null) fromOnline = true;
+    }
+    if (answer == null && ONLINE_AI && canTryOnline) {
+      answer = await askOnlineAI().catch(() => null);
+      if (answer != null) fromOnline = true;
     }
     if (answer == null) answer = DATA.offlineAnswer(q);
+    setMode(fromOnline ? "online" : "offline");
 
     // Keep the thinking animation visible for a natural beat, even if the answer was instant
     const elapsed = Date.now() - started;
@@ -191,7 +212,59 @@
     }
   }
 
+  // ---------- Free online tier (keyless public AI, grounded in the CV) ----------
+  function buildSystem() {
+    const profile = DATA.PROFILE || "";
+    return (
+      "You are the friendly AI assistant on Gustavo Pinho Maia's academic website. " +
+      "Use ONLY the profile below as your source of truth and never invent specific facts about Gustavo. " +
+      "You may add light, accurate context about his fields (mechanochemistry, prebiotic chemistry, astrobiology, origin of life). " +
+      "If a detail isn't in the profile, or the question is unrelated to Gustavo or his field, say you can't help with that and point to his contact email (gustavopinho.maia@mnhn.fr). " +
+      "Be concise and warm, and reply in the same language the user writes in (English or Portuguese).\n\nPROFILE:\n" +
+      profile
+    );
+  }
+
+  async function askOnlineAI() {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
+    try {
+      const messages = [{ role: "system", content: buildSystem() }].concat(history.slice(-12));
+      const res = await fetch(ONLINE_AI_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: ONLINE_AI_MODEL,
+          messages: messages,
+          temperature: 0.6,
+          referrer: "gpm-site"
+        }),
+        signal: ctrl.signal
+      });
+      if (!res.ok) throw new Error("online " + res.status);
+      const ct = res.headers.get("content-type") || "";
+      let text = "";
+      if (ct.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        if (data && data.choices && data.choices[0]) {
+          const c = data.choices[0];
+          text = (c.message && c.message.content) || c.text || "";
+        } else if (typeof data === "string") {
+          text = data;
+        } else if (data && typeof data.content === "string") {
+          text = data.content;
+        }
+      } else {
+        text = await res.text();
+      }
+      if (!text || !text.trim()) throw new Error("empty");
+      return text.trim();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   // Open the chat by default when the site loads. Minimising (−) collapses it to
-  // the bubble; the conversation is kept and it can be reopened from the bubble.
+  // the bubble and clears the conversation; reopening starts fresh.
   open(true);
 })();

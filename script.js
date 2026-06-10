@@ -224,6 +224,47 @@
   }
 
   // ============================================================
+  //  AUTO-CLOSE OPENED ACCORDIONS WHEN SCROLLED OUT OF VIEW
+  //  In Education & Experience, once an item is opened, if its revealed
+  //  panel scrolls fully out of the viewport it collapses automatically.
+  // ============================================================
+  const AUTO_CLOSE_SECTIONS = "#education, #experience";
+  const exitObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting && e.target.classList.contains("open")) {
+        const it = e.target.closest(".timeline-item");
+        if (it) closeTimelineItem(it);
+      }
+    });
+  }, { threshold: 0 });
+
+  function openTimelineItem(item) {
+    if (!item) return;
+    const expand = item.querySelector(".timeline-expand");
+    const card = item.querySelector(".timeline-card");
+    if (!expand || !card) return;
+    expand.classList.add("open");
+    item.classList.add("open");
+    card.setAttribute("aria-expanded", "true");
+    // Begin watching only after the open transition, so the panel has real
+    // height (observing a 0-height element would fire an immediate close).
+    if (item.closest(AUTO_CLOSE_SECTIONS)) {
+      setTimeout(() => {
+        if (expand.classList.contains("open")) exitObserver.observe(expand);
+      }, 420);
+    }
+  }
+
+  function closeTimelineItem(item) {
+    if (!item) return;
+    const expand = item.querySelector(".timeline-expand");
+    const card = item.querySelector(".timeline-card");
+    if (expand) { expand.classList.remove("open"); exitObserver.unobserve(expand); }
+    item.classList.remove("open");
+    if (card) card.setAttribute("aria-expanded", "false");
+  }
+
+  // ============================================================
   //  ACCORDIONS (accessible: keyboard + ARIA + chevron)
   // ============================================================
   let expandCounter = 0;
@@ -246,21 +287,12 @@
 
       const toggle = () => {
         const isOpen = expand.classList.contains("open");
-        // close others
-        document.querySelectorAll(".timeline-expand.open").forEach(el => {
-          if (el !== expand) {
-            el.classList.remove("open");
-            const it = el.closest(".timeline-item");
-            if (it) {
-              it.classList.remove("open");
-              const c = it.querySelector(".timeline-card");
-              if (c) c.setAttribute("aria-expanded", "false");
-            }
-          }
+        // close any other open items (and stop watching them)
+        document.querySelectorAll(".timeline-item.open").forEach(it => {
+          if (it !== item) closeTimelineItem(it);
         });
-        expand.classList.toggle("open", !isOpen);
-        item.classList.toggle("open", !isOpen);
-        card.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+        if (isOpen) closeTimelineItem(item);
+        else openTimelineItem(item);
       };
 
       card.addEventListener("click", e => {
@@ -863,7 +895,7 @@
   }
 
   // Exposed so the section loader can re-run init() after injecting content.
-  window.SiteApp = { init: init };
+  window.SiteApp = { init: init, openItem: openTimelineItem };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

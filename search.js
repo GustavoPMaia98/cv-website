@@ -133,12 +133,16 @@
       : (el.closest ? el.closest(".timeline-item") : null);
     const target = item || el;
     if (item) {
-      const expand = item.querySelector(".timeline-expand");
-      const card = item.querySelector(".timeline-card");
-      if (expand && card) {
-        expand.classList.add("open");
-        item.classList.add("open");
-        card.setAttribute("aria-expanded", "true");
+      if (window.SiteApp && typeof window.SiteApp.openItem === "function") {
+        window.SiteApp.openItem(item);
+      } else {
+        const expand = item.querySelector(".timeline-expand");
+        const card = item.querySelector(".timeline-card");
+        if (expand && card) {
+          expand.classList.add("open");
+          item.classList.add("open");
+          card.setAttribute("aria-expanded", "true");
+        }
       }
     }
     setTimeout(() => {
