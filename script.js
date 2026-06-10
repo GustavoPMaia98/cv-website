@@ -25,6 +25,7 @@
   let progressWired = false;
   let langWired = false;
   let mapWired = false;
+  let mapLangUpdate = null;   // set once the map legend exists; called by applyLang
   let currentLang = (function(){ try { return localStorage.getItem("lang") || "en"; } catch(e){ return "en"; } })();
 
   // ============================================================
@@ -223,6 +224,47 @@
   }
 
   // ============================================================
+  //  AUTO-CLOSE OPENED ACCORDIONS WHEN SCROLLED OUT OF VIEW
+  //  In Education & Experience, once an item is opened, if its revealed
+  //  panel scrolls fully out of the viewport it collapses automatically.
+  // ============================================================
+  const AUTO_CLOSE_SECTIONS = "#education, #experience";
+  const exitObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting && e.target.classList.contains("open")) {
+        const it = e.target.closest(".timeline-item");
+        if (it) closeTimelineItem(it);
+      }
+    });
+  }, { threshold: 0 });
+
+  function openTimelineItem(item) {
+    if (!item) return;
+    const expand = item.querySelector(".timeline-expand");
+    const card = item.querySelector(".timeline-card");
+    if (!expand || !card) return;
+    expand.classList.add("open");
+    item.classList.add("open");
+    card.setAttribute("aria-expanded", "true");
+    // Begin watching only after the open transition, so the panel has real
+    // height (observing a 0-height element would fire an immediate close).
+    if (item.closest(AUTO_CLOSE_SECTIONS)) {
+      setTimeout(() => {
+        if (expand.classList.contains("open")) exitObserver.observe(expand);
+      }, 420);
+    }
+  }
+
+  function closeTimelineItem(item) {
+    if (!item) return;
+    const expand = item.querySelector(".timeline-expand");
+    const card = item.querySelector(".timeline-card");
+    if (expand) { expand.classList.remove("open"); exitObserver.unobserve(expand); }
+    item.classList.remove("open");
+    if (card) card.setAttribute("aria-expanded", "false");
+  }
+
+  // ============================================================
   //  ACCORDIONS (accessible: keyboard + ARIA + chevron)
   // ============================================================
   let expandCounter = 0;
@@ -245,21 +287,12 @@
 
       const toggle = () => {
         const isOpen = expand.classList.contains("open");
-        // close others
-        document.querySelectorAll(".timeline-expand.open").forEach(el => {
-          if (el !== expand) {
-            el.classList.remove("open");
-            const it = el.closest(".timeline-item");
-            if (it) {
-              it.classList.remove("open");
-              const c = it.querySelector(".timeline-card");
-              if (c) c.setAttribute("aria-expanded", "false");
-            }
-          }
+        // close any other open items (and stop watching them)
+        document.querySelectorAll(".timeline-item.open").forEach(it => {
+          if (it !== item) closeTimelineItem(it);
         });
-        expand.classList.toggle("open", !isOpen);
-        item.classList.toggle("open", !isOpen);
-        card.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+        if (isOpen) closeTimelineItem(item);
+        else openTimelineItem(item);
       };
 
       card.addEventListener("click", e => {
@@ -619,6 +652,7 @@
     const lb = document.getElementById("langToggle");
     if (lb) lb.textContent = lang === "en" ? "PT" : "EN";
     document.documentElement.setAttribute("lang", lang);
+    if (typeof mapLangUpdate === "function") mapLangUpdate(lang);
   }
   function setupLangToggle() {
     const btn = document.getElementById("langToggle");
@@ -697,15 +731,67 @@
     wrap.appendChild(all);
     sorted.forEach(y => wrap.appendChild(mk(y, y)));
   }
+
+  // Presentation type filter (All / Oral / Poster) — mirrors the publication filter,
+  // reusing the .pub-filter styling and the .pub-hidden show/hide mechanism.
+  function buildPresentationFilter() {
+    const wrap = document.getElementById("preso-filter");
+    if (!wrap) return;
+    const items = Array.prototype.slice.call(
+      document.querySelectorAll("#presentations .timeline-item[data-type]")
+    );
+    if (!items.length) return;
+
+    const types = [];
+    items.forEach(it => { const t = it.dataset.type; if (t && types.indexOf(t) === -1) types.push(t); });
+
+    const LABELS = {
+      all:    { en: "All",    pt: "Todos" },
+      oral:   { en: "Oral",   pt: "Oral" },
+      poster: { en: "Poster", pt: "Póster" }
+    };
+    const label = key => (LABELS[key] && (LABELS[key][currentLang] || LABELS[key].en)) || key;
+
+    wrap.innerHTML = "";
+    const mk = key => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = label(key); b.dataset.val = key;
+      b.addEventListener("click", () => {
+        wrap.querySelectorAll("button").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        items.forEach(it => it.classList.toggle("pub-hidden", key !== "all" && it.dataset.type !== key));
+      });
+      return b;
+    };
+    const all = mk("all"); all.classList.add("active"); wrap.appendChild(all);
+    types.forEach(t => wrap.appendChild(mk(t)));
+  }
+
+  // A publication entry counts as a PREPRINT — and is excluded from the headline
+  // "Publications" number, though it still appears in the list — when it is
+  // explicitly marked (class "preprint" or data-type="preprint") OR its venue /
+  // DOI matches a known preprint server.
+  function isPreprintItem(it) {
+    if (it.classList.contains("preprint")) return true;
+    if ((it.dataset.type || "").toLowerCase() === "preprint") return true;
+    const meta = (it.querySelector(".meta") || {}).textContent || "";
+    const title = (it.querySelector("strong") || {}).textContent || "";
+    const doiA = it.querySelector('a[href*="doi.org/"]');
+    const doi = doiA ? (doiA.getAttribute("href") || "") : "";
+    const hay = (meta + " " + title + " " + doi).toLowerCase();
+    if (/pre-?print|posted-content|arxiv|chemrxiv|biorxiv|medrxiv|ssrn|research\s*square|preprints?\.org|authorea|eartharxiv|essoar|\bosf\b/.test(hay)) return true;
+    // Known preprint DOI registrant prefixes (ChemRxiv, Research Square, bioRxiv/
+    // medRxiv, EarthArXiv, OSF, Authorea, Preprints.org)
+    if (/10\.(26434|21203|1101|31223|31219|22541|20944)\//.test(doi)) return true;
+    return false;
+  }
+
   function updateMetrics() {
     const el = document.querySelector('[data-metric="pubs"]');
     if (!el) return;
     let n = 0;
     document.querySelectorAll("#publications .timeline-item.publication").forEach(it => {
-      if (it.classList.contains("preprint")) return;
-      const meta = (it.querySelector(".meta") || {}).textContent || "";
-      if (/pre-?print|arxiv|chemrxiv|biorxiv|ssrn|research\s*square|preprints\.org/i.test(meta)) return;
-      n++;
+      if (!isPreprintItem(it)) n++;   // preprints shown in the list but not counted
     });
     if (n) el.textContent = n;
   }
@@ -739,7 +825,7 @@
       { n:"Covilhã, Portugal", c:[40.2784,-7.5046], d:"XV CICS-UBI Symposium 2020 (poster)" }
     ];
 
-    const map = L.map(el, { scrollWheelZoom: false });
+    const map = L.map(el, { scrollWheelZoom: true });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18, attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
@@ -762,14 +848,21 @@
     const fit = () => map.fitBounds(defaultBounds);
     fit();
 
-    // Legend
+    // Legend (text follows the current language; updated live on language toggle)
+    const legendText = lang => lang === "pt"
+      ? ['Estudos (ESPE · UBI · Técnico)', 'Laboratórios e investigação', 'Comunicações orais e painéis']
+      : ['Studies (ESPE · UBI · Técnico)', 'Laboratories &amp; research', 'Oral &amp; poster presentations'];
+    const legendHTML = lang => {
+      const t = legendText(lang);
+      return '<span class="dot" style="background:' + EDU  + '"></span>' + t[0] + '<br>' +
+             '<span class="dot" style="background:' + LAB  + '"></span>' + t[1] + '<br>' +
+             '<span class="dot" style="background:' + PRES + '"></span>' + t[2];
+    };
     const legend = L.control({ position: "bottomleft" });
     legend.onAdd = function () {
       const div = L.DomUtil.create("div", "map-legend");
-      div.innerHTML =
-        '<span class="dot" style="background:' + EDU  + '"></span>Studies (ESPE · UBI · Técnico)<br>' +
-        '<span class="dot" style="background:' + LAB  + '"></span>Laboratories &amp; research<br>' +
-        '<span class="dot" style="background:' + PRES + '"></span>Oral &amp; poster presentations';
+      div.innerHTML = legendHTML(currentLang);
+      mapLangUpdate = lang => { div.innerHTML = legendHTML(lang); };
       return div;
     };
     legend.addTo(map);
@@ -811,13 +904,14 @@
     setupLangToggle();
     setupScrollProgress();
     buildPublicationFilter();
+    buildPresentationFilter();
     updateMetrics();
     initPresoMap();
     if (document.getElementById("pub-list")) loadPublications();
   }
 
   // Exposed so the section loader can re-run init() after injecting content.
-  window.SiteApp = { init: init };
+  window.SiteApp = { init: init, openItem: openTimelineItem };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

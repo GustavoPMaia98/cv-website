@@ -1,17 +1,26 @@
 /* =====================================================================
    assistant.js — floating AI chat widget for the site.
-   Tier 1 (real AI): POSTs to ASSISTANT_ENDPOINT (your Vercel relay), which
-                     calls Claude with the profile from assistant-data.js.
-   Tier 2 (offline): if no endpoint is set, or the request fails, answers
-                     locally from the knowledge base. The chat always works.
-   No API key lives here — the key stays as a Vercel environment variable.
+   Tier 1 (your relay):  if ASSISTANT_ENDPOINT is set, POSTs to your Vercel
+                         relay, which calls Claude with the CV profile.
+   Tier 2 (free online): a keyless, no-signup public AI endpoint
+                         (Pollinations) given the same CV profile as context.
+                         Works with no backend and no API key.
+   Tier 3 (offline):     if the network fails, answers locally from the
+                         knowledge base. The chat always works.
    ===================================================================== */
 (function () {
   "use strict";
 
-  // 1) SET THIS after you deploy the Vercel function (e.g. "https://your-app.vercel.app/api/chat").
-  //    Leave "" to run offline-only.
+  // 1) OPTIONAL: set this to your own Vercel relay (Claude) if you deploy one.
+  //    Leave "" to use the free online tier below instead.
   const ASSISTANT_ENDPOINT = "";
+
+  // 2) Free, keyless online AI (no account, no API key). Set ONLINE_AI = false
+  //    to disable it and run offline-only from the knowledge base.
+  const ONLINE_AI = true;
+  const ONLINE_AI_GET = "https://text.pollinations.ai/";        // simple GET (no CORS preflight)
+  const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai"; // POST fallback
+  const ONLINE_AI_MODEL = "openai";   // set to "searchgpt" to enable live web search
 
   const DATA = window.ASSISTANT_DATA || {
     offlineAnswer: function () { return "Knowledge base failed to load."; },
@@ -77,7 +86,8 @@
   const dot = root.querySelector("#aiDot");
   const suggest = root.querySelector("#aiSuggest");
 
-  if (!ASSISTANT_ENDPOINT) { usedOffline = true; setMode("offline"); }
+  const onlineAvailable = !!ASSISTANT_ENDPOINT || ONLINE_AI;
+  setMode(onlineAvailable ? "online" : "offline");
 
   function setMode(m) {
     if (m === "offline") { modeEl.textContent = "offline · from CV & site"; dot.classList.add("off"); }
@@ -113,17 +123,22 @@
   }
 
   // ---------- Open / close ----------
-  function open() {
+  function open(auto) {
     panel.hidden = false;
     fab.setAttribute("aria-expanded", "true");
     root.classList.add("open");
     greet();
-    setTimeout(() => input.focus(), 60);
+    if (!auto) setTimeout(() => input.focus(), 60);
   }
   function close() {
     panel.hidden = true;
     fab.setAttribute("aria-expanded", "false");
     root.classList.remove("open");
+    // Clear the conversation so reopening always starts fresh.
+    history.length = 0;
+    log.innerHTML = "";
+    greeted = false;
+    suggest.style.display = "";
     fab.focus();
   }
   fab.addEventListener("click", () => (panel.hidden ? open() : close()));
@@ -151,12 +166,19 @@
     const started = Date.now();
     const think = 1500 + Math.random() * 1000; // 1.5–2.5s of visible "thinking"
 
-    let answer = null;
-    if (ASSISTANT_ENDPOINT && !usedOffline) {
+    let answer = null, fromOnline = false;
+    const canTryOnline = navigator.onLine !== false;
+
+    if (ASSISTANT_ENDPOINT && canTryOnline) {
       answer = await askAI(q).catch(() => null);
-      if (answer == null) { usedOffline = true; setMode("offline"); }
+      if (answer != null) fromOnline = true;
+    }
+    if (answer == null && ONLINE_AI && canTryOnline) {
+      answer = await askOnlineAI().catch(() => null);
+      if (answer != null) fromOnline = true;
     }
     if (answer == null) answer = DATA.offlineAnswer(q);
+    setMode(fromOnline ? "online" : "offline");
 
     // Keep the thinking animation visible for a natural beat, even if the answer was instant
     const elapsed = Date.now() - started;
@@ -190,4 +212,87 @@
       clearTimeout(timer);
     }
   }
+
+  // ---------- Free online tier (keyless public AI, grounded in the CV) ----------
+  function buildSystem() {
+    const profile = DATA.PROFILE || "";
+    const instructions =
+      "You are the assistant on the personal academic website of Gustavo Pinho Maia. " +
+      "Help visitors navigate the site and answer questions about Gustavo and his CV — research, " +
+      "publications, presentations, funding, education, experience, tutoring, and how to contact or " +
+      "collaborate with him — using the PROFILE below as your source of truth. " +
+      "You MAY also explain general concepts in his scientific fields (astrobiology, mechanochemistry, " +
+      "prebiotic chemistry, the origin of life, meteoritics, and directly related chemistry), since they " +
+      "give context to his work. " +
+      "Stay strictly on-topic: if the user asks about a different person, an unrelated subject, current " +
+      "events, or anything outside Gustavo, this website, or those scientific fields, do NOT answer it — " +
+      "reply only: \"Sorry, I can only help with Gustavo Pinho Maia's work, this website, and his research " +
+      "fields. For anything else, you can reach him at gustavopinho.maia@mnhn.fr.\" " +
+      "(Translate that to Portuguese if the user wrote in Portuguese.) " +
+      "Never invent specific facts about Gustavo that are not in the PROFILE. Be concise and warm, and " +
+      "reply in the user's language (English or Portuguese).\n\nPROFILE:\n";
+    return (instructions + profile).slice(0, 3800);
+  }
+
+  // Primary: a simple GET (no JSON body → no CORS preflight, which is what made
+  // the POST fail and drop to offline on every message).
+  async function onlineGet(sys) {
+    const convo = history.slice(-6)
+      .map(m => (m.role === "user" ? "User: " : "Assistant: ") + m.content)
+      .join("\n");
+    const prompt = convo + "\nAssistant:";
+    const url = ONLINE_AI_GET + encodeURIComponent(prompt) +
+      "?model=" + encodeURIComponent(ONLINE_AI_MODEL) +
+      "&referrer=" + encodeURIComponent((window.location && location.hostname) || "gpm-site") +
+      "&system=" + encodeURIComponent(sys);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal });
+      if (!res.ok) throw new Error("get " + res.status);
+      const text = ((await res.text()) || "").trim();
+      if (!text || /^\{?\s*"?error/i.test(text)) throw new Error("empty/err");
+      return text;
+    } finally { clearTimeout(timer); }
+  }
+
+  // Fallback: OpenAI-compatible POST (used only if the GET path is blocked).
+  async function onlinePost(sys) {
+    const messages = [{ role: "system", content: sys }].concat(history.slice(-12));
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    try {
+      const res = await fetch(ONLINE_AI_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: ONLINE_AI_MODEL, messages: messages, temperature: 0.6, referrer: "gpm-site" }),
+        signal: ctrl.signal
+      });
+      if (!res.ok) throw new Error("post " + res.status);
+      const ct = res.headers.get("content-type") || "";
+      let text = "";
+      if (ct.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        if (data && data.choices && data.choices[0]) {
+          const c = data.choices[0];
+          text = (c.message && c.message.content) || c.text || "";
+        } else if (typeof data === "string") { text = data; }
+        else if (data && typeof data.content === "string") { text = data.content; }
+      } else {
+        text = await res.text();
+      }
+      if (!text || !text.trim()) throw new Error("empty");
+      return text.trim();
+    } finally { clearTimeout(timer); }
+  }
+
+  async function askOnlineAI() {
+    const sys = buildSystem();
+    try { return await onlineGet(sys); }
+    catch (e) { return await onlinePost(sys); }
+  }
+
+  // Open the chat by default when the site loads. Minimising (−) collapses it to
+  // the bubble and clears the conversation; reopening starts fresh.
+  open(true);
 })();
