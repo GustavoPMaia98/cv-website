@@ -697,6 +697,42 @@
     wrap.appendChild(all);
     sorted.forEach(y => wrap.appendChild(mk(y, y)));
   }
+
+  // Presentation type filter (All / Oral / Poster) — mirrors the publication filter,
+  // reusing the .pub-filter styling and the .pub-hidden show/hide mechanism.
+  function buildPresentationFilter() {
+    const wrap = document.getElementById("preso-filter");
+    if (!wrap) return;
+    const items = Array.prototype.slice.call(
+      document.querySelectorAll("#presentations .timeline-item[data-type]")
+    );
+    if (!items.length) return;
+
+    const types = [];
+    items.forEach(it => { const t = it.dataset.type; if (t && types.indexOf(t) === -1) types.push(t); });
+
+    const LABELS = {
+      all:    { en: "All",    pt: "Todos" },
+      oral:   { en: "Oral",   pt: "Oral" },
+      poster: { en: "Poster", pt: "Póster" }
+    };
+    const label = key => (LABELS[key] && (LABELS[key][currentLang] || LABELS[key].en)) || key;
+
+    wrap.innerHTML = "";
+    const mk = key => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = label(key); b.dataset.val = key;
+      b.addEventListener("click", () => {
+        wrap.querySelectorAll("button").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        items.forEach(it => it.classList.toggle("pub-hidden", key !== "all" && it.dataset.type !== key));
+      });
+      return b;
+    };
+    const all = mk("all"); all.classList.add("active"); wrap.appendChild(all);
+    types.forEach(t => wrap.appendChild(mk(t)));
+  }
+
   function updateMetrics() {
     const el = document.querySelector('[data-metric="pubs"]');
     if (!el) return;
@@ -811,6 +847,7 @@
     setupLangToggle();
     setupScrollProgress();
     buildPublicationFilter();
+    buildPresentationFilter();
     updateMetrics();
     initPresoMap();
     if (document.getElementById("pub-list")) loadPublications();

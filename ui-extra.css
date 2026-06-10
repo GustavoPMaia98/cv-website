@@ -220,3 +220,22 @@ html[data-theme="light"] .search-close:hover{ background:rgba(15,23,42,.06); }
   .ai-dots i{ animation:none; opacity:.6; }
   .search-hit{ animation:none; box-shadow:0 0 0 2px rgba(125,211,252,.5); }
 }
+
+/* =====================================================================
+   3) PRESENTATION TYPE BADGES  (paired with the All / Oral / Poster
+      filter; the badge encodes whether a talk was oral or a poster)
+   ===================================================================== */
+.preso-badge{
+  display:inline-block; margin-bottom:6px;
+  font-size:.64rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  padding:3px 9px; border-radius:999px; border:1px solid transparent;
+}
+.preso-oral{
+  color:var(--accent);
+  background:rgba(125,211,252,.12); border-color:rgba(125,211,252,.28);
+}
+.preso-poster{
+  color:#fbbf24;
+  background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.30);
+}
+html[data-theme="light"] .preso-poster{ color:#a16207; background:rgba(161,98,7,.1); border-color:rgba(161,98,7,.28); }
