@@ -18,8 +18,9 @@
   // 2) Free, keyless online AI (no account, no API key). Set ONLINE_AI = false
   //    to disable it and run offline-only from the knowledge base.
   const ONLINE_AI = true;
-  const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai";
-  const ONLINE_AI_MODEL = "openai";
+  const ONLINE_AI_GET = "https://text.pollinations.ai/";        // simple GET (no CORS preflight)
+  const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai"; // POST fallback
+  const ONLINE_AI_MODEL = "openai";   // set to "searchgpt" to enable live web search
 
   const DATA = window.ASSISTANT_DATA || {
     offlineAnswer: function () { return "Knowledge base failed to load."; },
@@ -215,33 +216,59 @@
   // ---------- Free online tier (keyless public AI, grounded in the CV) ----------
   function buildSystem() {
     const profile = DATA.PROFILE || "";
-    return (
-      "You are the friendly AI assistant on Gustavo Pinho Maia's academic website. " +
-      "Use ONLY the profile below as your source of truth and never invent specific facts about Gustavo. " +
-      "You may add light, accurate context about his fields (mechanochemistry, prebiotic chemistry, astrobiology, origin of life). " +
-      "If a detail isn't in the profile, or the question is unrelated to Gustavo or his field, say you can't help with that and point to his contact email (gustavopinho.maia@mnhn.fr). " +
-      "Be concise and warm, and reply in the same language the user writes in (English or Portuguese).\n\nPROFILE:\n" +
-      profile
-    );
+    const instructions =
+      "You are the assistant on the personal academic website of Gustavo Pinho Maia. " +
+      "Help visitors navigate the site and answer questions about Gustavo and his CV — research, " +
+      "publications, presentations, funding, education, experience, tutoring, and how to contact or " +
+      "collaborate with him — using the PROFILE below as your source of truth. " +
+      "You MAY also explain general concepts in his scientific fields (astrobiology, mechanochemistry, " +
+      "prebiotic chemistry, the origin of life, meteoritics, and directly related chemistry), since they " +
+      "give context to his work. " +
+      "Stay strictly on-topic: if the user asks about a different person, an unrelated subject, current " +
+      "events, or anything outside Gustavo, this website, or those scientific fields, do NOT answer it — " +
+      "reply only: \"Sorry, I can only help with Gustavo Pinho Maia's work, this website, and his research " +
+      "fields. For anything else, you can reach him at gustavopinho.maia@mnhn.fr.\" " +
+      "(Translate that to Portuguese if the user wrote in Portuguese.) " +
+      "Never invent specific facts about Gustavo that are not in the PROFILE. Be concise and warm, and " +
+      "reply in the user's language (English or Portuguese).\n\nPROFILE:\n";
+    return (instructions + profile).slice(0, 3800);
   }
 
-  async function askOnlineAI() {
+  // Primary: a simple GET (no JSON body → no CORS preflight, which is what made
+  // the POST fail and drop to offline on every message).
+  async function onlineGet(sys) {
+    const convo = history.slice(-6)
+      .map(m => (m.role === "user" ? "User: " : "Assistant: ") + m.content)
+      .join("\n");
+    const prompt = convo + "\nAssistant:";
+    const url = ONLINE_AI_GET + encodeURIComponent(prompt) +
+      "?model=" + encodeURIComponent(ONLINE_AI_MODEL) +
+      "&referrer=" + encodeURIComponent((window.location && location.hostname) || "gpm-site") +
+      "&system=" + encodeURIComponent(sys);
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 20000);
+    const timer = setTimeout(() => ctrl.abort(), 25000);
     try {
-      const messages = [{ role: "system", content: buildSystem() }].concat(history.slice(-12));
+      const res = await fetch(url, { signal: ctrl.signal });
+      if (!res.ok) throw new Error("get " + res.status);
+      const text = ((await res.text()) || "").trim();
+      if (!text || /^\{?\s*"?error/i.test(text)) throw new Error("empty/err");
+      return text;
+    } finally { clearTimeout(timer); }
+  }
+
+  // Fallback: OpenAI-compatible POST (used only if the GET path is blocked).
+  async function onlinePost(sys) {
+    const messages = [{ role: "system", content: sys }].concat(history.slice(-12));
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    try {
       const res = await fetch(ONLINE_AI_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: ONLINE_AI_MODEL,
-          messages: messages,
-          temperature: 0.6,
-          referrer: "gpm-site"
-        }),
+        body: JSON.stringify({ model: ONLINE_AI_MODEL, messages: messages, temperature: 0.6, referrer: "gpm-site" }),
         signal: ctrl.signal
       });
-      if (!res.ok) throw new Error("online " + res.status);
+      if (!res.ok) throw new Error("post " + res.status);
       const ct = res.headers.get("content-type") || "";
       let text = "";
       if (ct.indexOf("application/json") !== -1) {
@@ -249,19 +276,20 @@
         if (data && data.choices && data.choices[0]) {
           const c = data.choices[0];
           text = (c.message && c.message.content) || c.text || "";
-        } else if (typeof data === "string") {
-          text = data;
-        } else if (data && typeof data.content === "string") {
-          text = data.content;
-        }
+        } else if (typeof data === "string") { text = data; }
+        else if (data && typeof data.content === "string") { text = data.content; }
       } else {
         text = await res.text();
       }
       if (!text || !text.trim()) throw new Error("empty");
       return text.trim();
-    } finally {
-      clearTimeout(timer);
-    }
+    } finally { clearTimeout(timer); }
+  }
+
+  async function askOnlineAI() {
+    const sys = buildSystem();
+    try { return await onlineGet(sys); }
+    catch (e) { return await onlinePost(sys); }
   }
 
   // Open the chat by default when the site loads. Minimising (−) collapses it to
