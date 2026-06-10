@@ -767,15 +767,31 @@
     types.forEach(t => wrap.appendChild(mk(t)));
   }
 
+  // A publication entry counts as a PREPRINT — and is excluded from the headline
+  // "Publications" number, though it still appears in the list — when it is
+  // explicitly marked (class "preprint" or data-type="preprint") OR its venue /
+  // DOI matches a known preprint server.
+  function isPreprintItem(it) {
+    if (it.classList.contains("preprint")) return true;
+    if ((it.dataset.type || "").toLowerCase() === "preprint") return true;
+    const meta = (it.querySelector(".meta") || {}).textContent || "";
+    const title = (it.querySelector("strong") || {}).textContent || "";
+    const doiA = it.querySelector('a[href*="doi.org/"]');
+    const doi = doiA ? (doiA.getAttribute("href") || "") : "";
+    const hay = (meta + " " + title + " " + doi).toLowerCase();
+    if (/pre-?print|posted-content|arxiv|chemrxiv|biorxiv|medrxiv|ssrn|research\s*square|preprints?\.org|authorea|eartharxiv|essoar|\bosf\b/.test(hay)) return true;
+    // Known preprint DOI registrant prefixes (ChemRxiv, Research Square, bioRxiv/
+    // medRxiv, EarthArXiv, OSF, Authorea, Preprints.org)
+    if (/10\.(26434|21203|1101|31223|31219|22541|20944)\//.test(doi)) return true;
+    return false;
+  }
+
   function updateMetrics() {
     const el = document.querySelector('[data-metric="pubs"]');
     if (!el) return;
     let n = 0;
     document.querySelectorAll("#publications .timeline-item.publication").forEach(it => {
-      if (it.classList.contains("preprint")) return;
-      const meta = (it.querySelector(".meta") || {}).textContent || "";
-      if (/pre-?print|arxiv|chemrxiv|biorxiv|ssrn|research\s*square|preprints\.org/i.test(meta)) return;
-      n++;
+      if (!isPreprintItem(it)) n++;   // preprints shown in the list but not counted
     });
     if (n) el.textContent = n;
   }
