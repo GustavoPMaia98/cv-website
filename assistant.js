@@ -1,26 +1,42 @@
 /* =====================================================================
    assistant.js — floating AI chat widget for the site.
+
    Tier 1 (your relay):  if ASSISTANT_ENDPOINT is set, POSTs to your Vercel
                          relay, which calls Claude with the CV profile.
-   Tier 2 (free online): a keyless, no-signup public AI endpoint
-                         (Pollinations) given the same CV profile as context.
-                         Works with no backend and no API key.
-   Tier 3 (offline):     if the network fails, answers locally from the
-                         knowledge base. The chat always works.
+                         This is the only RELIABLE AI tier — deploy api/chat.js
+                         and set ASSISTANT_ENDPOINT below for a stable assistant.
+   Tier 2 (free online): a keyless public AI (Pollinations) given the same CV
+                         profile. Best-effort only — free anonymous access is
+                         frequently rate-limited/blocked, so treat any answer
+                         from here as a bonus, not a guarantee.
+   Tier 3 (offline):     if every network attempt fails, answers locally from
+                         the knowledge base. The chat ALWAYS works.
+
+   Previous behaviour fell straight to Tier 3 on every message (because Tier 1
+   was unset and Tier 2 was failing), which flipped the widget to the "offline"
+   state on every question. This version: guards URL length, retries once,
+   never permanently latches offline, keeps the conversation on minimise, and
+   degrades quietly instead of looking broken.
    ===================================================================== */
 (function () {
   "use strict";
 
-  // 1) OPTIONAL: set this to your own Vercel relay (Claude) if you deploy one.
-  //    Leave "" to use the free online tier below instead.
+  // 1) RECOMMENDED: set this to your own Vercel relay (Claude) for a reliable
+  //    assistant. Leave "" to use the free best-effort online tier below.
+  //    e.g. "https://your-app.vercel.app/api/chat"
   const ASSISTANT_ENDPOINT = "";
 
-  // 2) Free, keyless online AI (no account, no API key). Set ONLINE_AI = false
-  //    to disable it and run offline-only from the knowledge base.
+  // 2) Free, keyless online AI (no account, no API key). Best-effort only.
+  //    Set ONLINE_AI = false to skip it and answer straight from the CV.
   const ONLINE_AI = true;
-  const ONLINE_AI_GET = "https://text.pollinations.ai/";        // simple GET (no CORS preflight)
-  const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai"; // POST fallback
+  const ONLINE_AI_GET = "https://text.pollinations.ai/";            // simple GET (no CORS preflight)
+  const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai"; // OpenAI-compatible POST fallback
   const ONLINE_AI_MODEL = "openai";   // set to "searchgpt" to enable live web search
+
+  // Keep GET URLs comfortably under common server/proxy limits (~2 KB). If the
+  // built URL would exceed this, we skip GET and use the POST path instead of
+  // emitting a request that returns 414 and silently drops us offline.
+  const MAX_GET_URL = 1900;
 
   const DATA = window.ASSISTANT_DATA || {
     offlineAnswer: function () { return "Knowledge base failed to load."; },
@@ -28,8 +44,9 @@
   };
 
   const history = [];          // {role:"user"|"assistant", content:"..."} for the AI tier
-  let usedOffline = false;     // becomes true once we fall back, so we stop retrying the API
   let pending = false;
+  let lastTierUsed = "online";  // "online" | "offline" — drives the status dot
+  let offlineNoticeShown = false;
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   // ---------- Build DOM ----------
@@ -86,12 +103,18 @@
   const dot = root.querySelector("#aiDot");
   const suggest = root.querySelector("#aiSuggest");
 
-  const onlineAvailable = !!ASSISTANT_ENDPOINT || ONLINE_AI;
-  setMode(onlineAvailable ? "online" : "offline");
+  const onlineConfigured = !!ASSISTANT_ENDPOINT || ONLINE_AI;
+  setMode(onlineConfigured ? "online" : "offline");
 
   function setMode(m) {
-    if (m === "offline") { modeEl.textContent = "offline · from CV & site"; dot.classList.add("off"); }
-    else { modeEl.textContent = "research & CV assistant"; dot.classList.remove("off"); }
+    lastTierUsed = m;
+    if (m === "offline") {
+      modeEl.textContent = "answering from CV & site";
+      dot.classList.add("off");
+    } else {
+      modeEl.textContent = "research & CV assistant";
+      dot.classList.remove("off");
+    }
   }
 
   // ---------- Messages ----------
@@ -122,7 +145,7 @@
     add("assistant", DATA.GREETING);
   }
 
-  // ---------- Open / close ----------
+  // ---------- Open / close / minimise ----------
   function open(auto) {
     panel.hidden = false;
     fab.setAttribute("aria-expanded", "true");
@@ -130,21 +153,26 @@
     greet();
     if (!auto) setTimeout(() => input.focus(), 60);
   }
-  function close() {
+  // Minimise: collapse to the bubble but KEEP the conversation (per the docs).
+  function minimise() {
     panel.hidden = true;
     fab.setAttribute("aria-expanded", "false");
     root.classList.remove("open");
-    // Clear the conversation so reopening always starts fresh.
+    fab.focus();
+  }
+  // Close: collapse AND clear, so reopening starts fresh.
+  function close() {
+    minimise();
     history.length = 0;
     log.innerHTML = "";
     greeted = false;
+    offlineNoticeShown = false;
     suggest.style.display = "";
-    fab.focus();
   }
-  fab.addEventListener("click", () => (panel.hidden ? open() : close()));
+  fab.addEventListener("click", () => (panel.hidden ? open() : minimise()));
   closeBtn.addEventListener("click", close);
-  minBtn.addEventListener("click", close);   // minimise = collapse to bubble, conversation kept
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && !panel.hidden) close(); });
+  minBtn.addEventListener("click", minimise);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !panel.hidden) minimise(); });
 
   // ---------- Send ----------
   suggest.addEventListener("click", e => {
@@ -169,30 +197,43 @@
     let answer = null, fromOnline = false;
     const canTryOnline = navigator.onLine !== false;
 
+    // Tier 1: your relay (reliable, if configured).
     if (ASSISTANT_ENDPOINT && canTryOnline) {
       answer = await askAI(q).catch(() => null);
       if (answer != null) fromOnline = true;
     }
+    // Tier 2: free public AI (best-effort). We retry every message — a previous
+    // transient failure must NOT permanently drop us to offline.
     if (answer == null && ONLINE_AI && canTryOnline) {
       answer = await askOnlineAI().catch(() => null);
       if (answer != null) fromOnline = true;
     }
+    // Tier 3: offline knowledge base (always available).
     if (answer == null) answer = DATA.offlineAnswer(q);
+
     setMode(fromOnline ? "online" : "offline");
 
-    // Keep the thinking animation visible for a natural beat, even if the answer was instant
+    // Keep the thinking animation visible for a natural beat.
     const elapsed = Date.now() - started;
     if (elapsed < think) await sleep(think - elapsed);
 
     t.remove();
     add("assistant", answer);
     history.push({ role: "assistant", content: answer });
+
+    // One quiet note the first time we fall back, so visitors understand the
+    // answer came from the CV rather than wondering why it looks different.
+    if (!fromOnline && !offlineNoticeShown) {
+      offlineNoticeShown = true;
+      add("assistant", "(Answering directly from Gustavo's CV right now. For anything not covered, email gustavopinho.maia@mnhn.fr.)");
+    }
+
     if (history.length > 16) history.splice(0, history.length - 16); // keep context small
     pending = false;
     input.focus();
   }
 
-  // ---------- Real AI tier (calls your Vercel relay) ----------
+  // ---------- Tier 1: your relay (calls your Vercel function) ----------
   async function askAI(q) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 30000);
@@ -213,8 +254,8 @@
     }
   }
 
-  // ---------- Free online tier (keyless public AI, grounded in the CV) ----------
-  function buildSystem() {
+  // ---------- Tier 2: free online tier (grounded in the CV) ----------
+  function buildSystem(maxLen) {
     const profile = DATA.PROFILE || "";
     const instructions =
       "You are the assistant on the personal academic website of Gustavo Pinho Maia. " +
@@ -231,20 +272,24 @@
       "(Translate that to Portuguese if the user wrote in Portuguese.) " +
       "Never invent specific facts about Gustavo that are not in the PROFILE. Be concise and warm, and " +
       "reply in the user's language (English or Portuguese).\n\nPROFILE:\n";
-    return (instructions + profile).slice(0, 3800);
+    return (instructions + profile).slice(0, maxLen || 3800);
   }
 
-  // Primary: a simple GET (no JSON body → no CORS preflight, which is what made
-  // the POST fail and drop to offline on every message).
-  async function onlineGet(sys) {
+  // Primary: a simple GET (no JSON body → no CORS preflight). We guard the URL
+  // length: an over-long URL returns 414 and used to drop us straight offline.
+  async function onlineGet() {
     const convo = history.slice(-6)
       .map(m => (m.role === "user" ? "User: " : "Assistant: ") + m.content)
       .join("\n");
     const prompt = convo + "\nAssistant:";
-    const url = ONLINE_AI_GET + encodeURIComponent(prompt) +
-      "?model=" + encodeURIComponent(ONLINE_AI_MODEL) +
-      "&referrer=" + encodeURIComponent((window.location && location.hostname) || "gpm-site") +
-      "&system=" + encodeURIComponent(sys);
+    const referrer = (window.location && location.hostname) || "gpm-site";
+
+    // Start with the full system prompt; if the URL is too long, shrink it.
+    let sys = buildSystem(3800);
+    let url = makeGetUrl(prompt, referrer, sys);
+    if (url.length > MAX_GET_URL) { sys = buildSystem(1500); url = makeGetUrl(prompt, referrer, sys); }
+    if (url.length > MAX_GET_URL) throw new Error("get-too-long"); // hand off to POST
+
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25000);
     try {
@@ -256,8 +301,16 @@
     } finally { clearTimeout(timer); }
   }
 
-  // Fallback: OpenAI-compatible POST (used only if the GET path is blocked).
-  async function onlinePost(sys) {
+  function makeGetUrl(prompt, referrer, sys) {
+    return ONLINE_AI_GET + encodeURIComponent(prompt) +
+      "?model=" + encodeURIComponent(ONLINE_AI_MODEL) +
+      "&referrer=" + encodeURIComponent(referrer) +
+      "&system=" + encodeURIComponent(sys);
+  }
+
+  // Fallback: OpenAI-compatible POST (used if the GET path is blocked/too long).
+  async function onlinePost() {
+    const sys = buildSystem(3800);
     const messages = [{ role: "system", content: sys }].concat(history.slice(-12));
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25000);
@@ -286,13 +339,23 @@
     } finally { clearTimeout(timer); }
   }
 
+  // Try GET, then POST. One quiet retry on the whole sequence to ride out
+  // momentary blips before we decide the network is unavailable.
   async function askOnlineAI() {
-    const sys = buildSystem();
-    try { return await onlineGet(sys); }
-    catch (e) { return await onlinePost(sys); }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { return await onlineGet(); }
+      catch (e1) {
+        try { return await onlinePost(); }
+        catch (e2) {
+          if (attempt === 0) { await sleep(500); continue; }
+          throw e2;
+        }
+      }
+    }
+    return null;
   }
 
   // Open the chat by default when the site loads. Minimising (−) collapses it to
-  // the bubble and clears the conversation; reopening starts fresh.
+  // the bubble and keeps the conversation; closing (×) clears it.
   open(true);
 })();
