@@ -14,9 +14,14 @@
 
    Previous behaviour fell straight to Tier 3 on every message (because Tier 1
    was unset and Tier 2 was failing), which flipped the widget to the "offline"
-   state on every question. This version: guards URL length, retries once,
-   never permanently latches offline, keeps the conversation on minimise, and
-   degrades quietly instead of looking broken.
+   state on every question. This version: sweeps several free models (GET then
+   POST) over two passes before giving up, guards URL length, never latches
+   offline, and ALWAYS presents as available — when the live AI is unreachable it
+   answers silently from the CV knowledge base instead of looking broken.
+
+   PRIVACY: set ONLINE_AI = false (below) for a fully in-browser assistant where
+   no visitor data ever leaves the page; leave it true to use the free keyless
+   third-party AI. The on-screen note reflects whichever mode is active.
    ===================================================================== */
 (function () {
   "use strict";
@@ -27,11 +32,22 @@
   const ASSISTANT_ENDPOINT = "";
 
   // 2) Free, keyless online AI (no account, no API key). Best-effort only.
-  //    Set ONLINE_AI = false to skip it and answer straight from the CV.
+  //    PRIVACY TOGGLE: leave `true` for conversational AI answers — visitor
+  //    questions are sent to a free third-party AI (Pollinations: no storage,
+  //    anonymous, not used for training) and only the already-public CV is sent
+  //    as context. Set `false` for FULLY-PRIVATE mode: the assistant then answers
+  //    entirely in the visitor's browser from the CV knowledge base and nothing
+  //    is ever sent anywhere. The on-screen privacy note updates automatically.
   const ONLINE_AI = true;
   const ONLINE_AI_GET = "https://text.pollinations.ai/";            // simple GET (no CORS preflight)
   const ONLINE_AI_ENDPOINT = "https://text.pollinations.ai/openai"; // OpenAI-compatible POST fallback
   const ONLINE_AI_MODEL = "openai";   // set to "searchgpt" to enable live web search
+
+  // The free anonymous tier is frequently rate-limited on a single model. We try
+  // the preferred model first, then quietly fall through to other free models,
+  // and finally to the server default (no model param). This greatly raises the
+  // odds that at least one of them answers before we ever touch the offline tier.
+  const ONLINE_AI_MODELS = [ONLINE_AI_MODEL, "openai-fast", "mistral", null];
 
   // Keep GET URLs comfortably under common server/proxy limits (~2 KB). If the
   // built URL would exceed this, we skip GET and use the POST path instead of
@@ -87,7 +103,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         </button>
       </form>
-      <p class="ai-disclaimer">AI assistant — may be imperfect. Verify important details via the linked profiles.</p>
+      <p class="ai-disclaimer" id="aiDisclaimer">AI assistant — may be imperfect. Verify important details via the linked profiles.</p>
     </section>
   `;
   document.body.appendChild(root);
@@ -102,19 +118,32 @@
   const modeEl = root.querySelector("#aiMode");
   const dot = root.querySelector("#aiDot");
   const suggest = root.querySelector("#aiSuggest");
+  const disclaimer = root.querySelector("#aiDisclaimer");
+
+  // Transparency note. When a live AI tier is active, tell visitors their
+  // questions are processed by a third-party AI. When ONLINE_AI (and the relay)
+  // are off, everything runs in the browser, so we say nothing leaves it. This
+  // keeps the widget honest for a public/open-source site and updates itself the
+  // moment you flip the ONLINE_AI flag — no other change needed.
+  const usesLiveAI = !!ASSISTANT_ENDPOINT || ONLINE_AI;
+  if (disclaimer) {
+    disclaimer.textContent = usesLiveAI
+      ? "AI assistant — may be imperfect; verify important details via the linked profiles. Your questions are sent to a free third-party AI service to generate answers."
+      : "AI assistant — may be imperfect; verify important details via the linked profiles. Runs entirely in your browser — your questions are not sent anywhere.";
+  }
 
   const onlineConfigured = !!ASSISTANT_ENDPOINT || ONLINE_AI;
   setMode(onlineConfigured ? "online" : "offline");
 
+  // The assistant is always available: when the live AI is reachable it answers
+  // through it, otherwise it answers from the on-page CV knowledge base. Either
+  // way it IS answering, so we always present an active (green) state and never
+  // flip the widget into a broken-looking "offline" mode. We still track which
+  // tier served the answer internally (lastTierUsed) for debugging only.
   function setMode(m) {
     lastTierUsed = m;
-    if (m === "offline") {
-      modeEl.textContent = "answering from CV & site";
-      dot.classList.add("off");
-    } else {
-      modeEl.textContent = "research & CV assistant";
-      dot.classList.remove("off");
-    }
+    modeEl.textContent = "research & CV assistant";
+    dot.classList.remove("off");
   }
 
   // ---------- Messages ----------
@@ -221,12 +250,9 @@
     add("assistant", answer);
     history.push({ role: "assistant", content: answer });
 
-    // One quiet note the first time we fall back, so visitors understand the
-    // answer came from the CV rather than wondering why it looks different.
-    if (!fromOnline && !offlineNoticeShown) {
-      offlineNoticeShown = true;
-      add("assistant", "(Answering directly from Gustavo's CV right now. For anything not covered, email gustavopinho.maia@mnhn.fr.)");
-    }
+    // No "we're offline" notice: whether the answer came from the live AI or the
+    // built-in CV knowledge base, it's a real answer, so we present it the same
+    // way and never make the widget look broken or degraded.
 
     if (history.length > 16) history.splice(0, history.length - 16); // keep context small
     pending = false;
@@ -277,7 +303,7 @@
 
   // Primary: a simple GET (no JSON body → no CORS preflight). We guard the URL
   // length: an over-long URL returns 414 and used to drop us straight offline.
-  async function onlineGet() {
+  async function onlineGet(model) {
     const convo = history.slice(-6)
       .map(m => (m.role === "user" ? "User: " : "Assistant: ") + m.content)
       .join("\n");
@@ -286,8 +312,8 @@
 
     // Start with the full system prompt; if the URL is too long, shrink it.
     let sys = buildSystem(3800);
-    let url = makeGetUrl(prompt, referrer, sys);
-    if (url.length > MAX_GET_URL) { sys = buildSystem(1500); url = makeGetUrl(prompt, referrer, sys); }
+    let url = makeGetUrl(prompt, referrer, sys, model);
+    if (url.length > MAX_GET_URL) { sys = buildSystem(1500); url = makeGetUrl(prompt, referrer, sys, model); }
     if (url.length > MAX_GET_URL) throw new Error("get-too-long"); // hand off to POST
 
     const ctrl = new AbortController();
@@ -301,24 +327,26 @@
     } finally { clearTimeout(timer); }
   }
 
-  function makeGetUrl(prompt, referrer, sys) {
+  function makeGetUrl(prompt, referrer, sys, model) {
     return ONLINE_AI_GET + encodeURIComponent(prompt) +
-      "?model=" + encodeURIComponent(ONLINE_AI_MODEL) +
-      "&referrer=" + encodeURIComponent(referrer) +
+      "?referrer=" + encodeURIComponent(referrer) +
+      (model ? "&model=" + encodeURIComponent(model) : "") +
       "&system=" + encodeURIComponent(sys);
   }
 
   // Fallback: OpenAI-compatible POST (used if the GET path is blocked/too long).
-  async function onlinePost() {
+  async function onlinePost(model) {
     const sys = buildSystem(3800);
     const messages = [{ role: "system", content: sys }].concat(history.slice(-12));
+    const body = { messages: messages, temperature: 0.6, referrer: "gpm-site" };
+    if (model) body.model = model;
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25000);
     try {
       const res = await fetch(ONLINE_AI_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: ONLINE_AI_MODEL, messages: messages, temperature: 0.6, referrer: "gpm-site" }),
+        body: JSON.stringify(body),
         signal: ctrl.signal
       });
       if (!res.ok) throw new Error("post " + res.status);
@@ -339,20 +367,24 @@
     } finally { clearTimeout(timer); }
   }
 
-  // Try GET, then POST. One quiet retry on the whole sequence to ride out
-  // momentary blips before we decide the network is unavailable.
+  // For each candidate model, try GET then POST. We sweep through every model in
+  // ONLINE_AI_MODELS before giving up, and do one extra full pass with a short
+  // backoff to ride out momentary rate-limits/blips. Only after ALL of that fails
+  // do we hand off to the offline tier — so a single flaky model no longer drops
+  // the whole assistant offline.
   async function askOnlineAI() {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try { return await onlineGet(); }
-      catch (e1) {
-        try { return await onlinePost(); }
-        catch (e2) {
-          if (attempt === 0) { await sleep(500); continue; }
-          throw e2;
+    let lastErr = null;
+    for (let pass = 0; pass < 2; pass++) {
+      for (const model of ONLINE_AI_MODELS) {
+        try { return await onlineGet(model); }
+        catch (e1) {
+          try { return await onlinePost(model); }
+          catch (e2) { lastErr = e2; }
         }
       }
+      if (pass === 0) await sleep(600); // brief pause, then one more sweep
     }
-    return null;
+    throw lastErr || new Error("online-unavailable");
   }
 
   // Open the chat by default when the site loads. Minimising (−) collapses it to
