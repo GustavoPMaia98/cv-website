@@ -158,6 +158,18 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 16px)}
 .avatar-credit{margin-top:.4em;font-size:.72rem;color:#cdd6e4;font-style:italic;text-align:center}
 .hero-body h1{font-size:clamp(1.9rem, 1.2rem + 3vw, 3rem);margin:0 0 6px}
 .role{color:var(--accent);font-weight:600;margin-bottom:12px}
+
+/* Affiliation logos under the name (CQE · NASA · IMPMC), each a clickable link */
+.affiliations{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.affiliations a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;padding:6px;border-radius:10px;
+  background:#fff;border:1px solid var(--border);
+  transition:transform .15s, border-color .2s, box-shadow .2s;
+}
+.affiliations a:hover{transform:translateY(-2px);border-color:var(--border-strong);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.affiliations img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+
 .hero-body p{margin:0 0 16px;max-width:60ch;color:#d6deea}
 
 .hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
@@ -371,7 +383,7 @@ a:focus-visible,button:focus-visible,.timeline-card[role="button"]:focus-visible
   .hero{padding:14px;margin-bottom:32px}
   .hero-card{flex-direction:column;align-items:center;text-align:center;padding:22px 18px;gap:18px}
   .hero-body p{margin-left:auto;margin-right:auto}
-  .hero-tags,.social-links{justify-content:center}
+  .hero-tags,.social-links,.affiliations{justify-content:center}
   .timeline{padding-left:22px}
   .timeline-card{padding:14px 40px 14px 18px}
   .timeline-item.publication .timeline-header img{width:60px;height:60px}

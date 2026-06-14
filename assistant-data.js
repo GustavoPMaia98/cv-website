@@ -72,64 +72,91 @@ PROFILES / METRICS
 - Based between Lisbon/Seixal (Portugal) and Paris (France); originally from Ovar, Portugal.
 `.trim();
 
-  // ---- Offline answers: each entry = {keywords, answer}. First best match wins. ----
+  // ---- Offline answers: each entry = {keywords, answer}. Highest keyword-hit
+  //      count wins; if NOTHING matches, we return FALLBACK and say we can't help.
+  //      Keywords are matched accent-insensitively (see offlineAnswer). IMPORTANT:
+  //      do NOT use bare question words like "who", "where", "what", "how many",
+  //      "about", "quem", "onde", "sobre" as keywords — they match unrelated
+  //      questions ("who is bugabuga?") and make the bot answer as if about
+  //      Gustavo. Use specific, on-topic terms (and full phrases) instead. ----
   const FAQ = [
-    { k: ["who", "about", "yourself", "bio", "quem", "sobre"], a:
+    // --- About Gustavo (requires his name or a self-referential phrase) ---
+    { k: ["gustavo", "maia", "who are you", "who is he", "who's he", "about you", "about him", "about himself", "yourself", "biography", "your background", "his background", "quem e gustavo", "quem es", "sobre o gustavo", "sobre ele", "sobre ti"], a:
       "Gustavo Pinho Maia is a PhD researcher in Chemistry (Astrobiology) at the Centro de Química Estrutural (Instituto Superior Técnico, Universidade de Lisboa), and a Visiting Scientist at the MNHN–IMPMC in Paris. His work sits at the interface of prebiotic chemistry, mechanochemistry and meteoritics — studying how mechanical energy shapes organic molecules relevant to the origin of life." },
-    { k: ["research", "work on", "study", "focus", "investiga", "área", "tema"], a:
+    { k: ["his research", "research focus", "research about", "work on", "his work", "what does he do", "investiga", "investigacao", "area de investigacao", "tema de investigacao", "linha de investigacao"], a:
       "His research focuses on mechanochemical and shock-driven synthesis, degradation and evolution of organic molecules relevant to prebiotic chemistry and the origin of life. In practice he reproduces, in the lab, the mechanical energy from impacts, planetesimal accretion and meteoritic atmospheric entry, and studies what it does to organic compounds — helping interpret the organic matter found in meteorites and returned samples." },
-    { k: ["mechanochem", "mecanoquím", "grind", "milling", "ball mill", "shock", "impact"], a:
+    { k: ["mechanochem", "mecanoquim", "grind", "milling", "ball mill", "shock", "impact"], a:
       "Mechanochemistry drives chemical reactions with mechanical force (grinding, milling, impact) instead of heat or solvent. Gustavo uses it to mimic the dry, high-energy events organic molecules experience in space. For example, grinding ribonucleosides with metals and carbonates found in meteorites degrades them into the same nucleobases detected in real samples — suggesting those molecules may be survivors of a mechanical history." },
-    { k: ["publication", "paper", "article", "publica", "artigo"], a:
+    { k: ["publication", "paper", "article", "publica", "artigo", "doi"], a:
       "Three peer-reviewed publications: (1) 'Mechanochemical Reactivity of Ribonucleosides…', Applied Sciences (2025), DOI 10.3390/app15031363; (2) 'Shock-Induced Degradation of Guanosine and Uridine…', Molecules (2023), DOI 10.3390/molecules28248006; (3) 'Da Química Bioinorgânica para a Química Prebiótica…', Boletim da SPQ (2023), DOI 10.52590/m3.p708.a30002745. The Publications section stays in sync with ORCID." },
-    { k: ["education", "degree", "phd", "msc", "master", "bsc", "studies", "estudo", "formação", "doutoramento", "mestrado"], a:
+    { k: ["education", "degree", "phd", "msc", "master", "bsc", "studies", "studied", "estudo", "formacao", "doutoramento", "mestrado", "licenciatura"], a:
       "PhD in Chemistry/Astrobiology at IST (2023–2027, ongoing); MSc in Chemistry at IST (2020–2022, 17/20); BSc in Industrial Chemistry at UBI (2017–2020, 16); and a Level-IV Mechatronics Technician diploma from Escola Profissional de Espinho (2013–2016, 18)." },
-    { k: ["experience", "job", "position", "nasa", "mnhn", "impmc", "goddard", "experiência", "trabalho"], a:
+    { k: ["experience", "his job", "position", "nasa", "mnhn", "impmc", "goddard", "experiencia", "trabalhou", "visiting scientist"], a:
       "He is a Visiting Scientist at MNHN–IMPMC in Paris (since Jan 2025, with Prof. Laurent Remusat), was a Visiting Scientist at the NASA Goddard Astrobiology Analytical Laboratory (Nov–Dec 2024), and an Invited Teaching Assistant in General Chemistry at IST (2024). He has also held several student-association leadership roles." },
-    { k: ["present", "talk", "conference", "poster", "beacon", "eana", "abgrade", "apresenta", "conferência"], a:
+    { k: ["present", "talk", "conference", "poster", "beacon", "eana", "abgrade", "apresenta", "conferencia"], a:
       "Recent highlights: oral talks at the IPGP 'Small Bodies Day' (Paris) and AbGradE'25 (Lisbon) in Oct 2025, a talk at BEACON 2025 (Reykjavik), and a poster at EANA 2025 that won the EANA 2025 Poster Award. Earlier talks/posters include EuChemS 2022, NInTec 2024 and CICS-UBI 2020. See the Presentations and 'Where I have been' map sections." },
     { k: ["fund", "grant", "fct", "scholarship", "financ", "bolsa"], a:
       "His PhD is supported by FCT Doctoral Grant 2023.01099.BD (2023–2027). He was also a Research Fellow on an FCT RNA-biosensor project at CQE (2023), and his research unit (CQE) is funded by FCT (UIDB/00100/2020)." },
-    { k: ["award", "prize", "distinction", "best teacher", "prémio", "distinção"], a:
+    { k: ["award", "prize", "distinction", "best teacher", "premio", "distincao"], a:
       "Distinctions include the 'Excellent Teachers 2024/2025' recognition at IST, the EANA 2025 Poster Award, and earlier the Rotary Club de Espinho merit recognition and a RoboCup 'Best Presentation' certificate (2016)." },
-    { k: ["tutor", "cientifica", "explica", "lessons", "aulas", "química"], a:
+    { k: ["tutor", "cientifica", "explicacoes", "lessons", "aulas", "tutoring", "private lessons"], a:
       "Gustavo runs 'Cientifica(mente)', personalised chemistry tutoring (General and Organic Chemistry, plus scientific writing), taught in Portuguese. You can reach him about lessons via gustavopinhomaia@gmail.com — see the Tutoring section." },
-    { k: ["contact", "email", "reach", "hire", "collaborat", "contact", "contacto", "colabora"], a:
+    { k: ["contact", "email", "reach him", "reach gustavo", "hire", "collaborat", "contacto", "colabora", "get in touch"], a:
       "You can contact Gustavo at gustavopinho.maia@mnhn.fr (or gustavo.pinho.maia@tecnico.ulisboa.pt). He's also on LinkedIn (in/gustavopinhomaia), ResearchGate, Google Scholar and ORCID (0000-0001-5314-8816) — all linked in the header and footer." },
-    { k: ["cv", "resume", "curriculum", "download"], a:
+    { k: ["cv", "resume", "curriculum", "curriculo", "download cv"], a:
       "You can download his full CV from the 'Download CV' button in the header. It covers education, research experience, publications, funding, presentations and skills." },
-    { k: ["robot", "mechatron", "espinho", "robocup"], a:
+    { k: ["robot", "mechatron", "robocup"], a:
       "Before chemistry, Gustavo trained as a Level-IV Mechatronics Technician at the Escola Profissional de Espinho (2013–2016) and built an autonomous robot for the RoboCupJunior Rescue Line — an experimental, problem-solving foundation he still draws on at the bench." },
-    { k: ["origin of life", "prebiotic", "prebiót", "abiogenesis", "vida"], a:
-      "A central question in his work is how the building blocks of life could have formed and survived in extreme, non-aqueous, high-energy environments — an alternative to the classic 'warm little pond', emphasising mechanical/impact-driven chemistry and the exogenous delivery of organics to the early Earth." },
-    { k: ["how many", "number of publications", "researchgate", "scholar", "metrics", "quantos"], a:
+    { k: ["researchgate", "scholar", "h-index", "citations", "number of publications", "how many publications", "how many papers", "quantas publicacoes", "quantos artigos"], a:
       "He has three peer-reviewed journal articles (2023–2025); his ResearchGate profile lists six research items in total, including conference contributions. You can see them on Google Scholar (user TTVIFykAAAAJ), ResearchGate and ORCID, all linked in the header." },
-    { k: ["where", "based", "location", "live", "city", "onde", "vive", "localiza"], a:
+    { k: ["where is he", "where does he", "where is gustavo", "based in", "based between", "location", "lives in", "where do you live", "onde vive", "onde esta", "onde mora", "where is he based"], a:
       "He works between Lisbon/Seixal in Portugal (CQE–IST) and Paris in France (MNHN–IMPMC), and is originally from Ovar, Portugal." },
-    { k: ["language", "languages", "portuguese", "english", "idioma", "língua"], a:
+    { k: ["language", "languages", "portuguese", "english", "speak", "idioma", "lingua", "fala"], a:
       "Portuguese is his native language and he works in English at a C1 level." },
-    { k: ["media", "interview", "news", "press", "notícia", "entrevista"], a:
-      "He has been featured in Maré Viva (2025, 'O percurso improvável de Gustavo Maia levou-o de Ovar até à NASA'), Praça Pública (2024) and the IST student journal Diferencial (2024) — see the News section." }
+    { k: ["media", "interview", "news", "press", "noticia", "entrevista", "mare viva", "praca publica", "diferencial"], a:
+      "He has been featured in Maré Viva (2025, 'O percurso improvável de Gustavo Maia levou-o de Ovar até à NASA'), Praça Pública (2024) and the IST student journal Diferencial (2024) — see the News section." },
+
+    // --- General concepts in Gustavo's scientific fields (definitions) ---
+    { k: ["astrobiology", "astrobiolog", "astrobiologia", "exobiology"], a:
+      "Astrobiology is the science that studies the origin, evolution and distribution of life in the universe — how life began on Earth and whether it could exist elsewhere. It draws on chemistry, biology, geology and astronomy. Gustavo's PhD sits in this field: he studies the chemistry of organic molecules that are relevant to the origin of life and that are found in meteorites and returned space samples." },
+    { k: ["prebiotic chemistry", "prebiotic", "prebiot", "quimica prebiotica", "building blocks of life"], a:
+      "Prebiotic chemistry studies the chemical reactions that could have produced the building blocks of life (such as amino acids, sugars and nucleobases) on the early Earth, before biology existed. Gustavo works on how mechanical energy — from impacts and meteoritic entry — can synthesise or degrade these molecules, an alternative to the classic 'warm little pond' scenario." },
+    { k: ["origin of life", "abiogenesis", "how life began", "first life", "origem da vida"], a:
+      "The origin of life is the question of how living systems first arose from non-living chemistry. A central theme in Gustavo's work is how life's building blocks could have formed and survived in extreme, dry, high-energy environments, and how organics may have been delivered to the early Earth by meteorites — emphasising mechanical/impact-driven chemistry." },
+    { k: ["meteorit", "meteor", "asteroid", "comet", "extraterrestrial organic", "returned sample", "carbonaceous chondrite", "space sample"], a:
+      "Meteorites — especially carbonaceous chondrites — and samples returned from asteroids carry organic molecules formed in space. Studying them helps reveal what chemistry was available to the early Solar System and Earth. Gustavo investigates how mechanical events (parent-body processing, impacts, atmospheric entry) alter that organic matter, which is key to interpreting it correctly." }
   ];
 
   const FALLBACK =
-    "Sorry, I'm not able to answer that. I can help with questions about Gustavo Pinho Maia — his research, publications, education, experience, presentations, funding, awards, tutoring, or how to get in touch.";
+    "Sorry, I'm not able to answer that. I can help with questions about Gustavo Pinho Maia — his research, publications, education, experience, presentations, funding, awards, tutoring, or how to get in touch — and with general topics in his fields (astrobiology, prebiotic chemistry, the origin of life, mechanochemistry, meteoritics). For anything else, email gustavopinho.maia@mnhn.fr.";
 
   const GREETING =
     "Hi! I'm an assistant for Gustavo Pinho Maia's site. Ask me anything about his research, CV, publications, or how to get in touch.";
 
-  // Offline matcher: score FAQ entries by keyword hits in the question
+  // Lower-case AND strip accents so e.g. "quimica" matches "química" and the
+  // keyword lists (written without accents) match accented user input too.
+  // The regex (combining-diacritical-marks block U+0300–U+036F) is built from a
+  // string so no literal combining characters live in the source file.
+  var DIACRITICS = new RegExp("[\\u0300-\\u036f]", "g");
+  function norm(s) {
+    return (s || "").toLowerCase().normalize("NFD").replace(DIACRITICS, "");
+  }
+
+  // Offline matcher: score FAQ entries by keyword hits in the normalised
+  // question. Keywords are deliberately specific (no bare "who/what/where"),
+  // so a question we don't actually cover scores 0 and we return FALLBACK —
+  // i.e. we say we can't answer instead of forcing an unrelated CV reply.
   function offlineAnswer(qRaw) {
-    const q = (qRaw || "").toLowerCase();
+    const q = norm(qRaw);
     if (!q.trim()) return FALLBACK;
-    if (/^(hi|hello|hey|olá|ola|bom dia|boa tarde)\b/.test(q)) return GREETING;
+    if (/^(hi|hello|hey|ola|bom dia|boa tarde|boa noite)\b/.test(q)) return GREETING;
     let best = null, bestScore = 0;
     for (const item of FAQ) {
       let score = 0;
-      for (const kw of item.k) if (q.indexOf(kw) !== -1) score++;
+      for (const kw of item.k) if (q.indexOf(norm(kw)) !== -1) score++;
       if (score > bestScore) { bestScore = score; best = item; }
     }
-    return best ? best.a : FALLBACK;
+    return bestScore > 0 ? best.a : FALLBACK;
   }
 
   window.ASSISTANT_DATA = { PROFILE, FAQ, FALLBACK, GREETING, offlineAnswer };
